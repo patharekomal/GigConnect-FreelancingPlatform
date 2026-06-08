@@ -10,6 +10,15 @@ import HowItWorks from "./pages/HowItWorks";
 import Contact from "./pages/Contact";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+
+import ClientDashboard from "./pages/Client/ClientDashboard"
+import PostJob from "./pages/Client/PostJobs"
+import ViewBids from "./pages/Client/ViewBids"
+import MyJobs from "./pages/Client/MyJobs"
+import ClientMyProjects from "./pages/Client/ClientMyProjects"
+import ProjectPage from "./pages/Client/ProjectPage"
+import Payment from "./pages/Client/Payment"
+import { jobs } from "./data/dummyData"
 // import ClientDashboard from "./pages/ClientDashboard";
 // import FreelancerDashboard from "./pages/FreelancerDashboard";
 
@@ -29,6 +38,14 @@ function App() {
         <Route path="/reset-password"  element={<ResetPassword />} />
         {/* <Route path="/client" element={<ClientDashboard />} />
         <Route path="/freelancer" element={<FreelancerDashboard />} /> */}
+
+        <Route path="/client" element={<ClientDashboard />} />
+         <Route path="/post-job" element={<PostJob />} />
+         <Route path="/bids/:jobId" element={<ViewBids jobs={jobs} />} />
+         <Route path="/my-jobs" element={<MyJobs jobs={jobs} />} />
+         <Route path="/my-projects" element={<ClientMyProjects />} />
+         <Route path="/project/:projectId" element={<ProjectPage />} />
+         <Route path="/payment" element={<Payment />} />
       </Routes>
 
       <Footer />
