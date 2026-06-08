@@ -149,7 +149,7 @@ export const bids = [
   {
     bid_id: 2,
     job_id: 2,
-    freelancer_id: 7,
+    freelancer_id: 6,
     amount: 23000,
     duration_days: 15,
     proposal: "Experienced Spring Boot developer.",
@@ -159,7 +159,7 @@ export const bids = [
   {
     bid_id: 3,
     job_id: 3,
-    freelancer_id: 8,
+    freelancer_id: 6,
     amount: 11000,
     duration_days: 7,
     proposal: "Professional UI/UX designer.",
@@ -276,50 +276,35 @@ export const messages = [
 // FREELANCER PROFILES
 
 export const freelancerProfiles = [
-  {
+{
     freelancer_id: 6,
     title: "Frontend Developer",
     skills: [
-      "React",
-      "JavaScript",
-      "Bootstrap",
-      "HTML",
-      "CSS"
+        "React",
+        "JavaScript",
+        "Bootstrap",
+        "HTML",
+        "CSS"
     ],
     experience: 2,
     portfolio: "https://portfolio-jane.com",
     bio: "Passionate frontend developer specializing in responsive web applications.",
     hourlyRate: 800,
     rating: 4.8
-  },
-  {
+},
+{
     freelancer_id: 7,
     title: "Full Stack Developer",
     skills: [
-      "Java",
-      "Spring Boot",
-      "React",
-      "MySQL"
+        "Java",
+        "Spring Boot",
+        "React",
+        "MySQL"
     ],
     experience: 3,
     portfolio: "https://portfolio-john.com",
     bio: "Experienced full stack developer with strong backend expertise.",
     hourlyRate: 1200,
     rating: 4.9
-  },
-  {
-    freelancer_id: 8,
-    title: "UI/UX Designer",
-    skills: [
-      "Figma",
-      "Adobe XD",
-      "Prototyping",
-      "Wireframing"
-    ],
-    experience: 2,
-    portfolio: "https://portfolio-priya.com",
-    bio: "Creative designer focused on user-centric design principles.",
-    hourlyRate: 600,
-    rating: 4.7
-  }
+}
 ];

@@ -21,6 +21,17 @@ import Payment from "./pages/Client/Payment"
 import { jobs } from "./data/dummyData"
 // import ClientDashboard from "./pages/ClientDashboard";
 // import FreelancerDashboard from "./pages/FreelancerDashboard";
+{/* Freelancer  */}
+   import FreelancerDashboard from './pages/Freelancer/FreelancerDashboard'
+import BrowseJobs from "./pages/Freelancer/BrowseJobs";
+import SubmitBid from "./pages/Freelancer/SubmitBid";
+import MyBids from "./pages/Freelancer/MyBids";
+import MyProjects from "./pages/Freelancer/MyProjects";
+import Chat from "./pages/Freelancer/Chat";
+import SubmitWork from "./pages/Freelancer/SubmitWork";
+import Reviews from "./pages/Freelancer/Reviews";
+import Profile from "./pages/Freelancer/Profile";
+
 
 function App() {
   return (
@@ -46,6 +57,18 @@ function App() {
          <Route path="/my-projects" element={<ClientMyProjects />} />
          <Route path="/project/:projectId" element={<ProjectPage />} />
          <Route path="/payment" element={<Payment />} />
+         
+         {/* Freelancer  */}
+    <Route path='/freelancer' element={<FreelancerDashboard/>}/>
+     <Route path='/browseJobs' element={<BrowseJobs/>} />
+     <Route  path="/submitBid/:jobId" element={<SubmitBid/>} />
+     <Route  path="/myBids" element={<MyBids/>} />
+     <Route path='/myProjects' element={<MyProjects/>} />
+     <Route path="/submitWork/:projectId" element={<SubmitWork />}/>
+     <Route path="/chat/:projectId" element={<Chat />}/>
+     <Route path="/reviews" element={<Reviews/>}/>
+     <Route path="/profile" element={<Profile/>}/>
+
       </Routes>
 
       <Footer />
