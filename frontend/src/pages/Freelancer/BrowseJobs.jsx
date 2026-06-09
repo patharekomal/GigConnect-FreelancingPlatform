@@ -19,7 +19,8 @@ function BrowseJobs() {
         <div className="col-md-10">
             {/* First Part */}
                 <div className="card border-0 shadow-sm p-4 mb-4">
-                  <h2>💼 Browse Jobs</h2>
+                  <h2> Browse Jobs</h2>
+                  {/* 💼 */}
                        <p className="text-muted mb-0">
                            Discover projects that match your skills
                            and submit competitive proposals.

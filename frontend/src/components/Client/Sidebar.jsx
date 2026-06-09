@@ -69,6 +69,9 @@ function Sidebar({ activePage }) {
         <div>
           <div className="fw-semibold" style={{ fontSize: "13px" }}>{CLIENT_NAME}</div>
           <div style={{ fontSize: "11px", color: "#1D9E75" }}>Client</div>
+          <button className="btn btn-light text-start" onClick={() => navigate("/")}>
+                Logout
+                </button>
         </div>
       </div>
     </aside>

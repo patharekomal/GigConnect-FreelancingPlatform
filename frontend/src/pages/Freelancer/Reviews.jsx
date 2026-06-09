@@ -31,7 +31,7 @@ function Reviews() {
 
                     <div className="card shadow-sm border-0 p-4 mb-4">
 
-                        <h2>⭐ Reviews & Ratings</h2>
+                        <h2>Reviews & Ratings</h2>
 
                         <h4 className="text-success">
                             Average Rating : {avgRating}

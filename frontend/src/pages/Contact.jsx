@@ -30,11 +30,7 @@ function Contact() {
           className="text-muted mx-auto"
           style={{ maxWidth: "500px", fontSize: "1.1rem", lineHeight: "1.7" }}
         >
-          Have questions or need help? We're here to assist you with anything related to WorkBridge.
-        </p>
-      </section>
-
-      {/* CONTACT CARDS */}
+            Have questions or need help? We're here to assist you with anything related to GigConnect.</p></section>
       <section className="container py-5">
         <div className="row g-4 justify-content-center">
 
@@ -50,7 +46,7 @@ function Contact() {
                 📧
               </div>
               <h5 className="fw-bold mb-1" style={{ color: "#1f2937" }}>Email Us</h5>
-              <p className="text-muted mb-0" style={{ fontSize: "0.95rem" }}>support@workbridge.com</p>
+              <p className="text-muted mb-0" style={{ fontSize: "0.95rem" }}>support@gigconnect.com</p>
             </div>
           </div>
 
@@ -97,7 +93,7 @@ function Contact() {
         >
           <h2 className="fw-bold mb-2">We're always here for you</h2>
           <p className="mb-0" style={{ opacity: 0.9 }}>
-            Reach out anytime — our team is ready to help you get the most out of WorkBridge.
+            Reach out anytime — our team is ready to help you get the most out of GigConnect.
           </p>
         </div>
       </section>

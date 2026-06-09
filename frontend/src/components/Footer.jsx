@@ -5,7 +5,7 @@ function Footer() {
         <div className="row">
 
           <div className="col-md-3">
-            <h5>WorkBridge</h5>
+            <h5>GigConnect</h5>
             <p>Bridging the gap between clients and freelancers</p>
           </div>
 
@@ -34,7 +34,7 @@ function Footer() {
 
         <hr />
         <p className="text-center pb-3">
-          © 2026 WorkBridge. All rights reserved.
+          © 2026 GigConnect. All rights reserved.
         </p>
       </div>
     </div>

@@ -56,7 +56,7 @@ function Login() {
             Welcome Back
           </span>
           <h4 className="fw-bold mb-1" style={{ color: "#1f2937" }}>
-            Sign in to <span style={{ color: "#198754" }}>WorkBridge</span>
+            Sign in to <span style={{ color: "#198754" }}>GigConnect</span>
           </h4>
           <p className="text-muted" style={{ fontSize: "0.9rem" }}>
             Enter your credentials to continue

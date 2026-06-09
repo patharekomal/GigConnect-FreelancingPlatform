@@ -20,7 +20,7 @@ function MyBids() {
 
                     <div className="card shadow-sm border-0 p-4 mb-4">
 
-                       <h2>📝 My Bids</h2>
+                       <h2> My Bids</h2>
                         <p className="text-muted mb-0">
                             Track all your submitted proposals and client responses.
                         </p>
@@ -35,7 +35,7 @@ function MyBids() {
                                                     <div className="card-body">
 
                                                           <h4>
-                                                              💼 {job?.title}
+                                                               {job?.title}
                                                           </h4>
 
                                                           <p>
