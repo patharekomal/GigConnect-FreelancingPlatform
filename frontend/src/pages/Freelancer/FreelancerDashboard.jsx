@@ -20,7 +20,7 @@ function FreelancerDashboard() {
             <div className="card shadow-sm border-0 p-4 mb-4">
                   <div className="row align-items-center">
                         <div className="col-md-7">
-                          <h1>Welcome Back, Jane 👋</h1>
+                          <h1>Welcome Back, Jane !!!</h1>
                           <p className="text-muted">
                               Find exciting freelance opportunities,
                               submit competitive bids and manage

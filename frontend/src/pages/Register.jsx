@@ -26,7 +26,7 @@ function Register() {
             Get Started Free
           </span>
           <h4 className="fw-bold mb-1" style={{ color: "#1f2937" }}>
-            Join <span style={{ color: "#198754" }}>WorkBridge</span>
+            Join <span style={{ color: "#198754" }}>GigConnect</span>
           </h4>
           <p className="text-muted" style={{ fontSize: "0.9rem" }}>
             Create your account in seconds

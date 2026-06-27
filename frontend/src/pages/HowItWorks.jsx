@@ -61,7 +61,7 @@ function HowItWorks() {
           className="text-muted mx-auto"
           style={{ maxWidth: "520px", fontSize: "1.1rem", lineHeight: "1.7" }}
         >
-          Getting started on WorkBridge is quick and easy — just four simple steps
+          Getting started on GigConnect is quick and easy — just four simple steps
           between you and your next great project.
         </p>
       </section>
@@ -105,7 +105,7 @@ function HowItWorks() {
         >
           <h2 className="fw-bold mb-2">Ready to get started?</h2>
           <p className="mb-4" style={{ opacity: 0.9 }}>
-            Join millions of clients and freelancers already using WorkBridge.
+            Join millions of clients and freelancers already using GigConnect.
           </p>
           <button
             className="btn btn-light fw-semibold px-4 py-2"

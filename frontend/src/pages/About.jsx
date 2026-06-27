@@ -26,7 +26,7 @@ function About() {
           className="fw-bold mb-3"
           style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", color: "#1f2937", lineHeight: "1.2" }}
         >
-          About <span style={{ color: "#198754" }}>WorkBridge</span>
+          About <span style={{ color: "#198754" }}>GigConnect</span>
         </h1>
         <p
           className="text-muted mx-auto"
@@ -74,7 +74,7 @@ function About() {
               <h4 className="fw-bold mb-2" style={{ color: "#1f2937" }}>Our Vision</h4>
               <p className="text-muted" style={{ lineHeight: "1.7" }}>
                 Whether you are a business looking for talent or a freelancer seeking
-                opportunities, WorkBridge helps you achieve your goals seamlessly.
+                opportunities, GigConnect helps you achieve your goals seamlessly.
               </p>
             </div>
           </div>
@@ -89,7 +89,7 @@ function About() {
           style={{ background: "linear-gradient(135deg, #198754, #157347, #0d6efd)" }}
         >
           <div className="text-center mb-4">
-            <h2 className="fw-bold">Why WorkBridge</h2>
+            <h2 className="fw-bold">Why GigConnect</h2>
             <p className="mb-0" style={{ opacity: 0.9 }}>
               Built with freelancers and clients at the heart of everything we do
             </p>

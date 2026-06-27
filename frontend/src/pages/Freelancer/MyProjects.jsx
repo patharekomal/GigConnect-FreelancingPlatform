@@ -27,7 +27,7 @@ function MyProjects() {
 
                    <div className="card shadow-sm border-0 p-4 mb-4">
                            <h2>
-                               📁 My Projects
+                                My Projects
                            </h2>
                            <p className="text-muted mb-0">    
                             Manage active projects, submit work and track payments.</p>
@@ -41,7 +41,7 @@ function MyProjects() {
                                return (<div className="card shadow-sm border-0 mb-3" key={project.project_id}>
                                          <div className="card-body">
                                                  <h4>
-                                                     📁 {job?.title}
+                                                      {job?.title}
                                                  </h4>
                                                   <p>
                                                       <strong>Project Amount:</strong>

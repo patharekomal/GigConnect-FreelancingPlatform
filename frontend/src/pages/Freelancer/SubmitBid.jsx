@@ -27,7 +27,7 @@ if (!selectedJob) {
         <div className="col-md-10">
 
            <div className="card shadow-sm border-0 p-4 mb-4">
-                 <h2>📝 Submit Bid</h2>
+                 <h2> Submit Bid</h2>
                  <p className="text-muted mb-0">
                      Send your proposal and convince the client
                      why you are the right freelancer.
@@ -37,7 +37,7 @@ if (!selectedJob) {
             <div className="row">
                 <div className="col-md-5">
                         <div className="card shadow-sm border-0 p-4">
-                           <h4>💼 {selectedJob.title}</h4>
+                           <h4> {selectedJob.title}</h4>
                              <hr />
                            <p>
                                <strong>Budget:</strong>
@@ -58,7 +58,8 @@ if (!selectedJob) {
                     <div className="card shadow-sm border-0 p-4">
 
                          <h4 className="mb-4">
-                             📝 Submit Your Proposal
+                             {/* 📝 Submit Your Proposal */}
+                             Submit Your Proposal
                          </h4>
                          <div className="mb-3">
                            <label className="form-label">

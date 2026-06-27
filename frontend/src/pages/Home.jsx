@@ -52,7 +52,7 @@ function Home() {
               fontSize: "0.9rem",
             }}
           >
-            Welcome to WorkBridge
+            Welcome to GigConnect
           </span>
 
           <h1
@@ -73,7 +73,7 @@ function Home() {
               fontSize: "1.15rem",
             }}
           >
-            WorkBridge connects ambitious clients with skilled freelancers,
+            GigConnect connects ambitious clients with skilled freelancers,
             making collaboration simple, secure, and fast.
           </p>
 
@@ -124,7 +124,7 @@ function Home() {
         <div className="text-center mb-5">
           <h2 className="fw-bold">Built for everyone</h2>
           <p className="text-muted">
-            Whether you are hiring talent or looking for work, WorkBridge helps you move forward.
+            Whether you are hiring talent or looking for work, GigConnect helps you move forward.
           </p>
         </div>
 
