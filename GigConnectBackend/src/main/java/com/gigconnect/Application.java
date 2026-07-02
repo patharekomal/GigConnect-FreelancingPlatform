@@ -24,6 +24,7 @@ public class Application {
 	 ModelMapper modelMapper()
 	{
 		ModelMapper mapper=new ModelMapper();
+		mapper.getConfiguration().setSkipNullEnabled(true);
 		//configure mapper - to transfer the matching props (name + data type)
 		mapper.getConfiguration()
 		.setMatchingStrategy(MatchingStrategies.STRICT)
