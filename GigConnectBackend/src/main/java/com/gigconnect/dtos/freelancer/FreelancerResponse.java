@@ -7,8 +7,6 @@ import lombok.Setter;
 @Setter
 public class FreelancerResponse {
 	
-    private Long id;
-    
     // Basic user details (coming from User table)
     private String firstName;
     private String lastName;
