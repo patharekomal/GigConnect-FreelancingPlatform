@@ -6,13 +6,16 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.gigconnect.custom_exceptions.ApiException;
 import com.gigconnect.custom_exceptions.ResourceNotFoundException;
 import com.gigconnect.dtos.ApiResponse;
 import com.gigconnect.dtos.freelancer.BidRequest;
 import com.gigconnect.dtos.freelancer.BidResponse;
+import com.gigconnect.dtos.freelancer.UpdateBidRequest;
 import com.gigconnect.entities.Bid;
 import com.gigconnect.entities.Freelancer;
 import com.gigconnect.entities.Job;
+import com.gigconnect.enums.BidStatus;
 import com.gigconnect.repository.BidRepository;
 import com.gigconnect.repository.FreelancerRepository;
 import com.gigconnect.repository.JobRepository;
@@ -70,7 +73,7 @@ public class BidServiceImpl implements BidService {
 
 		    BidResponse dto = new BidResponse();
 
-		    dto.setBidId(bid.getBidId());
+		    dto.setBidId(bid.getId());
 		    //fetch job details from job id
 		    
 		    dto.setJobId(bid.getJob().getId());
@@ -90,4 +93,27 @@ public class BidServiceImpl implements BidService {
 		return list ;
 	}
 
+	@Override
+	public ApiResponse updateBid(Long bidId, UpdateBidRequest bid) {
+		// TODO Auto-generated method stub
+		      
+		      //get bid by bid id 
+		         
+				Bid obj=bidRepository.findById(bidId)
+						.orElseThrow(()-> new ResourceNotFoundException("Bid id invalid "));
+				
+				//check if status is pending ,if pending then only update bid 
+				if (obj.getStatus() != BidStatus.PENDING) {
+				    throw new ApiException("Only pending bids can be updated");
+				}
+				obj.setAmount(bid.getAmount());
+				obj.setDurationDays(bid.getDuration());
+				obj.setProposal(bid.getProposal());
+			     
+				//Save changes to database
+				bidRepository.save(obj);
+			
+				return new ApiResponse("Successful","Bid  Updated SuccessFully");
+	}
+    
 }

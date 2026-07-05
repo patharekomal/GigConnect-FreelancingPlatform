@@ -1,16 +1,13 @@
 package com.gigconnect.entities;
 
-import java.time.LocalDateTime;
-
 import com.gigconnect.enums.BidStatus;
 
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -24,13 +21,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name="bids")
-public class Bid {
-	
-	@Id 
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="bid_id")
-	private Long bidId;
-	
+@AttributeOverride(name="id",column=@Column(name="bid_id"))
+public class Bid extends BaseClass{
+
 	@Column
 	private Double amount;
 	
@@ -41,10 +34,8 @@ public class Bid {
 	private String proposal;
 	
 	@Enumerated(EnumType.STRING)
-	private BidStatus status;
+	private BidStatus status=BidStatus.PENDING;
 	
-	@Column(name = "created_at")
-	private LocalDateTime createdAt;
 	
 	@ManyToOne
 	@JoinColumn(name = "job_id")
