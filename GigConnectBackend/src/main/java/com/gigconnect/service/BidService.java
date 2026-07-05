@@ -16,4 +16,6 @@ public interface BidService {
 
 	ApiResponse updateBid(Long bidId, UpdateBidRequest bid);
 
+	ApiResponse deleteBid(Long bidId);
+
 }

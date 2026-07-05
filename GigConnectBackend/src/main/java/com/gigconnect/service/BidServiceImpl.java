@@ -115,5 +115,23 @@ public class BidServiceImpl implements BidService {
 			
 				return new ApiResponse("Successful","Bid  Updated SuccessFully");
 	}
+
+	
+	@Override
+	public ApiResponse deleteBid(Long bidId) {
+
+		if (bidRepository.existsById(bidId)) {
+			
+			bidRepository.deleteById(bidId);
+			
+			return new ApiResponse("Success","Bid Deleted Successfully");
+		}
+		else
+		{
+			return new ApiResponse("Failed ","BID Id Not Found ");
+		}
+
+		
+	}
     
 }

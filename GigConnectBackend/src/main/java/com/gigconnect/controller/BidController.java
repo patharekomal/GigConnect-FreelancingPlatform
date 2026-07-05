@@ -1,6 +1,7 @@
 package com.gigconnect.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,11 +39,16 @@ public class BidController {
 	}
 	
 	//Update Bid 
-	@PutMapping("/{id}")
-	public ResponseEntity<?> updateBid(@PathVariable Long id,@RequestBody UpdateBidRequest bid )
+	@PutMapping("/{bidId}")
+	public ResponseEntity<?> updateBid(@PathVariable Long bidId,@RequestBody UpdateBidRequest bid )
 	{
-		return ResponseEntity.ok(bidService.updateBid(id,bid));
+		return ResponseEntity.ok(bidService.updateBid(bidId,bid));
 	}
 	
+	@DeleteMapping("/{bidId}")
+	public ResponseEntity<?> deleteBid(@PathVariable Long bidId )
+	{
+		return ResponseEntity.ok(bidService.deleteBid(bidId));
+	}
 	
 }
