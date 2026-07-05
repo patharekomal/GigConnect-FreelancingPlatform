@@ -9,16 +9,25 @@ import lombok.Setter;
 @Setter
 public class BidResponse {
 
+
+	 // Bid Details
     private Long bidId;
 
-    private String jobTitle;
+    private Double amount;
 
-    private double amount;
-
-    private int duration;
+    private Integer duration;
 
     private String proposal;
 
     private BidStatus status;
+    
+    //job title which need for mybid jobs
+    private Long jobId;
+
+    private String jobTitle;
+    
+    // null if bid is not accepted
+    private Long projectId;
+    
 
 }
