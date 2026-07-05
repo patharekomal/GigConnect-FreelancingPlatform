@@ -1,14 +1,17 @@
 package com.gigconnect.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gigconnect.dtos.freelancer.BidRequest;
+import com.gigconnect.dtos.freelancer.UpdateBidRequest;
 import com.gigconnect.service.BidService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,4 +37,18 @@ public class BidController {
 	{
 		return ResponseEntity.ok(bidService.getMyBidByFreelancerId(freelancerId));
 	}
+	
+	//Update Bid 
+	@PutMapping("/{bidId}")
+	public ResponseEntity<?> updateBid(@PathVariable Long bidId,@RequestBody UpdateBidRequest bid )
+	{
+		return ResponseEntity.ok(bidService.updateBid(bidId,bid));
+	}
+	
+	@DeleteMapping("/{bidId}")
+	public ResponseEntity<?> deleteBid(@PathVariable Long bidId )
+	{
+		return ResponseEntity.ok(bidService.deleteBid(bidId));
+	}
+	
 }
