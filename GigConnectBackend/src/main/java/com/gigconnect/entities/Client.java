@@ -1,5 +1,6 @@
 package com.gigconnect.entities;
 
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,12 +11,15 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "clients")
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString(exclude ="userDetails",callSuper = true)
+@AttributeOverride(name="id",column=@Column(name="client_id"))
 public class Client extends BaseClass{
 	@Column(name="company_name")
 	private String companyName;
