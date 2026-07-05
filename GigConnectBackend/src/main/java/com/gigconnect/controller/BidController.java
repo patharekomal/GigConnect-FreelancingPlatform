@@ -37,10 +37,11 @@ public class BidController {
 		return ResponseEntity.ok(bidService.getMyBidByFreelancerId(freelancerId));
 	}
 	
-	@PutMapping("/{bidId}")
-	public ResponseEntity<?> updateBid(@PathVariable Long bidId,@RequestBody UpdateBidRequest bid )
+	//Update Bid 
+	@PutMapping("/{id}")
+	public ResponseEntity<?> updateBid(@PathVariable Long id,@RequestBody UpdateBidRequest bid )
 	{
-		return ResponseEntity.ok(bidService.updateBid(bidId,bid));
+		return ResponseEntity.ok(bidService.updateBid(id,bid));
 	}
 	
 	
