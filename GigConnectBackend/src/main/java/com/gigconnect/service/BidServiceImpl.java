@@ -1,11 +1,15 @@
 package com.gigconnect.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.gigconnect.custom_exceptions.ResourceNotFoundException;
 import com.gigconnect.dtos.ApiResponse;
 import com.gigconnect.dtos.freelancer.BidRequest;
+import com.gigconnect.dtos.freelancer.BidResponse;
 import com.gigconnect.entities.Bid;
 import com.gigconnect.entities.Freelancer;
 import com.gigconnect.entities.Job;
@@ -26,7 +30,8 @@ public class BidServiceImpl implements BidService {
 	private final  JobRepository jobRepository;
 
 	@Override
-	public ApiResponse submitBid(Long freelancerId, BidRequest bid) {
+	public ApiResponse submitBid(Long freelancerId, BidRequest bid) 
+{
 		// TODO Auto-generated method stub
 		//find Freelancer object
 		Freelancer freelancer=freelancerRepository.findById(freelancerId)
@@ -50,6 +55,39 @@ public class BidServiceImpl implements BidService {
 		}
 		
 		return new ApiResponse("Successful","Bid Submitted SuccessFully");
+	}
+
+	@Override
+	public List<BidResponse> getMyBidByFreelancerId(Long freelancerId) 
+	{
+		//create empty list to collect all bids
+		List<BidResponse> list=new ArrayList<>();
+		
+		//derived query to take list of bids by freelancer id 
+		List<Bid> bidList=bidRepository.findByFreelancerId(freelancerId);
+		
+		for (Bid bid : bidList) {
+
+		    BidResponse dto = new BidResponse();
+
+		    dto.setBidId(bid.getBidId());
+		    //fetch job details from job id
+		    
+		    dto.setJobId(bid.getJob().getId());
+		    dto.setJobTitle(bid.getJob().getTitle());
+
+		    dto.setAmount(bid.getAmount());
+		    dto.setDuration(bid.getDurationDays());
+		    dto.setProposal(bid.getProposal());
+		    dto.setStatus(bid.getStatus());
+
+		    list.add(dto);
+		}
+		if(list.isEmpty())
+		{
+		     throw new RuntimeException("List not Found");
+		}
+		return list ;
 	}
 
 }
