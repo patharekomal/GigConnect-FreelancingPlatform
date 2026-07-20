@@ -10,6 +10,7 @@ import com.gigconnect.custom_exceptions.ResourceNotFoundException;
 import com.gigconnect.dtos.ApiResponse;
 import com.gigconnect.dtos.client.JobRequestDto;
 import com.gigconnect.dtos.client.JobResponseDto;
+import com.gigconnect.dtos.client.JobUpdateDto;
 import com.gigconnect.entities.Client;
 import com.gigconnect.entities.Job;
 import com.gigconnect.enums.JobStatus;
@@ -70,5 +71,42 @@ public class JobServiceImpl implements JobService{
 
 	    return jobList;
 	}
+
+	@Override
+	public ApiResponse updateJob(Long jobId, @Valid JobUpdateDto dto) {
+		Job job = jobRepo.findById(jobId)
+				.orElseThrow(()->new ResourceNotFoundException("Job not found with id"+jobId));
+		
+		if(dto.getTitle()!=null)
+	        job.setTitle(dto.getTitle());
+
+	    if(dto.getDescription()!=null)
+	        job.setDescription(dto.getDescription());
+
+	    if(dto.getBudget()!=null)
+	        job.setBudget(dto.getBudget());
+
+	    if(dto.getDeadline()!=null)
+	        job.setDeadline(dto.getDeadline());
+		return new ApiResponse(
+	            "Success",
+	            "Job updated successfully");
+	}
+
+	@Override
+	public ApiResponse deleteJob(Long jobId) {
+
+	    if (!jobRepo.existsById(jobId)) {
+	        throw new ResourceNotFoundException(
+	                "Job not found with Id : " + jobId);
+	    }
+	    
+	    jobRepo.deleteById(jobId);
+
+	    return new ApiResponse(
+	            "Success",
+	            "Job deleted successfully");
+	}
+	
 
 }
