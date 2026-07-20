@@ -29,5 +29,7 @@ public class BidResponse {
     // null if bid is not accepted
     private Long projectId;
     
+    private String freelancerName;
+    
 
 }
