@@ -1,5 +1,6 @@
 package com.gigconnect.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,10 +16,14 @@ import com.gigconnect.dtos.freelancer.UpdateBidRequest;
 import com.gigconnect.entities.Bid;
 import com.gigconnect.entities.Freelancer;
 import com.gigconnect.entities.Job;
+import com.gigconnect.entities.Project;
 import com.gigconnect.enums.BidStatus;
+import com.gigconnect.enums.JobStatus;
+import com.gigconnect.enums.ProjectStatus;
 import com.gigconnect.repository.BidRepository;
 import com.gigconnect.repository.FreelancerRepository;
 import com.gigconnect.repository.JobRepository;
+import com.gigconnect.repository.ProjectRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +36,7 @@ public class BidServiceImpl implements BidService {
 	private final ModelMapper modelMapper;
 	private  final FreelancerRepository freelancerRepository;
 	private final  JobRepository jobRepository;
+	private final ProjectRepository projectRepository;
 
 	@Override
 	public ApiResponse submitBid(Long freelancerId, BidRequest bid) 
@@ -132,6 +138,97 @@ public class BidServiceImpl implements BidService {
 		}
 
 		
+	}
+
+	@Override
+	public List<BidResponse> getBidsByJob(Long jobId) {
+		
+		jobRepository.findById(jobId)
+        .orElseThrow(() ->
+                new ResourceNotFoundException(
+                        "Job not found with id : " + jobId));
+		// Fetch bids
+	    List<Bid> bidList = bidRepository.findByJobId(jobId);
+	    
+	    List<BidResponse> response = new ArrayList<>();
+	    
+	    for(Bid bid : bidList) {
+	    	BidResponse dto = modelMapper.map(bid, BidResponse.class);
+	    	
+	    	dto.setBidId(bid.getId());
+	    	
+	    	dto.setFreelancerName(
+	                bid.getFreelancer()
+	                        .getUserDetails()
+	                        .getFirstName()
+	                        + " "
+	                        + bid.getFreelancer()
+	                        .getUserDetails()
+	                        .getLastName());
+
+	        response.add(dto);
+	    }
+	    
+		return response;
+	}
+
+	@Override
+	public ApiResponse acceptBid(Long bidId) {
+		
+		//Find selected bid
+		Bid selectedBid = bidRepository.findById(bidId)
+				.orElseThrow(()->new ResourceNotFoundException("Invalid Bid Id"));
+		
+		// Allow accepting only pending bids
+	    if (selectedBid.getStatus() != BidStatus.PENDING) {
+	        throw new ApiException("Bid is already processed.");
+	    }
+	    
+	    //Accept selected bid
+	    selectedBid.setStatus(BidStatus.ACCEPTED);
+	    
+	    //Get associated job
+	    Job job = selectedBid.getJob();
+	    
+	    // Reject all other pending bids for this job
+	    List<Bid> bidList = bidRepository.findByJobId(job.getId());
+
+	    for (Bid bid : bidList) {
+
+	        if (!bid.getId().equals(selectedBid.getId())
+	                && bid.getStatus() == BidStatus.PENDING) {
+
+	            bid.setStatus(BidStatus.REJECTED);
+	        }
+	    }
+	    
+	    // Close the job
+	    job.setStatus(JobStatus.CLOSED);
+	    
+	    // Create Project
+	    Project project = new Project();
+
+	    project.setJob(job);
+
+	    project.setClient(job.getClient());
+
+	    project.setFreelancer(selectedBid.getFreelancer());
+	    
+	    //Agreed amount is the accepted bid amount
+	    project.setAgreedAmount(selectedBid.getAmount());
+
+	    project.setStatus(ProjectStatus.IN_PROGRESS);
+
+	    //Nothing submitted yet
+	    project.setSubmittedWork(null);
+
+	    project.setCreatedAt(LocalDateTime.now());
+
+	    projectRepository.save(project);
+
+	    return new ApiResponse(
+	            "Success",
+	            "Bid accepted and Project created successfully");
 	}
     
 }
