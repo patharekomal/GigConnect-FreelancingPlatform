@@ -3,10 +3,15 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.gigconnect.custom_exceptions.ResourceNotFoundException;
+import com.gigconnect.dtos.freelancer.FreelancerDashboardResponse;
 import com.gigconnect.dtos.freelancer.FreelancerResponse;
 import com.gigconnect.dtos.freelancer.UpdateFreelancerProfile;
 import com.gigconnect.entities.Freelancer;
+import com.gigconnect.enums.BidStatus;
+import com.gigconnect.enums.ProjectStatus;
+import com.gigconnect.repository.BidRepository;
 import com.gigconnect.repository.FreelancerRepository;
+import com.gigconnect.repository.ProjectRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +24,8 @@ public class FreelancerServiceImpl implements FreelancerService{
 	// Constructor based DI
    private final FreelancerRepository freelancerRepository;
    private final ModelMapper modelMapper;
+   private final BidRepository bidRepository;
+   private final ProjectRepository projectRepository;
    
    
 	@Override
@@ -63,6 +70,44 @@ public class FreelancerServiceImpl implements FreelancerService{
 		dto.setEmail(freelancer.getUserDetails().getEmail());
 		
 		return dto;
+	}
+	
+	@Override
+	public FreelancerDashboardResponse getDashboard(Long freelancerId) {
+
+	    Freelancer freelancer = freelancerRepository.findById(freelancerId)
+	            .orElseThrow(() ->
+	            new ResourceNotFoundException("Invalid Freelancer Id"));
+
+	    FreelancerDashboardResponse dto =
+	            new FreelancerDashboardResponse();
+
+	    dto.setTotalBids(
+	            bidRepository.countByFreelancerId(freelancerId));
+
+	    dto.setPendingBids(
+	            bidRepository.countByFreelancerIdAndStatus(
+	                    freelancerId,
+	                    BidStatus.PENDING));
+
+	    dto.setActiveProjects(
+	            projectRepository.countByFreelancerIdAndStatus(
+	                    freelancerId,
+	                    ProjectStatus.IN_PROGRESS));
+
+	    dto.setSubmittedProjects(
+	            projectRepository.countByFreelancerIdAndStatus(
+	                    freelancerId,
+	                    ProjectStatus.SUBMITTED));
+
+	    dto.setCompletedProjects(
+	            projectRepository.countByFreelancerIdAndStatus(
+	                    freelancerId,
+	                    ProjectStatus.COMPLETED));
+
+	    dto.setRating(freelancer.getRating());
+
+	    return dto;
 	}
 
 }

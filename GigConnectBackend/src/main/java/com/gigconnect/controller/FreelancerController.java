@@ -47,4 +47,10 @@ public class FreelancerController {
 	    return ResponseEntity.ok(
 	            freelancerService.updateFreelancerDetails(id, request));
 	}
+	
+	@GetMapping("/{freelancerId}/dashboard")
+	public ResponseEntity<?> getDashboard( @PathVariable Long freelancerId){
+
+	    return ResponseEntity.ok(freelancerService.getDashboard(freelancerId));
+	}
 }
