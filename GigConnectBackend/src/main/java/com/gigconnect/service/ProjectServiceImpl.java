@@ -3,11 +3,14 @@ package com.gigconnect.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.gigconnect.custom_exceptions.ApiException;
 import com.gigconnect.custom_exceptions.ResourceNotFoundException;
 import com.gigconnect.dtos.ApiResponse;
+import com.gigconnect.dtos.project.ClientProjectListResponse;
+import com.gigconnect.dtos.project.ClientProjectResponseDto;
 import com.gigconnect.dtos.project.ProjectDetailsResponse;
 import com.gigconnect.dtos.project.ProjectResponse;
 import com.gigconnect.dtos.project.SubmitWorkRequest;
@@ -25,6 +28,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     // Constructor based Dependency Injection
     private final ProjectRepository projectRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public List<ProjectResponse> getProjectsByFreelancer(Long freelancerId) {
@@ -128,4 +132,70 @@ public class ProjectServiceImpl implements ProjectService {
 
         return new ApiResponse("Successful","Work Submitted Successfully");
     }
+
+	@Override
+	public ClientProjectResponseDto getProjectByIdForClient(Long projectId) {
+		
+		//Find Project
+		Project project = projectRepository.findById(projectId)
+				.orElseThrow(() ->new ResourceNotFoundException("Project not found with Id : " + projectId));
+		
+		ClientProjectResponseDto dto =
+	            modelMapper.map(project, ClientProjectResponseDto.class);
+		
+		//Project Id
+	    dto.setProjectId(project.getId());
+
+	    //Job Details
+	    dto.setProjectTitle(project.getJob().getTitle());
+	    dto.setDescription(project.getJob().getDescription());
+	    
+	    //Freelancer Details
+	    dto.setFreelancerName(project.getFreelancer().getUserDetails().getFirstName()+ " "+ project.getFreelancer().getUserDetails().getLastName());
+		return dto;
+	}
+
+	@Override
+	public List<ClientProjectListResponse> getProjectsByClient(Long clientId) {
+		
+		//Fetch projects
+	    List<Project> projectList = projectRepository.findByClientId(clientId);
+
+	    //Create response list
+	    List<ClientProjectListResponse> list = new ArrayList<>();
+	    
+	    for (Project project : projectList) {
+
+	        ClientProjectListResponse dto = modelMapper.map(project, ClientProjectListResponse.class);
+
+	        dto.setProjectId(project.getId());
+
+	        dto.setProjectTitle(project.getJob().getTitle());
+
+	        dto.setFreelancerName(project.getFreelancer().getUserDetails().getFirstName()+ " "+ project.getFreelancer().getUserDetails().getLastName());
+
+	        list.add(dto);
+	    }
+		return list;
+	}
+
+	@Override
+	public ApiResponse approveProject(Long projectId) {
+		//Find project
+		Project project = projectRepository.findById(projectId).orElseThrow(()->new ResourceNotFoundException("Project not found with Id : " + projectId));
+		
+		//Check whether freelancer has submitted work
+	    if (project.getSubmittedWork() == null || project.getSubmittedWork().isBlank()) {
+	        throw new ApiException("Freelancer has not submitted the work yet.");
+	    }
+	    //Allow approval only when project is under review
+	    if (project.getStatus() != ProjectStatus.SUBMITTED) {
+	    		throw new ApiException("Only projects under review can be approved.");
+	    }
+	    
+	    //Approve Project
+	    project.setStatus(ProjectStatus.COMPLETED);
+
+	    return new ApiResponse("Success","Project approved successfully.");
+	}
 }

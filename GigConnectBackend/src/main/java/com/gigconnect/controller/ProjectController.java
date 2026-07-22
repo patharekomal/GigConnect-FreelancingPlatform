@@ -2,6 +2,7 @@ package com.gigconnect.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,18 +29,37 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.getProjectsByFreelancer(freelancerId));
     }
     
-    //Get All Available Projects 
+  //Get all Projects of Particular Client
+    @GetMapping("/client/{clientId}")
+    public ResponseEntity<?> getProjectsByClient(@PathVariable Long clientId){
+
+        return ResponseEntity.ok(projectService.getProjectsByClient(clientId));
+    }
+    
+    //Get project details
     @GetMapping("/{projectId}")
     public ResponseEntity<?> getProjectDetails( @PathVariable Long projectId) {
 
         return ResponseEntity.ok(projectService.getProjectDetails(projectId));
     }
     
+    //Get Project details for client
+    @GetMapping("/client/details/{projectId}")
+    public ResponseEntity<?> getProjectByIdForClient(@PathVariable Long projectId){
+
+        return ResponseEntity.ok(projectService.getProjectByIdForClient(projectId));
+    }
+    
     @PutMapping("/{projectId}/submit-work")
-    public ResponseEntity<?> submitWork(
-            @PathVariable Long projectId,@RequestBody @Valid SubmitWorkRequest request){
+    public ResponseEntity<?> submitWork(@PathVariable Long projectId,@RequestBody @Valid SubmitWorkRequest request){
 
         return ResponseEntity.ok(projectService.submitWork(projectId, request));
+    }
+    
+    @PatchMapping("/{projectId}/approve")
+    public ResponseEntity<?> approveProject(@PathVariable Long projectId)
+    {
+        return ResponseEntity.ok(projectService.approveProject(projectId));
     }
     
     

@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.gigconnect.dtos.ApiResponse;
 import com.gigconnect.dtos.freelancer.FreelancerDashboardResponse;
+import com.gigconnect.dtos.project.ClientProjectListResponse;
+import com.gigconnect.dtos.project.ClientProjectResponseDto;
 import com.gigconnect.dtos.project.ProjectDetailsResponse;
 import com.gigconnect.dtos.project.ProjectResponse;
 import com.gigconnect.dtos.project.SubmitWorkRequest;
@@ -18,6 +20,12 @@ public interface ProjectService {
      ProjectDetailsResponse getProjectDetails(Long projectId);
 
 	 ApiResponse submitWork(Long projectId, @Valid SubmitWorkRequest request);
+
+	 ClientProjectResponseDto getProjectByIdForClient(Long projectId);
+
+	 List<ClientProjectListResponse> getProjectsByClient(Long clientId);
+
+	 ApiResponse approveProject(Long projectId);
 	 
 	
 
