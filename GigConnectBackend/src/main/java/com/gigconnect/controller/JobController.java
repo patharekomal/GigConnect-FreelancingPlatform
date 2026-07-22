@@ -1,5 +1,7 @@
 package com.gigconnect.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gigconnect.dtos.client.JobRequestDto;
+import com.gigconnect.dtos.client.JobResponseDto;
 import com.gigconnect.dtos.client.JobUpdateDto;
 import com.gigconnect.service.JobService;
 
@@ -50,5 +53,16 @@ public class JobController {
 				jobService.deleteJob(jobId));
 	}
 	
+	@GetMapping
+	public ResponseEntity<List<JobResponseDto>> getAllJobs() {
+	    return ResponseEntity.ok(jobService.getAllJobs());
+	}
+	
+	
+	@GetMapping("/{jobId}")
+	public ResponseEntity<JobResponseDto> getJobById(@PathVariable Long jobId) {
+
+	    return ResponseEntity.ok(jobService.getJobById(jobId));
+	}
 	
 }
