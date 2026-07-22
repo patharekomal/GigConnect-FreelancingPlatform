@@ -26,6 +26,7 @@ function MyJobs({ jobs }) {
     return "bg-light text-dark";
   };
 
+  
   return (
     <>
       <style>{`

@@ -1,11 +1,29 @@
 import Sidebar from "../../components/Freelancer/Sidebar";
 import { useNavigate } from "react-router-dom";
-import { jobs } from "../../data/dummyData.js";
+import { useEffect, useState } from "react";
+import { getAllJobs } from "../../api/jobApi";
 
 function BrowseJobs() {
 
     const navigate = useNavigate();
+    const [jobs, setJobs] = useState([]);
 
+    useEffect(() => {
+      loadJobs();
+    }, []); //load jobs only once when page open 
+
+    const loadJobs = async () => {
+      try {
+        const response = await getAllJobs(); //waits until Spring Boot replies.
+
+        console.log(response.data);
+
+        setJobs(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    
     return (
       <div className="container-fluid p-4">
         <div className="row">
