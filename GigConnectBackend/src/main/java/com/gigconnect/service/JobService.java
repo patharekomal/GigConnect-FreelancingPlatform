@@ -19,4 +19,7 @@ public interface JobService {
 
 	ApiResponse deleteJob(Long jobId);
 
+	List<JobResponseDto> getAllJobs();
+	
+	JobResponseDto getJobById(Long jobId);
 }

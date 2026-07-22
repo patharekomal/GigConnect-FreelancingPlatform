@@ -107,6 +107,28 @@ public class JobServiceImpl implements JobService{
 	            "Success",
 	            "Job deleted successfully");
 	}
+	@Override
+	public List<JobResponseDto> getAllJobs() {
+
+	    List<Job> jobs = jobRepo.findAll();
+	    List<JobResponseDto> jobList = new ArrayList<>();
+
+	    for (Job j : jobs) {
+	        jobList.add(mapper.map(j, JobResponseDto.class));
+	    }
+
+	    return jobList;
+	    
+	}
 	
+	@Override
+	public JobResponseDto getJobById(Long jobId) {
+
+	    Job job = jobRepo.findById(jobId)
+	            .orElseThrow(() ->
+	                    new ResourceNotFoundException("Job Not Found"));
+
+	    return mapper.map(job, JobResponseDto.class);
+	}
 
 }
