@@ -18,5 +18,7 @@ public class ReviewResponseDto {
     private String comment;
 
     private LocalDate reviewDate;
+    
+    private String freelancerName;
 
 }

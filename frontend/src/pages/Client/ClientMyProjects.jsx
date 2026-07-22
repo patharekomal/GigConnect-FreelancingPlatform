@@ -1,46 +1,76 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Sidebar from "../../components/Client/Sidebar";
-import { projects, users, jobs, messages, freelancerProfiles } from "../../data/dummyData";
-
-
+import {
+  projects,
+  users,
+  jobs,
+  messages,
+  freelancerProfiles,
+} from "../../data/dummyData";
 
 const CLIENT_ID = 2;
 
 function MyProjects() {
   const navigate = useNavigate();
+
   const [expandedProject, setExpandedProject] = useState(null);
   const [newMessage, setNewMessage] = useState("");
 
-  // Filter only this client's projects
-  const myProjects = projects.filter(p => p.client_id === CLIENT_ID);
+  const myProjects = projects.filter(
+    (p) => p.client_id === CLIENT_ID
+  );
 
-  // Get freelancer name by ID
-  const getFreelancer = (id) => users.find(u => u.user_id === id);
+  const getFreelancer = (id) =>
+    users.find((u) => u.user_id === id);
 
-  // Get job title by ID
-  const getJob = (id) => jobs.find(j => j.job_id === id);
+  const getJob = (id) =>
+    jobs.find((j) => j.job_id === id);
 
-  // Get project messages
-  const getProjectMessages = (projectId) => 
-    messages.filter(m => m.project_id === projectId);
+  const getProjectMessages = (projectId) =>
+    messages.filter(
+      (m) => m.project_id === projectId
+    );
 
-  // Get freelancer profile
-  const getFreelancerProfile = (id) => 
-    freelancerProfiles.find(p => p.freelancer_id === id);
+  const getFreelancerProfile = (id) =>
+    freelancerProfiles.find(
+      (p) => p.freelancer_id === id
+    );
 
-  // Badge style based on project status
   const statusStyle = (status) => {
-    if (status === "COMPLETED")   return { bg: "#E1F5EE", color: "#1D9E75" };
-    if (status === "SUBMITTED")   return { bg: "#fef9c3", color: "#ca8a04" };
-    if (status === "IN_PROGRESS") return { bg: "#dbeafe", color: "#2563eb" };
-    if (status === "CANCELLED")   return { bg: "#fee2e2", color: "#dc2626" };
-    return { bg: "#f1f5f9", color: "#64748b" };
+    if (status === "COMPLETED")
+      return {
+        bg: "#E1F5EE",
+        color: "#1D9E75",
+      };
+
+    if (status === "SUBMITTED")
+      return {
+        bg: "#FEF3C7",
+        color: "#B45309",
+      };
+
+    if (status === "IN_PROGRESS")
+      return {
+        bg: "#DBEAFE",
+        color: "#2563EB",
+      };
+
+    if (status === "CANCELLED")
+      return {
+        bg: "#FEE2E2",
+        color: "#DC2626",
+      };
+
+    return {
+      bg: "#F1F5F9",
+      color: "#64748B",
+    };
   };
 
-  const handleSendMessage = (projectId) => {
+  const handleSendMessage = () => {
     if (newMessage.trim()) {
-      console.log("Message sent:", newMessage);
+      console.log(newMessage);
       setNewMessage("");
     }
   };
@@ -48,209 +78,475 @@ function MyProjects() {
   return (
     <>
       <style>{`
-        body { background: #f8fafc !important; }
-        .sidebar { width: 220px; min-height: 100vh; position: sticky; top: 0; }
-        .nav-btn:hover { background: #f1f5f9 !important; }
-        .logo-green { color: #1D9E75; }
-        .text-green { color: #1D9E75 !important; }
-        .bg-green-light { background-color: #E1F5EE !important; }
-        .project-row:hover { background: #f8fafc; }
-        .view-btn:hover { background: linear-gradient(135deg, #198754, #157347) !important; }
-        .chat-container { max-height: 400px; overflow-y: auto; background: #f8fafc; border-radius: 8px; }
-        .message { padding: 8px 12px; margin: 4px 0; border-radius: 6px; font-size: 13px; }
-        .message.sent { background: #E1F5EE; color: #0f172a; margin-left: 20px; }
-        .message.received { background: #e5e7eb; color: #0f172a; margin-right: 20px; }
+        body{
+          background:#f8fafc !important;
+          margin:0;
+        }
+
+        .nav-btn:hover{
+          background:#f1f5f9!important;
+        }
+
+        .project-row:hover{
+          background:#f8fafc;
+        }
+
+        .view-btn:hover{
+          background:linear-gradient(135deg,#198754,#157347)!important;
+        }
+
+        .chat-container{
+          max-height:350px;
+          overflow-y:auto;
+          background:#f8fafc;
+          border-radius:10px;
+        }
+
+        .message{
+          padding:10px 14px;
+          border-radius:8px;
+          margin-bottom:10px;
+          font-size:13px;
+        }
+
+        .message.sent{
+          background:#E1F5EE;
+          margin-left:30px;
+        }
+
+        .message.received{
+          background:#e5e7eb;
+          margin-right:30px;
+        }
       `}</style>
 
-      <div className="d-flex">
+      <div>
 
-        {/* ── SIDEBAR COMPONENT ─────────────────────────────────────────── */}
         <Sidebar activePage="my-projects" />
-        <main className="flex-grow-1 p-4">
 
-          <div className="mb-4">
-            <h1 className="fw-bold mb-1" style={{ fontSize: "22px" }}>My Projects</h1>
-            <p className="text-muted mb-0" style={{ fontSize: "14px" }}>
-              {myProjects.length} project{myProjects.length !== 1 ? "s" : ""} in total
-            </p>
-          </div>
+        <main
+          style={{
+            marginLeft: "260px",
+            minHeight: "100vh",
+            padding: "35px",
+            background: "#f8fafc",
+          }}
+        >
+          <div
+            style={{
+              maxWidth: "1400px",
+              margin: "0 auto",
+            }}
+          >
 
-          {/* ── EMPTY STATE ────────────────────────────────────── */}
-          {myProjects.length === 0 ? (
-            <div className="bg-white border rounded-3 p-5 text-center">
-              <div style={{ fontSize: "40px", marginBottom: "12px" }}>🗂️</div>
-              <h5 className="fw-semibold mb-2">No projects yet</h5>
-              <p className="text-muted mb-3" style={{ fontSize: "14px" }}>
-                Projects are created when you accept a freelancer's bid.
-              </p>
-              <button
-                className="btn text-white fw-semibold rounded-3 px-4"
-                style={{ background: "linear-gradient(135deg, #198754, #157347)", fontSize: "13px" }}
-                onClick={() => navigate("/my-jobs")}
+            <div className="mb-4">
+
+              <h2
+                className="fw-bold mb-2"
+                style={{
+                  fontSize: "24px",
+                }}
               >
-                View My Jobs
-              </button>
+                My Projects
+              </h2>
+
+              <p className="text-muted">
+                {myProjects.length} Project
+                {myProjects.length !== 1
+                  ? "s"
+                  : ""}
+              </p>
+
             </div>
 
-          ) : (
+            {myProjects.length === 0 ? (
 
-            /* ── PROJECTS TABLE ──────────────────────────────────
-               Each row is one project. Click "View" to go to ProjectPage. */
-            <div className="bg-white border rounded-3 overflow-hidden">
-              {myProjects.map((project, index) => {
-                const freelancer = getFreelancer(project.freelancer_id);
-                const job = getJob(project.job_id);
-                const badge = statusStyle(project.status);
-                const projectMessages = getProjectMessages(project.project_id);
-                const isExpanded = expandedProject === project.project_id;
+              <div className="bg-white border rounded-3 p-5 text-center">
 
-                return (
-                  <div key={project.project_id}>
-                    <table className="table table-hover mb-0">
-                      {index === 0 && (
-                        <thead style={{ background: "#f8fafc" }}>
-                          <tr>
-                            <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>#</th>
-                            <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>JOB TITLE</th>
-                            <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>FREELANCER</th>
-                            <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>AMOUNT</th>
-                            <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>STATUS</th>
-                            <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>ACTION</th>
-                          </tr>
-                        </thead>
-                      )}
-                      <tbody>
-                        <tr className="project-row align-middle">
+                <div
+                  style={{
+                    fontSize: "45px",
+                  }}
+                >
+                  🗂️
+                </div>
 
-                          <td className="px-4 py-3 text-muted" style={{ fontSize: "13px" }}>
+                <h5 className="fw-bold mt-3">
+                  No Projects Yet
+                </h5>
+
+                <p className="text-muted">
+                  Projects will appear here after
+                  accepting bids.
+                </p>
+
+                <button
+                  className="btn text-white"
+                  style={{
+                    background:
+                      "linear-gradient(135deg,#198754,#157347)",
+                  }}
+                  onClick={() =>
+                    navigate("/my-jobs")
+                  }
+                >
+                  View My Jobs
+                </button>
+
+              </div>
+
+            ) : (
+
+              <div
+                className="bg-white rounded-3 border"
+                style={{
+                  overflowX: "auto",
+                }}
+              >
+
+                <table
+                  className="table table-hover mb-0"
+                  style={{
+                    minWidth: "1100px",
+                  }}
+                >
+
+                  <thead
+                    style={{
+                      background: "#f8fafc",
+                    }}
+                  >
+                    <tr>
+
+                      <th className="px-4 py-3">
+                        #
+                      </th>
+
+                      <th className="px-4 py-3">
+                        JOB TITLE
+                      </th>
+
+                      <th className="px-4 py-3">
+                        FREELANCER
+                      </th>
+
+                      <th className="px-4 py-3">
+                        AMOUNT
+                      </th>
+
+                      <th className="px-4 py-3">
+                        STATUS
+                      </th>
+
+                      <th className="px-4 py-3">
+                        ACTION
+                      </th>
+
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                                      {myProjects.map((project, index) => {
+                    const freelancer = getFreelancer(
+                      project.freelancer_id
+                    );
+
+                    const job = getJob(
+                      project.job_id
+                    );
+
+                    const badge = statusStyle(
+                      project.status
+                    );
+
+                    const projectMessages =
+                      getProjectMessages(
+                        project.project_id
+                      );
+
+                    const isExpanded =
+                      expandedProject ===
+                      project.project_id;
+
+                    return (
+                      <>
+                        <tr
+                          key={project.project_id}
+                          className="project-row align-middle"
+                        >
+                          {/* Row Number */}
+                          <td className="px-4 py-3">
                             {index + 1}
                           </td>
 
-                          {/* Job title */}
-                          <td className="px-4 py-3">
-                            <div className="fw-semibold" style={{ fontSize: "14px" }}>
-                              {job?.title || "—"}
+                          {/* Job Title */}
+                          <td
+                            className="px-4 py-3"
+                            style={{ width: "35%" }}
+                          >
+                            <div
+                              className="fw-semibold"
+                              style={{
+                                fontSize: "14px",
+                              }}
+                            >
+                              {job?.title || "N/A"}
                             </div>
-                            <div className="text-muted" style={{ fontSize: "11px" }}>
-                              #PRJ-{String(project.project_id).padStart(3, "0")}
+
+                            <div
+                              className="text-muted"
+                              style={{
+                                fontSize: "12px",
+                              }}
+                            >
+                              #PRJ-
+                              {String(
+                                project.project_id
+                              ).padStart(3, "0")}
                             </div>
                           </td>
 
-                          {/* Freelancer avatar + name */}
+                          {/* Freelancer */}
                           <td className="px-4 py-3">
                             <div className="d-flex align-items-center gap-2">
+
                               <div
-                                className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold flex-shrink-0"
-                                style={{ width: "28px", height: "28px", background: "linear-gradient(135deg, #198754, #157347)", fontSize: "11px" }}
+                                className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
+                                style={{
+                                  width: "32px",
+                                  height: "32px",
+                                  background:
+                                    "linear-gradient(135deg,#198754,#157347)",
+                                }}
                               >
-                                {freelancer?.name.charAt(0)}
+                                {freelancer?.name?.charAt(
+                                  0
+                                )}
                               </div>
-                              <span style={{ fontSize: "13px" }}>{freelancer?.name}</span>
+
+                              <span>
+                                {freelancer?.name}
+                              </span>
+
                             </div>
                           </td>
 
-                          {/* Agreed amount */}
-                          <td className="px-4 py-3 fw-semibold" style={{ fontSize: "14px" }}>
-                            ₹{project.agreed_amount.toLocaleString()}
+                          {/* Amount */}
+                          <td className="px-4 py-3 fw-semibold">
+                            ₹
+                            {project.agreed_amount
+                              ?.toLocaleString?.() ??
+                              project.agreed_amount}
                           </td>
 
-                          {/* Status badge */}
+                          {/* Status */}
                           <td className="px-4 py-3">
+
                             <span
-                              className="badge rounded-pill px-3 py-1 fw-semibold"
-                              style={{ background: badge.bg, color: badge.color, fontSize: "11px" }}
+                              className="badge rounded-pill px-3 py-2"
+                              style={{
+                                background:
+                                  badge.bg,
+                                color:
+                                  badge.color,
+                              }}
                             >
                               {project.status}
                             </span>
+
                           </td>
 
-                          {/* View button + Chat toggle */}
+                          {/* Action */}
                           <td className="px-4 py-3">
-                            <div className="d-flex gap-2 align-items-center">
+
+                            <div className="d-flex gap-2">
+
                               <button
-                                className="view-btn btn text-white rounded-3 px-2 py-1"
-                                style={{ background: "linear-gradient(135deg, #198754, #157347)", fontSize: "12px", fontWeight: "600" }}
-                                onClick={() => navigate(`/project/${project.project_id}`)}
+                                className="btn text-white view-btn"
+                                style={{
+                                  background:
+                                    "linear-gradient(135deg,#198754,#157347)",
+                                  fontSize:
+                                    "12px",
+                                }}
+                                onClick={() =>
+                                  navigate(
+                                    `/project/${project.project_id}`
+                                  )
+                                }
                               >
                                 View
                               </button>
+
                               <button
-                                className="btn btn-sm rounded-3"
-                                style={{ background: "#E1F5EE", color: "#1D9E75", fontSize: "12px" }}
-                                onClick={() => setExpandedProject(isExpanded ? null : project.project_id)}
+                                className="btn"
+                                style={{
+                                  background:
+                                    "#E1F5EE",
+                                  color:
+                                    "#1D9E75",
+                                  fontSize:
+                                    "12px",
+                                }}
+                                onClick={() =>
+                                  setExpandedProject(
+                                    isExpanded
+                                      ? null
+                                      : project.project_id
+                                  )
+                                }
                               >
-                                {isExpanded ? "✕" : "💬"}
+                                {isExpanded
+                                  ? "✕"
+                                  : "💬"}
                               </button>
+
                             </div>
+
                           </td>
-
                         </tr>
-                      </tbody>
-                    </table>
 
-                    {/* ── CHAT SECTION (expandable) ────────────────────── */}
-                    {isExpanded && (
-                      <div className="px-4 py-4 border-top" style={{ background: "#ffffff" }}>
-                        <h5 className="fw-semibold mb-3" style={{ fontSize: "14px" }}>
-                          Chat with {freelancer?.name}
-                        </h5>
+                        {isExpanded && (
+                          <tr>
 
-                        {/* Messages container */}
-                        <div className="chat-container p-3 mb-3">
-                          {projectMessages.length === 0 ? (
-                            <div className="text-center text-muted" style={{ fontSize: "12px", padding: "20px 0" }}>
-                              No messages yet. Start a conversation!
-                            </div>
-                          ) : (
-                            projectMessages.map((msg) => (
-                              <div
-                                key={msg.message_id}
-                                className={`message ${msg.sender_id === 2 ? "sent" : "received"}`}
-                              >
-                                <strong style={{ fontSize: "11px" }}>{msg.sender_name}</strong>
-                                <div style={{ marginTop: "4px" }}>{msg.message}</div>
-                                <div style={{ fontSize: "10px", marginTop: "4px", opacity: 0.7 }}>
-                                  {msg.time}
-                                </div>
+                            <td
+                              colSpan="6"
+                              className="p-4"
+                              style={{
+                                background:
+                                  "#fff",
+                              }}
+                            >
+                              <h6 className="fw-bold mb-3">
+                                Chat with{" "}
+                                {freelancer?.name}
+                              </h6>
+
+                              <div className="chat-container p-3 mb-3">
+
+                                {projectMessages.length ===
+                                0 ? (
+
+                                  <div className="text-center text-muted py-4">
+                                    No messages
+                                    yet.
+                                  </div>
+
+                                ) : (
+
+                                  projectMessages.map(
+                                    (msg) => (
+                                      <div
+                                        key={
+                                          msg.message_id
+                                        }
+                                        className={`message ${
+                                          msg.sender_id ===
+                                          CLIENT_ID
+                                            ? "sent"
+                                            : "received"
+                                        }`}
+                                      >
+                                        <strong>
+                                          {
+                                            msg.sender_name
+                                          }
+                                        </strong>
+
+                                        <div className="mt-1">
+                                          {
+                                            msg.message
+                                          }
+                                        </div>
+
+                                        <div
+                                          className="mt-1"
+                                          style={{
+                                            fontSize:
+                                              "11px",
+                                            opacity:
+                                              ".7",
+                                          }}
+                                        >
+                                          {
+                                            msg.time
+                                          }
+                                        </div>
+                                      </div>
+                                    )
+                                  )
+
+                                )}
+
                               </div>
-                            ))
-                          )}
-                        </div>
 
-                        {/* Message input */}
-                        <div className="d-flex gap-2">
-                          <input
-                            type="text"
-                            className="form-control rounded-3"
-                            placeholder="Type your message..."
-                            value={newMessage}
-                            onChange={(e) => setNewMessage(e.target.value)}
-                            onKeyPress={(e) => {
-                              if (e.key === "Enter") {
-                                handleSendMessage(project.project_id);
-                              }
-                            }}
-                            style={{ fontSize: "13px" }}
-                          />
-                          <button
-                            className="btn text-white rounded-3 px-4"
-                            style={{ background: "linear-gradient(135deg, #198754, #157347)", fontSize: "13px" }}
-                            onClick={() => handleSendMessage(project.project_id)}
-                          >
-                            Send
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+                              <div className="d-flex gap-2">
+
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Type your message..."
+                                  value={
+                                    newMessage
+                                  }
+                                  onChange={(
+                                    e
+                                  ) =>
+                                    setNewMessage(
+                                      e.target
+                                        .value
+                                    )
+                                  }
+                                  onKeyDown={(
+                                    e
+                                  ) => {
+                                    if (
+                                      e.key ===
+                                      "Enter"
+                                    ) {
+                                      handleSendMessage();
+                                    }
+                                  }}
+                                />
+
+                                <button
+                                  className="btn text-white"
+                                  style={{
+                                    background:
+                                      "linear-gradient(135deg,#198754,#157347)",
+                                  }}
+                                  onClick={
+                                    handleSendMessage
+                                  }
+                                >
+                                  Send
+                                </button>
+
+                              </div>
+
+                            </td>
+
+                          </tr>
+                        )}
+                      </>
+                    );
+                  })}
+                                  </tbody>
+
+              </table>
+
             </div>
+
           )}
 
+          </div>
+
         </main>
+
       </div>
+
     </>
+
   );
 }
 

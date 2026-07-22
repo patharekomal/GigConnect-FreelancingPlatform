@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 function Register() {
   const [selectedRole, setSelectedRole] = useState("Client");
@@ -143,6 +144,7 @@ function Register() {
           </Link>
         </p>
       </div>
+      
     </div>
   );
 }

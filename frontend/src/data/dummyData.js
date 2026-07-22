@@ -78,34 +78,64 @@ export const users = [
 
 export const jobs = [
   {
+    job_id: 1,
+    client_id: 1,
+    title: "Java Backend Developer",
+    description: "Develop REST APIs using Spring Boot.",
+    budget: 30000,
+    deadline: "2026-08-15",
+    status: "OPEN"
+  },
+
+  {
     job_id: 2,
+    client_id: 2,
     title: "Spring Boot Backend Developer",
     description: "Build secure REST APIs using Spring Boot.",
+    budget: 45000,
+    deadline: "2026-08-20",
+    status: "OPEN"
   },
 
   {
     job_id: 3,
+    client_id: 2,
     title: "React Dashboard Development",
     description: "Develop an admin dashboard using React and Bootstrap.",
+    budget: 25000,
+    deadline: "2026-08-18",
+    status: "IN_PROGRESS"
   },
 
   {
     job_id: 4,
+    client_id: 3,
     title: "Hotel Booking Website",
     description: "Create booking portal with responsive UI.",
+    budget: 50000,
+    deadline: "2026-08-25",
+    status: "OPEN"
   },
 
   {
     job_id: 5,
+    client_id: 4,
     title: "CMS System",
     description: "Develop CMS for school management.",
+    budget: 38000,
+    deadline: "2026-08-30",
+    status: "CLOSED"
   },
 
   {
     job_id: 6,
+    client_id: 5,
     title: "Portfolio Website",
     description: "Build personal portfolio website.",
-  },
+    budget: 12000,
+    deadline: "2026-09-05",
+    status: "OPEN"
+  }
 ];
 
 // BIDS
@@ -113,7 +143,7 @@ export const jobs = [
 export const bids = [
   {
     bid_id: 1,
-    job_id: 1,
+    job_id: 2,
     freelancer_id: 6,
     amount: 14000,
     duration_days: 10,

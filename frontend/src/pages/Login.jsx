@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { users } from "../data/dummyData";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -140,6 +141,7 @@ function Login() {
           </Link>
         </p>
       </div>
+      
     </div>
   );
 }

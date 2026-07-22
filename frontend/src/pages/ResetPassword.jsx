@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 function ResetPassword() {
   const [password, setPassword] = useState("");
@@ -101,6 +102,7 @@ function ResetPassword() {
           </Link>
         </p>
       </div>
+      <Footer />
     </div>
   );
 }
