@@ -32,6 +32,16 @@ import Chat from "./pages/Freelancer/Chat";
 import SubmitWork from "./pages/Freelancer/SubmitWork";
 import Reviews from "./pages/Freelancer/Reviews";
 import Profile from "./pages/Freelancer/Profile";
+import ClientProfileSetup from "./pages/ClientProfileSetup";
+import FreelancerProfileSetup from "./pages/FreelancerProfileSetup";
+import EditFreelancerProfile from "./pages/Freelancer/EditFreelancerProfile";
+import EditClientProfile from "./pages/Client/EditClientProfile";
+
+
+
+
+
+
 
 
 function App() {
@@ -48,8 +58,9 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password"  element={<ResetPassword />} />
-        {/* <Route path="/client" element={<ClientDashboard />} />
-        <Route path="/freelancer" element={<FreelancerDashboard />} /> */}
+        <Route path="/client-profile-setup" element={<ClientProfileSetup />} />
+        <Route path="/freelancer-profile-setup" element={<FreelancerProfileSetup />} /> 
+    
 
         <Route path="/client" element={<ClientDashboard />} />
          <Route path="/post-job" element={<PostJob />} />
@@ -59,7 +70,12 @@ function App() {
          <Route path="/project/:projectId" element={<ProjectPage />} />
          <Route path="/payment" element={<Payment />} />
          <Route path="/client-profile" element={<ClientProfile />} />
+         <Route path="/edit-client-profile" element={<EditClientProfile />}
+/>
          
+
+
+
          {/* Freelancer  */}
     <Route path='/freelancer' element={<FreelancerDashboard/>}/>
      <Route path='/browseJobs' element={<BrowseJobs/>} />
@@ -70,6 +86,7 @@ function App() {
      <Route path="/chat/:projectId" element={<Chat />}/>
      <Route path="/reviews" element={<Reviews/>}/>
      <Route path="/profile" element={<Profile/>}/>
+     <Route path="/freelancer/edit-profile" element={<EditFreelancerProfile />} />
 
       </Routes>
 

@@ -1,8 +1,10 @@
 import Sidebar from "../../components/Freelancer/Sidebar";
 import { freelancerProfiles } from "../../data/dummyData";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
 
+   const navigate = useNavigate();
     const profile =
         freelancerProfiles.find(
             p => p.freelancer_id === 6
@@ -53,9 +55,12 @@ function Profile() {
                 <div className="text-end">
                   <h4 className="text-warning mb-1">⭐ {profile.rating}</h4>
 
-                  <button className="btn btn-outline-success">
-                    ✏ Edit Profile
-                  </button>
+                  <button
+                  className="btn btn-outline-success"
+                  onClick={() => navigate("/freelancer/edit-profile")}
+                >
+                  ✏ Edit Profile
+                </button>
                 </div>
               </div>
               <hr />
