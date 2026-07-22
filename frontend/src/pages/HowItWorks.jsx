@@ -1,5 +1,6 @@
 
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 function HowItWorks() {
   const steps = [
@@ -115,7 +116,7 @@ function HowItWorks() {
           </button>
         </div>
       </section>
-
+          <Footer />
     </div>
   );
 }

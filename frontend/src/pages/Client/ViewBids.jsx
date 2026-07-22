@@ -3,46 +3,31 @@ import { useState } from "react";
 import Sidebar from "../../components/Client/Sidebar";
 import { bids, users, freelancerProfiles } from "../../data/dummyData";
 
-// ViewBids.jsx
-// Shows all bids received for a specific job.
-// jobId comes from the URL — e.g. /bids/1
-// jobs prop from App.jsx to get the job title and budget
-// bids and users are from dummyData
-
 function ViewBids({ jobs }) {
   const navigate = useNavigate();
-  const [selectedProfile, setSelectedProfile] = useState(null);
-
-  // ── Get jobId from the URL (/bids/1 → jobId = "1") ────────
-  // useParams reads the :jobId part of the route
   const { jobId } = useParams();
 
-  // Find the job this page is about
-  const job = jobs.find(j => j.job_id === parseInt(jobId));
+  const [selectedProfile, setSelectedProfile] = useState(null);
 
-  // Get all bids for this job only
-  const jobBids = bids.filter(b => b.job_id === parseInt(jobId));
+  const job = jobs.find((j) => j.job_id === parseInt(jobId));
+  const jobBids = bids.filter((b) => b.job_id === parseInt(jobId));
 
-  // Get freelancer name by their user_id
-  const getFreelancer = (freelancerId) =>
-    users.find(u => u.user_id === freelancerId);
+  const getFreelancer = (id) =>
+    users.find((u) => u.user_id === id);
 
-  // Get freelancer profile
-  const getFreelancerProfile = (freelancerId) =>
-    freelancerProfiles.find(p => p.freelancer_id === freelancerId);
+  const getFreelancerProfile = (id) =>
+    freelancerProfiles.find((p) => p.freelancer_id === id);
 
-  // Badge color based on bid status
   const statusBadge = (status) => {
     if (status === "ACCEPTED") return "bg-success";
     if (status === "REJECTED") return "bg-danger";
-    return "bg-warning text-dark";   // PENDING
+    return "bg-warning text-dark";
   };
 
-  // If job not found — safety check
   if (!job) {
     return (
-      <div className="p-4 text-center text-muted">
-        Job not found. <span className="text-decoration-underline" style={{ cursor: "pointer" }} onClick={() => navigate("/my-jobs")}>Go back</span>
+      <div className="p-5 text-center">
+        Job not found.
       </div>
     );
   }
@@ -50,163 +35,329 @@ function ViewBids({ jobs }) {
   return (
     <>
       <style>{`
-        body { background: #f8fafc !important; }
-        .sidebar { width: 220px; min-height: 100vh; position: sticky; top: 0; }
-        .nav-btn:hover { background: #f1f5f9 !important; }
-        .logo-green { color: #1D9E75; }
-        .text-green { color: #1D9E75 !important; }
-        .bg-green-light { background-color: #E1F5EE !important; }
-        .bid-row:hover { background: #f8fafc; }
-        .select-btn:hover { background: linear-gradient(135deg, #198754, #157347) !important; }
-        .freelancer-link { cursor: pointer; color: #1D9E75; text-decoration: none; }
-        .freelancer-link:hover { text-decoration: underline; }
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-        .modal-content { background: white; border-radius: 12px; padding: 32px; max-width: 500px; width: 90%; }
-        .skill-badge { display: inline-block; background: #E1F5EE; color: #1D9E75; padding: 6px 12px; border-radius: 20px; font-size: 12px; margin: 4px; }
-        .rating-star { color: #fbbf24; }
+        body{
+          background:#f8fafc !important;
+          margin:0;
+        }
+
+        .nav-btn:hover{
+          background:#f1f5f9 !important;
+        }
+
+        .logo-green{
+          color:#1D9E75;
+        }
+
+        .text-green{
+          color:#1D9E75 !important;
+        }
+
+        .bg-green-light{
+          background:#E1F5EE !important;
+        }
+
+        .bid-row:hover{
+          background:#f8fafc;
+        }
+
+        .select-btn:hover{
+          background:linear-gradient(135deg,#198754,#157347)!important;
+        }
+
+        .freelancer-link{
+          cursor:pointer;
+          color:#1D9E75;
+        }
+
+        .freelancer-link:hover{
+          text-decoration:underline;
+        }
+
+        .modal-overlay{
+          position:fixed;
+          inset:0;
+          background:rgba(0,0,0,.45);
+          display:flex;
+          justify-content:center;
+          align-items:center;
+          z-index:999;
+        }
+
+        .modal-content{
+          background:white;
+          width:90%;
+          max-width:520px;
+          border-radius:14px;
+          padding:30px;
+        }
+
+        .skill-badge{
+          display:inline-block;
+          margin:4px;
+          padding:6px 12px;
+          background:#E1F5EE;
+          color:#1D9E75;
+          border-radius:20px;
+          font-size:12px;
+        }
+
+        .rating-star{
+          color:#fbbf24;
+        }
+
       `}</style>
 
-      <div className="d-flex">
+      <div>
 
-        {/* ── SIDEBAR COMPONENT ─────────────────────────────────────────── */}
         <Sidebar activePage="my-jobs" />
 
-        {/* ── MAIN CONTENT ────────────────────────────────────── */}
-        <main className="flex-grow-1 p-4">
+        <main
+          style={{
+            marginLeft: "260px",
+            minHeight: "100vh",
+            padding: "35px",
+            background: "#f8fafc",
+          }}
+        >
+          <div
+            style={{
+              maxWidth: "1400px",
+              margin: "0 auto",
+            }}
+          >
 
-          {/* Back button + page heading */}
-          <div className="mb-4">
             <button
-              className="btn btn-link text-muted p-0 mb-3 text-decoration-none d-flex align-items-center gap-1"
-              style={{ fontSize: "13px" }}
+              className="btn btn-link text-muted p-0 mb-3 text-decoration-none"
               onClick={() => navigate("/my-jobs")}
             >
               ← Back to My Jobs
             </button>
-            <h1 className="fw-bold mb-1" style={{ fontSize: "22px" }}>{job.title}</h1>
-            <div className="d-flex align-items-center gap-3 flex-wrap">
-              <span className="text-muted" style={{ fontSize: "14px" }}>
-                Budget: <strong className="text-dark">₹{job.budget.toLocaleString()}</strong>
+
+            <h2
+              className="fw-bold mb-2"
+              style={{ fontSize: "24px" }}
+            >
+              {job.title}
+            </h2>
+
+            <div className="d-flex gap-4 flex-wrap mb-4">
+
+              <span className="text-muted">
+                Budget :
+                <strong className="text-dark ms-1">
+                  ₹{job.budget?.toLocaleString?.() ?? job.budget}
+                </strong>
               </span>
-              <span className="text-muted" style={{ fontSize: "14px" }}>
-                Deadline: <strong className="text-dark">{job.deadline}</strong>
+
+              <span className="text-muted">
+                Deadline :
+                <strong className="text-dark ms-1">
+                  {job.deadline}
+                </strong>
               </span>
-              <span className="text-muted" style={{ fontSize: "14px" }}>
-                {jobBids.length} bid{jobBids.length !== 1 ? "s" : ""} received
+
+              <span className="text-muted">
+                {jobBids.length} Bid
+                {jobBids.length !== 1 ? "s" : ""}
               </span>
+
             </div>
-          </div>
 
-          {/* ── NO BIDS STATE ──────────────────────────────────── */}
-          {jobBids.length === 0 ? (
-            <div className="bg-white border rounded-3 p-5 text-center">
-              <div style={{ fontSize: "40px", marginBottom: "12px" }}>📭</div>
-              <h5 className="fw-semibold mb-2">No bids yet</h5>
-              <p className="text-muted" style={{ fontSize: "14px" }}>
-                Freelancers haven't applied to this job yet. Check back soon.
-              </p>
-            </div>
+            {jobBids.length === 0 ? (
 
-          ) : (
+              <div className="bg-white rounded-3 border p-5 text-center">
 
-            /* ── BIDS TABLE ───────────────────────────────────────
-               Each row = one freelancer's bid
-               Columns: freelancer name, bid amount, duration, proposal preview, status, action */
-            <div className="bg-white border rounded-3 overflow-hidden">
-              <table className="table table-hover mb-0">
-                <thead style={{ background: "#f8fafc" }}>
-                  <tr>
-                    <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>#</th>
-                    <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>FREELANCER</th>
-                    <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>BID AMOUNT</th>
-                    <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>DURATION</th>
-                    <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>PROPOSAL</th>
-                    <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>STATUS</th>
-                    <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>ACTION</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {jobBids.map((bid, index) => {
+                <div
+                  style={{
+                    fontSize: "45px",
+                  }}
+                >
+                  📭
+                </div>
+
+                <h5 className="fw-bold mt-3">
+                  No bids received yet
+                </h5>
+
+                <p className="text-muted">
+                  Freelancers haven't applied yet.
+                </p>
+
+              </div>
+
+            ) : (
+
+              <div
+                className="bg-white rounded-3 border"
+                style={{
+                  overflowX: "auto",
+                }}
+              >
+
+                <table
+                  className="table table-hover mb-0"
+                  style={{
+                    minWidth: "1100px",
+                  }}
+                >
+
+                  <thead style={{ background: "#f8fafc" }}>
+
+                    <tr>
+
+                      <th className="px-4 py-3">#</th>
+
+                      <th className="px-4 py-3">
+                        FREELANCER
+                      </th>
+
+                      <th className="px-4 py-3">
+                        BID
+                      </th>
+
+                      <th className="px-4 py-3">
+                        DURATION
+                      </th>
+
+                      <th className="px-4 py-3">
+                        PROPOSAL
+                      </th>
+
+                      <th className="px-4 py-3">
+                        STATUS
+                      </th>
+
+                      <th className="px-4 py-3">
+                        ACTION
+                      </th>
+
+                    </tr>
+
+                  </thead>
+
+                  <tbody>
+                                      {jobBids.map((bid, index) => {
                     const freelancer = getFreelancer(bid.freelancer_id);
-                    return (
-                      <tr key={bid.bid_id} className="bid-row align-middle">
 
-                        {/* Row number */}
-                        <td className="px-4 py-3 text-muted" style={{ fontSize: "13px" }}>
+                    return (
+                      <tr
+                        key={bid.bid_id}
+                        className="bid-row align-middle"
+                      >
+                        {/* Row Number */}
+                        <td className="px-4 py-3">
                           {index + 1}
                         </td>
 
-                        {/* Freelancer name — avatar initial + name (CLICKABLE) */}
+                        {/* Freelancer */}
                         <td className="px-4 py-3">
-                          <div 
+                          <div
                             className="d-flex align-items-center gap-2"
-                            onClick={() => setSelectedProfile(bid.freelancer_id)}
                             style={{ cursor: "pointer" }}
+                            onClick={() =>
+                              setSelectedProfile(
+                                bid.freelancer_id
+                              )
+                            }
                           >
                             <div
-                              className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold flex-shrink-0"
-                              style={{ width: "32px", height: "32px", background: "linear-gradient(135deg, #198754, #157347)", fontSize: "12px" }}
+                              className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
+                              style={{
+                                width: "34px",
+                                height: "34px",
+                                background:
+                                  "linear-gradient(135deg,#198754,#157347)",
+                              }}
                             >
-                              {freelancer?.name.charAt(0)}
+                              {freelancer?.name?.charAt(0)}
                             </div>
-                            <div className="fw-semibold freelancer-link" style={{ fontSize: "14px" }}>
+
+                            <div
+                              className="fw-semibold freelancer-link"
+                            >
                               {freelancer?.name}
                             </div>
                           </div>
                         </td>
 
-                        {/* Bid amount */}
-                        <td className="px-4 py-3 fw-semibold" style={{ fontSize: "14px" }}>
-                          ₹{bid.amount.toLocaleString()}
+                        {/* Bid */}
+                        <td className="px-4 py-3 fw-semibold">
+                          ₹
+                          {bid.amount
+                            ?.toLocaleString?.() ??
+                            bid.amount}
                         </td>
 
-                        {/* Duration in days */}
-                        <td className="px-4 py-3 text-muted" style={{ fontSize: "13px" }}>
+                        {/* Duration */}
+                        <td className="px-4 py-3 text-muted">
                           {bid.duration_days} days
                         </td>
 
-                        {/* Proposal — truncated to one line, full text on hover via title */}
-                        <td className="px-4 py-3" style={{ maxWidth: "220px" }}>
+                        {/* Proposal */}
+                        <td
+                          className="px-4 py-3"
+                          style={{
+                            width: "35%",
+                          }}
+                        >
                           <div
-                            className="text-muted text-truncate"
-                            style={{ fontSize: "12px", maxWidth: "200px" }}
-                            title={bid.proposal}   // shows full text on hover
+                            className="text-muted"
+                            style={{
+                              fontSize: "12px",
+                            }}
                           >
                             {bid.proposal}
                           </div>
                         </td>
 
-                        {/* Status badge */}
+                        {/* Status */}
                         <td className="px-4 py-3">
                           <span
-                            className={`badge rounded-pill px-3 py-1 ${statusBadge(bid.status)}`}
-                            style={{ fontSize: "11px" }}
+                            className={`badge rounded-pill px-3 py-1 ${statusBadge(
+                              bid.status
+                            )}`}
                           >
                             {bid.status}
                           </span>
                         </td>
 
-                        {/* Select button — only show if bid is still PENDING */}
+                        {/* Action */}
                         <td className="px-4 py-3">
+
                           {bid.status === "PENDING" ? (
+
                             <button
-                              className="select-btn btn text-white rounded-3 px-3 py-1"
-                              style={{ background: "linear-gradient(135deg, #198754, #157347)", fontSize: "12px", fontWeight: "600" }}
+                              className="btn text-white select-btn"
+                              style={{
+                                background:
+                                  "linear-gradient(135deg,#198754,#157347)",
+                                fontSize: "12px",
+                                fontWeight: "600",
+                              }}
                               onClick={() => {
-                                alert(`${freelancer?.name} selected! Project will be created. (dummy)`);
+                                alert(
+                                  `${freelancer?.name} selected!`
+                                );
+
                                 navigate("/project/1");
                               }}
                             >
                               ✓ Select
                             </button>
-                          ) : (
-                            // If already accepted or rejected — show disabled label
-                            <span className="text-muted" style={{ fontSize: "12px" }}>
-                              {bid.status === "ACCEPTED" ? "✓ Hired" : "✗ Rejected"}
-                            </span>
-                          )}
-                        </td>
 
+                          ) : (
+
+                            <span className="text-muted">
+
+                              {bid.status === "ACCEPTED"
+                                ? "✓ Hired"
+                                : "✗ Rejected"}
+
+                            </span>
+
+                          )}
+
+                        </td>
                       </tr>
                     );
                   })}
@@ -215,230 +366,154 @@ function ViewBids({ jobs }) {
             </div>
           )}
 
-        </main>
-      </div>      <div className="d-flex">
-
-        {/* ── SIDEBAR COMPONENT ─────────────────────────────────────────── */}
-        <Sidebar activePage="my-jobs" />
-
-        {/* ── MAIN CONTENT ────────────────────────────────────── */}
-        <main className="flex-grow-1 p-4">
-
-          {/* Back button + page heading */}
-          <div className="mb-4">
-            <button
-              className="btn btn-link text-muted p-0 mb-3 text-decoration-none d-flex align-items-center gap-1"
-              style={{ fontSize: "13px" }}
-              onClick={() => navigate("/my-jobs")}
-            >
-              ← Back to My Jobs
-            </button>
-            <h1 className="fw-bold mb-1" style={{ fontSize: "22px" }}>{job.title}</h1>
-            <div className="d-flex align-items-center gap-3 flex-wrap">
-              <span className="text-muted" style={{ fontSize: "14px" }}>
-                Budget: <strong className="text-dark">₹{job.budget.toLocaleString()}</strong>
-              </span>
-              <span className="text-muted" style={{ fontSize: "14px" }}>
-                Deadline: <strong className="text-dark">{job.deadline}</strong>
-              </span>
-              <span className="text-muted" style={{ fontSize: "14px" }}>
-                {jobBids.length} bid{jobBids.length !== 1 ? "s" : ""} received
-              </span>
-            </div>
           </div>
-
-          {/* ── NO BIDS STATE ──────────────────────────────────── */}
-          {jobBids.length === 0 ? (
-            <div className="bg-white border rounded-3 p-5 text-center">
-              <div style={{ fontSize: "40px", marginBottom: "12px" }}>📭</div>
-              <h5 className="fw-semibold mb-2">No bids yet</h5>
-              <p className="text-muted" style={{ fontSize: "14px" }}>
-                Freelancers haven't applied to this job yet. Check back soon.
-              </p>
-            </div>
-
-          ) : (
-
-            /* ── BIDS TABLE ───────────────────────────────────────
-               Each row = one freelancer's bid
-               Columns: freelancer name, bid amount, duration, proposal preview, status, action */
-            <div className="bg-white border rounded-3 overflow-hidden">
-              <table className="table table-hover mb-0">
-                <thead style={{ background: "#f8fafc" }}>
-                  <tr>
-                    <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>#</th>
-                    <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>FREELANCER</th>
-                    <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>BID AMOUNT</th>
-                    <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>DURATION</th>
-                    <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>PROPOSAL</th>
-                    <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>STATUS</th>
-                    <th className="px-4 py-3 text-muted fw-semibold border-0" style={{ fontSize: "12px" }}>ACTION</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {jobBids.map((bid, index) => {
-                    const freelancer = getFreelancer(bid.freelancer_id);
-                    return (
-                      <tr key={bid.bid_id} className="bid-row align-middle">
-
-                        {/* Row number */}
-                        <td className="px-4 py-3 text-muted" style={{ fontSize: "13px" }}>
-                          {index + 1}
-                        </td>
-
-                        {/* Freelancer name — avatar initial + name */}
-                        <td className="px-4 py-3">
-                          <div className="d-flex align-items-center gap-2">
-                            <div
-                              className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold flex-shrink-0"
-                              style={{ width: "32px", height: "32px", background: "linear-gradient(135deg, #198754, #157347)", fontSize: "12px" }}
-                            >
-                              {freelancer?.name.charAt(0)}
-                            </div>
-                            <div className="fw-semibold" style={{ fontSize: "14px" }}>
-                              {freelancer?.name}
-                            </div>
-                          </div>
-                        </td>
-
-                        {/* Bid amount */}
-                        <td className="px-4 py-3 fw-semibold" style={{ fontSize: "14px" }}>
-                          ₹{bid.amount.toLocaleString()}
-                        </td>
-
-                        {/* Duration in days */}
-                        <td className="px-4 py-3 text-muted" style={{ fontSize: "13px" }}>
-                          {bid.duration_days} days
-                        </td>
-
-                        {/* Proposal — truncated to one line, full text on hover via title */}
-                        <td className="px-4 py-3" style={{ maxWidth: "220px" }}>
-                          <div
-                            className="text-muted text-truncate"
-                            style={{ fontSize: "12px", maxWidth: "200px" }}
-                            title={bid.proposal}   // shows full text on hover
-                          >
-                            {bid.proposal}
-                          </div>
-                        </td>
-
-                        {/* Status badge */}
-                        <td className="px-4 py-3">
-                          <span
-                            className={`badge rounded-pill px-3 py-1 ${statusBadge(bid.status)}`}
-                            style={{ fontSize: "11px" }}
-                          >
-                            {bid.status}
-                          </span>
-                        </td>
-
-                        {/* Select button — only show if bid is still PENDING */}
-                        <td className="px-4 py-3">
-                          {bid.status === "PENDING" ? (
-                            <button
-                              className="select-btn btn text-white rounded-3 px-3 py-1"
-                              style={{ background: "linear-gradient(135deg, #198754, #157347)", fontSize: "12px", fontWeight: "600" }}
-                              onClick={() => {
-                                alert(`${freelancer?.name} selected! Project will be created. (dummy)`);
-                                navigate("/project/1");
-                              }}
-                            >
-                              ✓ Select
-                            </button>
-                          ) : (
-                            // If already accepted or rejected — show disabled label
-                            <span className="text-muted" style={{ fontSize: "12px" }}>
-                              {bid.status === "ACCEPTED" ? "✓ Hired" : "✗ Rejected"}
-                            </span>
-                          )}
-                        </td>
-
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-
         </main>
       </div>
 
-      {/* ── FREELANCER PROFILE MODAL ──────────────────────────── */}
+      {/* ================= PROFILE MODAL ================= */}
+
       {selectedProfile && (
-        <div className="modal-overlay" onClick={() => setSelectedProfile(null)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="modal-overlay"
+          onClick={() =>
+            setSelectedProfile(null)
+          }
+        >
+          <div
+            className="modal-content"
+            onClick={(e) =>
+              e.stopPropagation()
+            }
+          >
             {(() => {
-              const profile = getFreelancerProfile(selectedProfile);
-              const freelancer = users.find(u => u.user_id === selectedProfile);
+              const profile =
+                getFreelancerProfile(
+                  selectedProfile
+                );
+
+              const freelancer =
+                getFreelancer(
+                  selectedProfile
+                );
+
               return (
                 <>
-                  <div className="d-flex justify-content-between align-items-start mb-3">
-                    <div className="d-flex align-items-center gap-3">
+                  <div className="d-flex justify-content-between mb-4">
+
+                    <div className="d-flex gap-3">
+
                       <div
-                        className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold flex-shrink-0"
-                        style={{ width: "50px", height: "50px", background: "linear-gradient(135deg, #198754, #157347)", fontSize: "20px" }}
+                        className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
+                        style={{
+                          width: "60px",
+                          height: "60px",
+                          fontSize: "22px",
+                          background:
+                            "linear-gradient(135deg,#198754,#157347)",
+                        }}
                       >
-                        {freelancer?.name.charAt(0)}
+                        {freelancer?.name?.charAt(0)}
                       </div>
+
                       <div>
-                        <h4 className="fw-bold mb-1" style={{ fontSize: "18px" }}>{freelancer?.name}</h4>
-                        <p className="text-muted mb-0" style={{ fontSize: "14px" }}>{profile?.title}</p>
+
+                        <h4 className="mb-1">
+                          {freelancer?.name}
+                        </h4>
+
+                        <p className="text-muted mb-1">
+                          {profile?.title}
+                        </p>
+
+                        <span className="rating-star">
+                          ★★★★★
+                        </span>
+
+                        <span className="ms-2 fw-semibold">
+                          {profile?.rating}
+                        </span>
+
                       </div>
+
                     </div>
+
                     <button
                       className="btn-close"
-                      onClick={() => setSelectedProfile(null)}
-                    ></button>
+                      onClick={() =>
+                        setSelectedProfile(
+                          null
+                        )
+                      }
+                    />
+
                   </div>
 
-                  {/* Rating */}
-                  <div className="mb-3">
-                    <span className="rating-star">★★★★★</span>
-                    <span className="ms-2 fw-semibold" style={{ fontSize: "14px" }}>
-                      {profile?.rating} ({profile?.experience} years experience)
-                    </span>
-                  </div>
+                  <p
+                    className="text-muted"
+                    style={{
+                      fontSize: "14px",
+                    }}
+                  >
+                    {profile?.bio}
+                  </p>
 
-                  {/* Bio */}
-                  <div className="mb-3">
-                    <p style={{ fontSize: "13px", color: "#475569" }}>
-                      {profile?.bio}
-                    </p>
-                  </div>
+                  <h6 className="fw-bold mt-4">
+                    Skills
+                  </h6>
 
-                  {/* Skills */}
-                  <div className="mb-3">
-                    <h6 className="fw-semibold mb-2" style={{ fontSize: "13px" }}>Skills</h6>
-                    <div>
-                      {profile?.skills?.map((skill, idx) => (
-                        <span key={idx} className="skill-badge">
+                  <div className="mb-4">
+
+                    {profile?.skills?.map(
+                      (skill, index) => (
+                        <span
+                          key={index}
+                          className="skill-badge"
+                        >
                           {skill}
                         </span>
-                      ))}
-                    </div>
+                      )
+                    )}
+
                   </div>
 
-                  {/* Rate & Portfolio */}
-                  <div className="mb-3">
-                    <div className="d-flex justify-content-between mb-2">
-                      <span style={{ fontSize: "13px", fontWeight: "600" }}>Hourly Rate</span>
-                      <span style={{ fontSize: "14px", fontWeight: "bold", color: "#1D9E75" }}>₹{profile?.hourlyRate}/hr</span>
-                    </div>
-                    <div className="d-flex justify-content-between">
-                      <span style={{ fontSize: "13px", fontWeight: "600" }}>Portfolio</span>
-                      <a href={profile?.portfolio} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px", color: "#1D9E75" }}>
-                        View →
-                      </a>
-                    </div>
+                  <div className="d-flex justify-content-between mb-2">
+
+                    <span>
+                      Hourly Rate
+                    </span>
+
+                    <strong className="text-success">
+                      ₹
+                      {profile?.hourlyRate}
+                      /hr
+                    </strong>
+
                   </div>
 
-                  {/* Contact Button */}
+                  <div className="d-flex justify-content-between mb-4">
+
+                    <span>
+                      Portfolio
+                    </span>
+
+                    <a
+                      href={profile?.portfolio}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View →
+                    </a>
+
+                  </div>
+
                   <button
-                    className="btn w-100 text-white rounded-3 fw-semibold"
-                    style={{ background: "linear-gradient(135deg, #198754, #157347)", fontSize: "14px" }}
+                    className="btn w-100 text-white fw-semibold"
+                    style={{
+                      background:
+                        "linear-gradient(135deg,#198754,#157347)",
+                    }}
                   >
-                    Contact Freelancer (dummy)
+                    Contact Freelancer
                   </button>
                 </>
               );
@@ -446,6 +521,7 @@ function ViewBids({ jobs }) {
           </div>
         </div>
       )}
+
     </>
   );
 }

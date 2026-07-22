@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 function ForgotPassword() {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
@@ -86,6 +87,7 @@ function ForgotPassword() {
           </Link>
         </p>
       </div>
+      <Footer />
     </div>
   );
 }
