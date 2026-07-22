@@ -1,20 +1,66 @@
 import Sidebar from "../../components/Freelancer/Sidebar";
 import { useNavigate,useParams } from "react-router-dom";
-import { jobs } from "../../data/dummyData";
-import { useState } from "react";
+import { useEffect,useState } from "react";
+
+import { getJobById } from "../../api/jobApi";
+import { submitBid } from "../../api/bidApi";
+
 function SubmitBid() {
 
 
 const navigate = useNavigate();
 const { jobId } = useParams();  //take  jobid from previous page 
-const selectedJob = jobs.find((job) => job.job_id == jobId);
+
+const [selectedJob, setSelectedJob] = useState(null);//react will wait until the job is fetched from backend
+
+       useEffect(() => {loadJob();}, []);
+
+const loadJob = async () => {
+     try {
+           const response = await getJobById(jobId);
+           console.log(response.data);
+           setSelectedJob(response.data);
+         } catch (error)
+           {
+            console.log(error);
+           }
+    };
+
 
 const [amount, setAmount] = useState("");
 const [duration, setDuration] = useState("");
 const [proposal, setProposal] = useState("");
 
+const handleSubmit = async () => {
+
+  try {
+    
+      if (!amount || !duration || !proposal) {
+        alert("Please fill all fields.");
+        return;
+      }
+   // const freelancerId = localStorage.getItem("userId"); 
+    const freelancerId = 3; // Hardcoded for now, replace with actual logged-in freelancer ID
+    const bidData = {
+      jobId: Number(jobId),
+      amount: Number(amount),
+      duration: Number(duration),
+      proposal: proposal,
+    };
+
+    const response = await submitBid(freelancerId, bidData);
+
+    alert("Bid Submitted Successfully");
+    console.log(response.data);
+
+    navigate("/freelancer/my-bids"); // Change route if needed
+  } catch (error) {
+    console.error(error);
+    alert("Failed to submit bid");
+  }
+};
 if (!selectedJob) {
-    return <h2> Sorry !!! Job Not Found</h2>;
+  return <h2>Loading...</h2>;
 }
   return (
     <div className="container-fluid p-4">
@@ -138,15 +184,8 @@ if (!selectedJob) {
                   />
                 </div>
 
-                <button
-                  className="btn btn-success w-100"
-                  onClick={() => {
-                    console.log(amount);
-                    console.log(duration);
-                    console.log(proposal);
-                    window.alert("Submitted Bid Successfully");
-                  }}
-                >
+                <button className="btn btn-success w-100"
+                  onClick={handleSubmit}>
                   Submit Bid
                 </button>
               </div>
