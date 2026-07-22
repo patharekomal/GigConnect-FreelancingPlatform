@@ -7,71 +7,137 @@ function BrowseJobs() {
     const navigate = useNavigate();
 
     return (
-    <div className="container-fluid p-4">
+      <div className="container-fluid p-4">
         <div className="row">
-                {/* Sidebar */}
-            <div className="col-md-2">
-              <Sidebar/>
-            </div>
+          {/* Sidebar */}
+          <div className="col-md-2">
+            <Sidebar />
+          </div>
 
-        {/* Main Content */}
+          {/* Main Content */}
 
-        <div className="col-md-10">
+          {/* <div className="col-md-10"> */}
+
+          <div style={{ marginLeft: "280px" }}>
             {/* First Part */}
-                <div className="card border-0 shadow-sm p-4 mb-4">
-                  <h2> Browse Jobs</h2>
-                  {/* 💼 */}
-                       <p className="text-muted mb-0">
-                           Discover projects that match your skills
-                           and submit competitive proposals.
-                       </p>
-                </div>
-                {/* Second part */}
-                <div className="card border-0 shadow-sm p-3 mb-4">
-                      <input type="text" className="form-control" placeholder="Search jobs..." />
-                </div>
-                {/* THird part */}
-                
-                    <div className="row">
-                        {
-                           jobs.map((job) => (
-                              <div className="col-md-6 mb-4" key={job.job_id}>
-                                    <div className="card border-0 shadow-sm h-100">
-                                            <div className="card-body">
-                                             <h4>{job.title}</h4>
-                                              <p className="text-muted">
-                                                  {job.description}
-                                              </p>
-                                              <p>
-                                                  <strong>Budget:</strong>
-                                                  ₹{job.budget}
-                                              </p>
-                                              <p>
-                                                  <strong>Deadline:</strong>
-                                                  {job.deadline}
-                                              </p>
-                                              <p>
-                                                  <strong>Status:</strong>
-                                                  {job.status}
-                                              </p>
-                                              <button className="btn btn-success" onClick={() => navigate(`/submitBid/${job.job_id}`)}>
-                                                  View Details
-                                              </button>
-                                            </div>
-                                     </div>
-                               </div>
-                               ))
-                         }
+            <div className="card border-0 shadow-sm p-4 mb-4">
+              <h2> Browse Jobs</h2>
+              {/* 💼 */}
+              <p className="text-muted mb-0">
+                Discover projects that match your skills and submit competitive
+                proposals.
+              </p>
+            </div>
+            {/* Second part */}
+            <div className="card border-0 shadow-sm p-3 mb-4">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search jobs..."
+              />
+            </div>
+            {/* THird part */}
 
-                     </div>
-            
+            <div className="row">
+              {
+                <div className="row">
+                  {jobs.map((job) => (
+                    <div className="col-12 mb-4" key={job.job_id}>
+                      <div
+                        className="card border-0 shadow-sm h-100"
+                        style={{
+                          borderRadius: "16px",
+                          transition: "0.2s",
+                        }}
+                      >
+                        <div className="card-body">
+                          {/* Title + Status */}
+                          <div className="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                              <h4 className="fw-bold mb-1">{job.title}</h4>
+
+                              <p className="text-muted mb-0">
+                                {job.description}
+                              </p>
+                            </div>
+
+                            <span
+                              className={`badge ${
+                                job.status === "OPEN"
+                                  ? "bg-success"
+                                  : "bg-secondary"
+                              }`}
+                            >
+                              {job.status}
+                            </span>
+                          </div>
+
+                          <hr />
+
+                          {/* Skills */}
+
+                          <div className="mb-3">
+                            <span className="badge bg-light text-dark me-2">
+                              Spring Boot
+                            </span>
+
+                            <span className="badge bg-light text-dark me-2">
+                              REST API
+                            </span>
+
+                            <span className="badge bg-light text-dark">
+                              MySQL
+                            </span>
+                          </div>
+
+                          {/* Information Row */}
+
+                          <div className="row text-center">
+                            <div className="col-2">
+                              <small className="text-muted">💰 Budget</small>
+
+                              <h5 className="fw-bold text-success">
+                                ₹{job.budget}
+                              </h5>
+                            </div>
+
+                            <div className="col-2">
+                              <small className="text-muted">📅 Deadline</small>
+
+                              <h6 className="fw-semibold">{job.deadline}</h6>
+                            </div>
+
+                            <div className="col-2">
+                              <small className="text-muted">👤 Client</small>
+
+                              <h6 className="fw-semibold">ABC Pvt Ltd</h6>
+                            </div>
+                          </div>
+
+                          <hr />
+
+                          {/* Footer */}
+
+                          <div className="d-flex justify-content-md">
+                            <button
+                              className="btn btn-outline-success px-4"
+                              onClick={() =>
+                                navigate(`/submitBid/${job.job_id}`)
+                              }
+                            >
+                              👁 View Details
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              }
+            </div>
+          </div>
         </div>
-
-    </div>
-
-
-            
-</div>
+      </div>
     );
 }
 
