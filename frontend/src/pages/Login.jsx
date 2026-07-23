@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { users } from "../data/dummyData";
+//import { users } from "../data/dummyData";
+import { loginUser } from "../services/authService";
+
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
@@ -10,22 +12,38 @@ function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    const user = users.find(
-      (u) => u.email === email && u.password === password
-    );
+  const handleLogin = async () => {
+  try {
+    setError("");
 
-    if (user) {
-      alert(`Welcome ${user.name} (${user.role})`);
-      if (user.role === "CLIENT") {
-        navigate("/client");
-      } else if (user.role === "FREELANCER") {
-        navigate("/freelancer");
-      }
+    const user = await loginUser({
+      email,
+      password,
+    });
+
+    console.log(user);
+
+    localStorage.setItem("user", JSON.stringify(user));
+
+    alert(user.message);
+
+   if (user.role === "CLIENT") {
+  navigate("/client");
+} else if (user.role === "FREELANCER") {
+  navigate("/freelancer");
+} else {
+  navigate("/");
+}
+  } catch (err) {
+    console.error(err);
+
+    if (err.response) {
+      setError(err.response.data.message || "Invalid email or password");
     } else {
-      setError("Invalid email or password.");
+      setError("Unable to connect to the server.");
     }
-  };
+  }
+};
 
   return (
     <div
