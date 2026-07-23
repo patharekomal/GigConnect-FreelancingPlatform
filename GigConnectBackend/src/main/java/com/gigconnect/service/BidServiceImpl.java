@@ -84,6 +84,7 @@ public class BidServiceImpl implements BidService {
 		    
 		    dto.setJobId(bid.getJob().getId());
 		    dto.setJobTitle(bid.getJob().getTitle());
+		    dto.setBudget(bid.getJob().getBudget());
 
 		    dto.setAmount(bid.getAmount());
 		    dto.setDuration(bid.getDurationDays());

@@ -120,15 +120,29 @@
 // export default MyBids;
 
 import Sidebar from "../../components/Freelancer/Sidebar";
-import { bids, jobs } from "../../data/dummyData";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getMyBids } from "../../api/bidApi";
 
 function MyBids() {
   const navigate = useNavigate();
 
-  const freelancerId = 6;
+  const freelancerId = 1; // temporary
 
-  const myBids = bids.filter((bid) => bid.freelancer_id === freelancerId);
+  const [myBids, setMyBids] = useState([]);
+  useEffect(() => {
+    loadMyBids();
+  }, []);
+
+  const loadMyBids = async () => {
+    try {
+      const response = await getMyBids(freelancerId);
+      console.log(response.data);
+      setMyBids(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="container-fluid p-4">
@@ -164,7 +178,6 @@ function MyBids() {
 
           {myBids.length > 0 ? (
             myBids.map((bid) => {
-              const job = jobs.find((job) => job.job_id === bid.job_id);
 
               return (
                 <div className="card shadow-sm border-0 mb-4" key={bid.bid_id}>
@@ -173,9 +186,9 @@ function MyBids() {
 
                     <div className="d-flex justify-content-between align-items-start">
                       <div>
-                        <h4 className="fw-bold mb-1">{job?.title}</h4>
+                        <h4 className="fw-bold mb-1">{bid.jobTitle}</h4>
 
-                        <p className="text-muted mb-0">{job?.description}</p>
+                        <p className="text-muted mb-0">{bid.proposal}</p>
                       </div>
 
                       <span
@@ -214,7 +227,7 @@ function MyBids() {
                         <div className="border rounded p-3 h-100 text-center">
                           <small className="text-muted">⏳ Duration</small>
 
-                          <h5 className="mt-2">{bid.duration_days} Days</h5>
+                          <h5 className="mt-2">{bid.duration} Days</h5>
                         </div>
                       </div>
 
@@ -224,7 +237,7 @@ function MyBids() {
                         <div className="border rounded p-3 h-100 text-center">
                           <small className="text-muted">💼 Job Budget</small>
 
-                          <h5 className="mt-2">₹{job?.budget}</h5>
+                          <h5 className="mt-2">₹{bid.budget}</h5>
                         </div>
                       </div>
 
@@ -241,7 +254,7 @@ function MyBids() {
                               <>
                                 <button
                                   className="btn btn-outline-success"
-                                  onClick={() => navigate(`/job/${job.job_id}`)}
+                                  onClick={() => navigate(`/job/${bid.jobId}`)}
                                 >
                                   👁 View Job
                                 </button>
@@ -249,7 +262,7 @@ function MyBids() {
                                 <button
                                   className="btn btn-outline-primary"
                                   onClick={() =>
-                                    navigate(`/editBid/${bid.bid_id}`)
+                                    navigate(`/editBid/${bid.bidId}`)
                                   }
                                 >
                                   ✏ Edit Bid
@@ -302,7 +315,7 @@ function MyBids() {
                                 <button
                                   className="btn btn-outline-danger"
                                   onClick={() =>
-                                    navigate(`/submitBid/${job.job_id}`)
+                                    navigate(`/submitBid/${bid.jobId}`)
                                   }
                                 >
                                   🔄 Submit Again

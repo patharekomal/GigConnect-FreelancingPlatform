@@ -1,26 +1,42 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import Sidebar from "../../components/Freelancer/Sidebar";
+import { submitWork } from "../../api/projectApi";
 
 function SubmitWork() {
 
     const { projectId } = useParams();
 
+    //const [submittedWork, setSubmittedWork] = useState("");
+   
     const [githubLink, setGithubLink] = useState("");
     const [demoLink, setDemoLink] = useState("");
     const [description, setDescription] = useState("");
 
-    const handleSubmit = () => {
+   const handleSubmit = async () => {
 
-        console.log({
-            projectId,
-            githubLink,
-            demoLink,
-            description
-        });
+           if (!githubLink) {
+             alert("Please enter GitHub Repository Link.");
+             return;
+           }
 
-        alert("Work Submitted Successfully");
-    };
+             const workData = {
+               submittedWork: `GitHub: ${githubLink}
+                               Demo: ${demoLink}
+                               Description: ${description}`,
+                              };
+             
+            try {
+
+                const response = await submitWork(projectId, workData);
+                console.log(response.data);
+                 alert("Work Submitted Successfully");
+
+                 } catch (error) {
+                           console.log(error);
+                           alert("Failed to submit work");
+              }
+        };
 
     return (
 
