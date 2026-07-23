@@ -26,6 +26,8 @@ public class BidResponse {
 
     private String jobTitle;
     
+    private Double budget;
+    
     // null if bid is not accepted
     private Long projectId;
     

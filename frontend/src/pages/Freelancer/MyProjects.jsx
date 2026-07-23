@@ -245,16 +245,31 @@ export default MyProjects;
 
 import Sidebar from "../../components/Freelancer/Sidebar";
 import { useNavigate } from "react-router-dom";
-import { projects, payments, jobs } from "../../data/dummyData";
+import { useEffect, useState } from "react";
+import { getMyProjects } from "../../api/projectApi";
 
 function MyProjects() {
   const navigate = useNavigate();
 
-  const freelancerId = 6;
+  const freelancerId = 1; // temporary
 
-  const myProjects = projects.filter(
-    (project) => project.freelancer_id === freelancerId,
-  );
+  const [myProjects, setMyProjects] = useState([]);
+
+  useEffect(() => {
+    loadProjects();
+  }, []);
+
+  const loadProjects = async () => {
+    try {
+      const response = await getMyProjects(freelancerId);
+
+      console.log(response.data);
+
+      setMyProjects(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const activeProjects = myProjects.filter(
     (project) => project.status !== "COMPLETED",
@@ -301,25 +316,27 @@ function MyProjects() {
 
           {activeProjects.length > 0 ? (
             activeProjects.map((project) => {
-              const job = jobs.find((job) => job.job_id === project.job_id);
-
-              const payment = payments.find(
-                (payment) => payment.project_id === project.project_id,
-              );
+            
+              // const payment = payments.find(
+              //   (payment) => payment.projectId === project.projectId,
+              // );
 
               return (
                 <div
                   className="card shadow-sm border-0 mb-4"
-                  key={project.project_id}
+                  key={project.projectId}
                 >
                   <div className="card-body">
                     {/* Title */}
 
                     <div className="d-flex justify-content-between align-items-start">
                       <div>
-                        <h4 className="fw-bold mb-1">{job?.title}</h4>
+                        <h4 className="fw-bold mb-1">{project.jobTitle}</h4>
 
-                        <p className="text-muted mb-0">{job?.description}</p>
+                        <p className="text-muted mb-0">
+                          {" "}
+                          {project.jobDescription}
+                        </p>
                       </div>
 
                       <span
@@ -345,7 +362,7 @@ function MyProjects() {
                           <small className="text-muted">💰 Amount</small>
 
                           <h5 className="fw-bold mt-2">
-                            ₹{project.agreed_amount}
+                            ₹{project.agreedAmount}
                           </h5>
                         </div>
                       </div>
@@ -354,11 +371,12 @@ function MyProjects() {
 
                       <div className="col-lg-3">
                         <div className="border rounded p-3 h-100 text-center">
-                          <small className="text-muted">📅 Deadline</small>
-
+                          {/* <small className="text-muted">📅 Deadline</small>
                           <h6 className="mt-2">{job?.deadline}</h6>
+                          <small className="text-danger">2 Days Left</small> */}
+                          <small className="text-muted">👤 Client</small>
 
-                          <small className="text-danger">2 Days Left</small>
+                          <h6 className="mt-2">{project.clientName}</h6>
                         </div>
                       </div>
 
@@ -368,7 +386,7 @@ function MyProjects() {
                         <div className="border rounded p-3 h-100 text-center">
                           <small className="text-muted">💳 Payment</small>
 
-                          <h6 className="mt-2">{payment?.status}</h6>
+                          <h6 className="mt-2">{"PENDING"}</h6>
                         </div>
                       </div>
 
@@ -382,7 +400,7 @@ function MyProjects() {
                             <button
                               className="btn btn-outline-success btn-sm"
                               onClick={() =>
-                                navigate(`/project/${project.project_id}`)
+                                navigate(`/freelancer/project/${project.projectId}`)
                               }
                             >
                               👁 View Details
@@ -391,7 +409,7 @@ function MyProjects() {
                             <button
                               className="btn btn-outline-primary btn-sm"
                               onClick={() =>
-                                navigate(`/chat/${project.project_id}`)
+                                navigate(`/chat/${project.projectId}`)
                               }
                             >
                               💬 Chat
@@ -400,7 +418,7 @@ function MyProjects() {
                             <button
                               className="btn btn-success btn-sm"
                               onClick={() =>
-                                navigate(`/submitWork/${project.project_id}`)
+                                navigate(`/submitWork/${project.projectId}`)
                               }
                             >
                               📤 Submit Work
@@ -432,7 +450,7 @@ function MyProjects() {
 
           {completedProjects.length > 0 ? (
             completedProjects.map((project) => {
-              const job = jobs.find((job) => job.job_id === project.job_id);
+             
 
               const payment = payments.find(
                 (payment) => payment.project_id === project.project_id,
@@ -441,16 +459,16 @@ function MyProjects() {
               return (
                 <div
                   className="card shadow-sm border-0 mb-4"
-                  key={project.project_id}
+                  key={project.projectId}
                 >
                   <div className="card-body">
                     {/* Title */}
 
                     <div className="d-flex justify-content-between align-items-start">
                       <div>
-                        <h4 className="fw-bold mb-1">{job?.title}</h4>
+                        <h4 className="fw-bold mb-1">{project.jobTitle}</h4>
 
-                        <p className="text-muted mb-0">{job?.description}</p>
+                        <p className="text-muted mb-0">{project.jobDescription}</p>
                       </div>
 
                       <span className="badge bg-success px-3 py-2">
@@ -470,7 +488,7 @@ function MyProjects() {
                           <small className="text-muted">💰 Amount</small>
 
                           <h5 className="fw-bold mt-2">
-                            ₹{project.agreed_amount}
+                            ₹{project.agreedAmount}
                           </h5>
                         </div>
                       </div>
@@ -479,11 +497,12 @@ function MyProjects() {
 
                       <div className="col-lg-3">
                         <div className="border rounded p-3 h-100 text-center">
-                          <small className="text-muted">📅 Deadline</small>
-
+                          {/* <small className="text-muted">📅 Deadline</small>
                           <h6 className="mt-2">{job?.deadline}</h6>
+                          <small className="text-success">Finished</small> */}
+                          <small className="text-muted">👤 Client</small>
 
-                          <small className="text-success">Finished</small>
+                          <h6 className="mt-2">{project.clientName}</h6>
                         </div>
                       </div>
 
@@ -493,7 +512,7 @@ function MyProjects() {
                         <div className="border rounded p-3 h-100 text-center">
                           <small className="text-muted">💳 Payment</small>
 
-                          <h6 className="mt-2">{payment?.status}</h6>
+                          <h6 className="mt-2">{"PENDING"}</h6>
                         </div>
                       </div>
 
@@ -507,7 +526,7 @@ function MyProjects() {
                             <button
                               className="btn btn-outline-success btn-sm"
                               onClick={() =>
-                                navigate(`/project/${project.project_id}`)
+                                navigate(`/freelancer/project/${project.projectId}`)
                               }
                             >
                               👁 View Details
