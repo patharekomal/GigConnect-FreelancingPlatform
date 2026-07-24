@@ -62,6 +62,7 @@ public class FreelancerServiceImpl implements FreelancerService{
 		freelancer.setHourlyRate(req.getHourlyRate());
 		freelancer.setPortfolioLink(req.getPortfolioLink());
 		freelancer.setSkills(req.getSkills());
+		freelancer.setExperience(req.getExperience());
 		
 		
 		dto=modelMapper.map(freelancer,FreelancerResponse.class);
