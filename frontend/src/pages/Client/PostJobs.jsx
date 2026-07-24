@@ -2,10 +2,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Client/Sidebar";
 
-const CLIENT_ID = 2;
+import {createJob} from "../../services/jobService";
 
-function PostJob({ addJob }) {
+
+
+function PostJob() {
   const navigate = useNavigate();
+
+  const user = JSON.parse(localStorage.getItem("user")); //Will get user id(user.id that will be my clientid) from localstorage object "user"
+  
+  const clientId = user.id;
 
   const [form, setForm] = useState({
     title: "",
@@ -49,7 +55,8 @@ function PostJob({ addJob }) {
   };
 
   // Submit Job
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+
     const foundErrors = validate();
 
     if (Object.keys(foundErrors).length > 0) {
@@ -57,19 +64,26 @@ function PostJob({ addJob }) {
       return;
     }
 
-    const newJob = {
-      job_id: Date.now(),
-      client_id: CLIENT_ID,
+    const jobData = {
       title: form.title.trim(),
       description: form.description.trim(),
       budget: parseFloat(form.budget),
       deadline: form.deadline,
-      status: "OPEN",
     };
 
-    addJob(newJob);
+    try{
+      await createJob(clientId, jobData);
 
-    navigate("/my-jobs");
+      alert("Job posted successfully!");
+
+      navigate("/my-jobs");
+
+    }catch(error) {
+
+      console.error(error);
+      alert("Unable to post job.");
+    }
+    
   };
 
   return (

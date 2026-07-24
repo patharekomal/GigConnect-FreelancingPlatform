@@ -1,13 +1,45 @@
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Client/Sidebar";
+
 import { bids } from "../../data/dummyData";
 
-const CLIENT_ID = 2;
+import { useState, useEffect } from "react";
+import { fetchJobsByClient } from "../../services/jobService";
 
-function MyJobs({ jobs }) {
+
+
+function MyJobs() {
+
   const navigate = useNavigate();
 
-  const myJobs = jobs.filter((j) => j.client_id === CLIENT_ID);
+  const user = JSON.parse(localStorage.getItem("user"));//read logged in user
+
+  if (!user) {
+    navigate("/login");
+    return null;
+  }
+
+  const clientId = user.id;
+
+  const[jobs, setJobs] = useState([]);
+
+  useEffect(()=>{
+    const loadJobs = async () => {
+      try{
+        const data = await fetchJobsByClient(clientId);
+
+        setJobs(data);
+
+      }catch(error) {
+        console.log(error);
+      }
+    };
+
+    loadJobs();
+
+  }, [clientId]);
+
+  const myJobs = jobs;
 
   const getBidCount = (jobId) =>
     bids.filter((b) => b.job_id === jobId).length;
@@ -166,7 +198,7 @@ function MyJobs({ jobs }) {
 
                   <tbody>
                                       {myJobs.map((job, index) => (
-                    <tr key={job.job_id} className="job-row align-middle">
+                    <tr key={job.id} className="job-row align-middle">
 
                       {/* Row Number */}
                       <td
@@ -232,17 +264,17 @@ function MyJobs({ jobs }) {
                             width: "28px",
                             height: "28px",
                             background:
-                              getBidCount(job.job_id) > 0
+                              getBidCount(job.id) > 0
                                 ? "#E1F5EE"
                                 : "#f1f5f9",
                             color:
-                              getBidCount(job.job_id) > 0
+                              getBidCount(job.id) > 0
                                 ? "#1D9E75"
                                 : "#64748b",
                             fontSize: "12px",
                           }}
                         >
-                          {getBidCount(job.job_id)}
+                          {getBidCount(job.id)}
                         </span>
                       </td>
 
@@ -257,7 +289,7 @@ function MyJobs({ jobs }) {
                             fontWeight: "600",
                           }}
                           onClick={() =>
-                            navigate(`/bids/${job.job_id}`)
+                            navigate(`/bids/${job.id}`)
                           }
                         >
                           View Bids
