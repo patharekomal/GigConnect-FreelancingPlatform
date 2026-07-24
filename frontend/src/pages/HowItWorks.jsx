@@ -1,8 +1,12 @@
 
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
+
 
 function HowItWorks() {
+ const navigate = useNavigate();
+
   const steps = [
     {
       number: "01",
@@ -109,11 +113,12 @@ function HowItWorks() {
             Join millions of clients and freelancers already using GigConnect.
           </p>
           <button
-            className="btn btn-light fw-semibold px-4 py-2"
-            style={{ borderRadius: "30px", color: "#198754" }}
-          >
+          className="btn btn-light fw-semibold px-4 py-2"
+          style={{ borderRadius: "30px", color: "#198754" }}
+          onClick={() => navigate("/register")}
+           >
             Create Free Account
-          </button>
+           </button>
         </div>
       </section>
           <Footer />

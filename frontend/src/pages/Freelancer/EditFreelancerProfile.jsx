@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import Sidebar from "../../components/Freelancer/Sidebar";
 import { freelancerProfiles } from "../../data/dummyData";
+
+// TODO: Replace with logged-in user's freelancer ID once auth is wired
+const FREELANCER_ID = JSON.parse(localStorage.getItem("user"))?.id; 
 
 function EditFreelancerProfile() {
   const navigate = useNavigate();
 
-  // Pre-fill with existing profile data
-  const profile = freelancerProfiles.find((p) => p.freelancer_id === 6);
+  const profile = freelancerProfiles.find((p) => p.freelancer_id === FREELANCER_ID);
 
   const [formData, setFormData] = useState({
     profession: profile?.title || "",
@@ -18,14 +21,41 @@ function EditFreelancerProfile() {
     hourlyRate: profile?.hourlyRate || "",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSave = () => {
-    // In phase 1 — just navigate back
-    // Later: call PUT /api/freelancer/profile/{userId} with formData
-    navigate("/profile");
+  const handleSave = async () => {
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
+    try {
+      // PATCH /freelancers/{id}
+      await axios.patch(`http://localhost:8080/freelancers/${FREELANCER_ID}`, {
+        profession: formData.profession,
+        skills: formData.skills,
+        experience: parseFloat(formData.experience),
+        portfolioLink: formData.portfolioLink,
+        bio: formData.bio,
+        hourlyRate: parseFloat(formData.hourlyRate),
+      });
+
+      setSuccess("Profile updated successfully!");
+      setTimeout(() => navigate("/profile"), 1200);
+    } catch (err) {
+      const msg =
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        "Failed to update profile. Please try again.";
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -57,6 +87,18 @@ function EditFreelancerProfile() {
             </div>
 
             <hr />
+
+            {/* SUCCESS / ERROR ALERTS */}
+            {success && (
+              <div className="alert alert-success py-2 mb-3" style={{ borderRadius: "10px" }}>
+                ✅ {success}
+              </div>
+            )}
+            {error && (
+              <div className="alert alert-danger py-2 mb-3" style={{ borderRadius: "10px" }}>
+                ⚠️ {error}
+              </div>
+            )}
 
             {/* PROFESSION */}
             <div className="mb-3">
@@ -170,20 +212,22 @@ function EditFreelancerProfile() {
               <button
                 className="btn fw-semibold px-4"
                 onClick={handleSave}
+                disabled={loading}
                 style={{
-                  background: "linear-gradient(135deg, #198754, #157347)",
+                  background: loading ? "#9ca3af" : "linear-gradient(135deg, #198754, #157347)",
                   color: "#fff",
                   borderRadius: "10px",
                   padding: "10px 24px",
                   border: "none",
+                  cursor: loading ? "not-allowed" : "pointer",
                 }}
               >
-                Save Changes
+                {loading ? "Saving..." : "Save Changes"}
               </button>
 
               <button
                 className="btn btn-outline-secondary fw-semibold px-4"
-                onClick={() => navigate("/freelancer/profile")}
+                onClick={() => navigate("/profile")}
                 style={{ borderRadius: "10px" }}
               >
                 Cancel

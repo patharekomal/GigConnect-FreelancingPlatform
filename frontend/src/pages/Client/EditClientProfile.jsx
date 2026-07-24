@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import Sidebar from "../../components/Client/Sidebar";
+
+// TODO: Replace with logged-in user's client ID once auth is wired
+const CLIENT_ID = JSON.parse(localStorage.getItem("user"))?.id;
 
 function EditClientProfile() {
   const navigate = useNavigate();
 
-  // Dummy data (Replace with API response later)
   const [formData, setFormData] = useState({
     firstName: "John",
     lastName: "Doe",
@@ -16,58 +19,54 @@ function EditClientProfile() {
     location: "Mumbai",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
+    setLoading(true);
 
-    console.log("Updated Client:", formData);
+    try {
+      // PATCH /client/{id}
+      await axios.patch(`http://localhost:8080/client/${CLIENT_ID}`, {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        phone: formData.phone,
+        companyName: formData.companyName,
+        companyWebsite: formData.companyWebsite,
+        industry: formData.industry,
+        location: formData.location,
+      });
 
-    // TODO:
-    // axios.put("/clients/profile", formData)
-
-    alert("Profile Updated Successfully!");
-
-    navigate("/client-profile");
+      setSuccess("Profile Updated Successfully!");
+      setTimeout(() => navigate("/client-profile"), 1200);
+    } catch (err) {
+      const msg =
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        "Failed to update profile. Please try again.";
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
       <style>{`
-        body{
-            background:#f8fafc;
-        }
-
-        .edit-card{
-            border:none;
-            border-radius:18px;
-            box-shadow:0 10px 25px rgba(0,0,0,.08);
-        }
-
-        .page-header{
-            background:linear-gradient(135deg,#198754,#157347);
-            color:white;
-            border-radius:18px;
-            padding:30px;
-            margin-bottom:25px;
-        }
-
-        .form-control{
-            border-radius:10px;
-        }
-
-        .btn-success{
-            border-radius:10px;
-        }
-
-        .btn-secondary{
-            border-radius:10px;
-        }
+        body { background:#f8fafc; }
+        .edit-card { border:none; border-radius:18px; box-shadow:0 10px 25px rgba(0,0,0,.08); }
+        .page-header { background:linear-gradient(135deg,#198754,#157347); color:white; border-radius:18px; padding:30px; margin-bottom:25px; }
+        .form-control { border-radius:10px; }
+        .btn-success { border-radius:10px; }
+        .btn-secondary { border-radius:10px; }
       `}</style>
 
       <div className="d-flex">
@@ -75,31 +74,33 @@ function EditClientProfile() {
 
         <div
           className="container-fluid"
-          style={{
-            marginLeft: "260px",
-            width: "calc(100% - 260px)",
-            padding: "35px",
-          }}
+          style={{ marginLeft: "260px", width: "calc(100% - 260px)", padding: "35px" }}
         >
           <div className="page-header">
             <h2>Edit Client Profile</h2>
-            <p className="mb-0">
-              Update your personal and company information.
-            </p>
+            <p className="mb-0">Update your personal and company information.</p>
           </div>
+
+          {/* SUCCESS / ERROR ALERTS */}
+          {success && (
+            <div className="alert alert-success py-2 mb-3" style={{ borderRadius: "10px" }}>
+              ✅ {success}
+            </div>
+          )}
+          {error && (
+            <div className="alert alert-danger py-2 mb-3" style={{ borderRadius: "10px" }}>
+              ⚠️ {error}
+            </div>
+          )}
 
           <div className="card edit-card">
             <div className="card-body p-4">
 
               <form onSubmit={handleSubmit}>
-
                 <div className="row">
 
                   <div className="col-md-6 mb-3">
-                    <label className="form-label fw-semibold">
-                      First Name
-                    </label>
-
+                    <label className="form-label fw-semibold">First Name</label>
                     <input
                       type="text"
                       className="form-control"
@@ -113,10 +114,7 @@ function EditClientProfile() {
                   </div>
 
                   <div className="col-md-6 mb-3">
-                    <label className="form-label fw-semibold">
-                      Last Name
-                    </label>
-
+                    <label className="form-label fw-semibold">Last Name</label>
                     <input
                       type="text"
                       className="form-control"
@@ -130,10 +128,7 @@ function EditClientProfile() {
                   </div>
 
                   <div className="col-md-6 mb-3">
-                    <label className="form-label fw-semibold">
-                      Phone Number
-                    </label>
-
+                    <label className="form-label fw-semibold">Phone Number</label>
                     <input
                       type="tel"
                       className="form-control"
@@ -146,10 +141,7 @@ function EditClientProfile() {
                   </div>
 
                   <div className="col-md-6 mb-3">
-                    <label className="form-label fw-semibold">
-                      Company Name
-                    </label>
-
+                    <label className="form-label fw-semibold">Company Name</label>
                     <input
                       type="text"
                       className="form-control"
@@ -161,10 +153,7 @@ function EditClientProfile() {
                   </div>
 
                   <div className="col-12 mb-3">
-                    <label className="form-label fw-semibold">
-                      Company Website
-                    </label>
-
+                    <label className="form-label fw-semibold">Company Website</label>
                     <input
                       type="url"
                       className="form-control"
@@ -176,10 +165,7 @@ function EditClientProfile() {
                   </div>
 
                   <div className="col-md-6 mb-3">
-                    <label className="form-label fw-semibold">
-                      Industry
-                    </label>
-
+                    <label className="form-label fw-semibold">Industry</label>
                     <input
                       type="text"
                       className="form-control"
@@ -191,10 +177,7 @@ function EditClientProfile() {
                   </div>
 
                   <div className="col-md-6 mb-4">
-                    <label className="form-label fw-semibold">
-                      Location
-                    </label>
-
+                    <label className="form-label fw-semibold">Location</label>
                     <input
                       type="text"
                       className="form-control"
@@ -208,7 +191,6 @@ function EditClientProfile() {
                 </div>
 
                 <div className="d-flex justify-content-end gap-3">
-
                   <button
                     type="button"
                     className="btn btn-secondary px-4"
@@ -220,10 +202,10 @@ function EditClientProfile() {
                   <button
                     type="submit"
                     className="btn btn-success px-4"
+                    disabled={loading}
                   >
-                    Save Changes
+                    {loading ? "Saving..." : "Save Changes"}
                   </button>
-
                 </div>
 
               </form>
