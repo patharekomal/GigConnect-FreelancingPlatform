@@ -40,7 +40,8 @@ const handleSubmit = async () => {
         return;
       }
    // const freelancerId = localStorage.getItem("userId"); 
-    const freelancerId = 3; // Hardcoded for now, replace with actual logged-in freelancer ID
+     const user = JSON.parse(localStorage.getItem("user"));
+     const freelancerId = user.id;
     const bidData = {
       jobId: Number(jobId),
       amount: Number(amount),
@@ -53,7 +54,7 @@ const handleSubmit = async () => {
     alert("Bid Submitted Successfully");
     console.log(response.data);
 
-    navigate("/freelancer/my-bids"); // Change route if needed
+    navigate("/freelancer/myBids"); // Change route if needed
   } catch (error) {
     console.error(error);
     alert("Failed to submit bid");
@@ -70,6 +71,12 @@ if (!selectedJob) {
         </div>
         {/* Main Content */}
         <div className="col-md-10">
+          <button
+            className="btn btn-outline-secondary mb-3"
+            onClick={() => navigate(-1)}
+          >
+            ← Go Back
+          </button>
           <div className="card shadow-sm border-0 p-4 mb-4">
             <h2> Submit Bid</h2>
             <p className="text-muted mb-4">
@@ -116,7 +123,7 @@ if (!selectedJob) {
                   <div className="col-6">
                     <small className="text-muted">🏢 Company</small>
 
-                    <h6>ABC Technologies</h6>
+                    <h6>{selectedJob.companyName}</h6>
                   </div>
                 </div>
 
@@ -184,8 +191,10 @@ if (!selectedJob) {
                   />
                 </div>
 
-                <button className="btn btn-success w-100"
-                  onClick={handleSubmit}>
+                <button
+                  className="btn btn-success w-100"
+                  onClick={handleSubmit}
+                >
                   Submit Bid
                 </button>
               </div>

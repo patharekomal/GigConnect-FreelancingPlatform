@@ -123,11 +123,14 @@ import Sidebar from "../../components/Freelancer/Sidebar";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getMyBids } from "../../api/bidApi";
+import { deleteBid } from "../../api/bidApi";
 
 function MyBids() {
   const navigate = useNavigate();
 
-  const freelancerId = 1; // temporary
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const freelancerId = user.id;
 
   const [myBids, setMyBids] = useState([]);
   useEffect(() => {
@@ -143,7 +146,27 @@ function MyBids() {
       console.log(error);
     }
   };
+  const handleDelete = async (bidId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to withdraw this bid?",
+    );
 
+    if (!confirmDelete) {
+      return;
+    }
+
+    try {
+      await deleteBid(bidId);
+
+      alert("Bid withdrawn successfully.");
+
+      loadMyBids(); // Refresh the list
+    } catch (error) {
+      console.log(error);
+
+      alert("Unable to withdraw bid.");
+    }
+  };
   return (
     <div className="container-fluid p-4">
       <div className="row">
@@ -180,7 +203,7 @@ function MyBids() {
             myBids.map((bid) => {
 
               return (
-                <div className="card shadow-sm border-0 mb-4" key={bid.bid_id}>
+                <div className="card shadow-sm border-0 mb-4" key={bid.bidId}>
                   <div className="card-body">
                     {/* Title */}
 
@@ -254,7 +277,7 @@ function MyBids() {
                               <>
                                 <button
                                   className="btn btn-outline-success"
-                                  onClick={() => navigate(`/job/${bid.jobId}`)}
+                                  onClick={() => navigate(`/browseJobs`)}
                                 >
                                   👁 View Job
                                 </button>
@@ -262,7 +285,7 @@ function MyBids() {
                                 <button
                                   className="btn btn-outline-primary"
                                   onClick={() =>
-                                    navigate(`/editBid/${bid.bidId}`)
+                                    navigate(`/freelancer/editBid/${bid.bidId}`)
                                   }
                                 >
                                   ✏ Edit Bid
@@ -270,11 +293,7 @@ function MyBids() {
 
                                 <button
                                   className="btn btn-outline-danger"
-                                  onClick={() =>
-                                    alert(
-                                      "Withdraw Bid API will be connected later.",
-                                    )
-                                  }
+                                  onClick={() => handleDelete(bid.bidId)}
                                 >
                                   🗑 Withdraw
                                 </button>
@@ -294,7 +313,7 @@ function MyBids() {
 
                                 <button
                                   className="btn btn-outline-secondary"
-                                  onClick={() => navigate(`/job/${job.job_id}`)}
+                                  onClick={() => navigate(`/browseJobs`)}
                                 >
                                   👁 View Job
                                 </button>
@@ -307,7 +326,7 @@ function MyBids() {
                               <>
                                 <button
                                   className="btn btn-outline-success"
-                                  onClick={() => navigate(`/job/${job.job_id}`)}
+                                  onClick={() => navigate(`/job/${bid.jobId}`)}
                                 >
                                   👁 View Job
                                 </button>

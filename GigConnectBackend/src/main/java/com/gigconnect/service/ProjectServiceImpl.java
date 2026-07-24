@@ -55,11 +55,11 @@ public class ProjectServiceImpl implements ProjectService {
             // Client Details
             dto.setClientId(project.getClient().getId());
 
-//            dto.setClientName(
-//                    project.getClient().getUserDetails().getFirstName()
-//                    + " "+ project.getClient().getUserDetails().getLastName()
-//            );
-
+            dto.setClientName(
+                    project.getClient().getUserDetails().getFirstName()
+                    + " "+ project.getClient().getUserDetails().getLastName()
+            );
+             dto.setCompanyName(project.getClient().getCompanyName());
             // Project Details
             dto.setAgreedAmount(project.getAgreedAmount());
             dto.setStatus(project.getStatus());
@@ -87,6 +87,7 @@ public class ProjectServiceImpl implements ProjectService {
         dto.setStatus(project.getStatus());
         dto.setAgreedAmount(project.getAgreedAmount());
         dto.setSubmittedWork(project.getSubmittedWork());
+        dto.setCreatedDate(project.getCreatedAt());
 
         // Job Details
         dto.setJobId(project.getJob().getId());

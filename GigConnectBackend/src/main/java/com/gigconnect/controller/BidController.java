@@ -65,4 +65,11 @@ public class BidController {
 	    return ResponseEntity.ok(
 	            bidService.acceptBid(bidId));
 	}
+	
+	//Get Bid by BIdId
+	@GetMapping("/bid/{bidId}")
+	public ResponseEntity<?> getBidById(@PathVariable Long bidId){
+
+	    return ResponseEntity.ok( bidService.getBidByBidId(bidId));
+	}
 }

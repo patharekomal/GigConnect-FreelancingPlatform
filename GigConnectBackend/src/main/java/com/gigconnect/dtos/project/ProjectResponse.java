@@ -19,7 +19,7 @@ public class ProjectResponse {
     //Client Details
     private Long clientId;
     private String clientName;
-
+    private String companyName;
     //Project Amount
     private Double agreedAmount;
 

@@ -22,4 +22,6 @@ public interface BidService {
 
 	ApiResponse acceptBid(Long bidId);
 
+	BidResponse getBidByBidId(Long bidId);
+
 }

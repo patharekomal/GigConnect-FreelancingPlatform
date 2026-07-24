@@ -21,4 +21,8 @@ public class JobResponseDto {
     private JobStatus status;
 
     private LocalDate deadline;
+    
+    private Long clientId;
+    private String companyName;
+    
 }

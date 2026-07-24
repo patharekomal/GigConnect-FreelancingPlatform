@@ -60,7 +60,7 @@ function BrowseJobs() {
               {
                 <div className="row">
                   {jobs.map((job) => (
-                    <div className="col-12 mb-4" key={job.job_id}>
+                    <div className="col-12 mb-4" key={job.id}>
                       <div
                         className="card border-0 shadow-sm h-100"
                         style={{
@@ -128,7 +128,7 @@ function BrowseJobs() {
                             <div className="col-2">
                               <small className="text-muted">👤 Client</small>
 
-                              <h6 className="fw-semibold">ABC Pvt Ltd</h6>
+                              <h6 className="fw-semibold">{job.companyName}</h6>
                             </div>
                           </div>
 
@@ -139,11 +139,9 @@ function BrowseJobs() {
                           <div className="d-flex justify-content-md">
                             <button
                               className="btn btn-outline-success px-4"
-                              onClick={() =>
-                                navigate(`/submitBid/${job.job_id}`)
-                              }
+                              onClick={() => navigate(`/submitBid/${job.id}`)}
                             >
-                              👁 View Details
+                              Submit Bid
                             </button>
                           </div>
                         </div>
@@ -153,6 +151,12 @@ function BrowseJobs() {
                 </div>
               }
             </div>
+            <button
+              className="btn btn-outline-secondary mb-3"
+              onClick={() => navigate(-1)}
+            >
+              ← Go Back
+            </button>
           </div>
         </div>
       </div>
