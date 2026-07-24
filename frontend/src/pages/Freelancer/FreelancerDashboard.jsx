@@ -6,7 +6,9 @@ import { useNavigate } from "react-router-dom";
 function FreelancerDashboard() {
 
     const navigate = useNavigate();
-     const freelancerId = 1; // Temporary
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const freelancerId = user.id;
 
      const [dashboard, setDashboard] = useState(null);
 
@@ -44,7 +46,7 @@ function FreelancerDashboard() {
             <div className="card shadow-sm border-0 p-4 mb-4">
               <div className="row align-items-center">
                 <div className="col-md-7">
-                  <h1>Welcome Back, Jane !!!</h1>
+                  <h1>Welcome Back, {user.firstName} 👋 !!!</h1>
                   <p className="text-muted">
                     Find exciting freelance opportunities, submit competitive
                     bids and manage your projects efficiently.

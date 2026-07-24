@@ -9,3 +9,16 @@ export const submitBid = (freelancerId, bidData) => {
 export const getMyBids = (freelancerId) => {
   return api.get(`/bids/${freelancerId}`);
 };
+
+//delete a bid
+export const deleteBid = (bidId) => {
+  return api.delete(`/bids/${bidId}`);
+};
+
+export const getBidById = (bidId) => {
+  return api.get(`/bids/bid/${bidId}`);
+};
+
+export const updateBid = (bidId, bidData) => {
+  return api.put(`/bids/${bidId}`, bidData);
+};

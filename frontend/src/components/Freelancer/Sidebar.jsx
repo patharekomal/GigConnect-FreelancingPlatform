@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 function Sidebar() {
   const navigate = useNavigate();
+   const user = JSON.parse(localStorage.getItem("user"));
 
   return (
     <div
@@ -40,7 +41,7 @@ function Sidebar() {
 
         <button
           className="btn btn-light text-start"
-          onClick={() => navigate("/myBids")}
+          onClick={() => navigate("/freelancer/myBids")}
         >
           My Bids
         </button>
@@ -72,9 +73,9 @@ function Sidebar() {
 
       {/* User Card */}
       <div className="card border-0 shadow-sm p-3">
-        <h4 className="mb-1">👤 Jane Smith</h4>
+        <h4 className="mb-1">👤 {user.firstName}</h4>
 
-        <small className="text-muted d-block mb-2">Frontend Developer</small>
+        <small className="text-muted d-block mb-2">{user.email}</small>
 
         <span className="text-success mb-3">● Online</span>
 

@@ -27,6 +27,7 @@ import { jobs } from "./data/dummyData"
 import BrowseJobs from "./pages/Freelancer/BrowseJobs";
 import SubmitBid from "./pages/Freelancer/SubmitBid";
 import MyBids from "./pages/Freelancer/MyBids";
+import EditBid from "./pages/Freelancer/EditBid";
 import MyProjects from "./pages/Freelancer/MyProjects";
 import Chat from "./pages/Freelancer/Chat";
 import SubmitWork from "./pages/Freelancer/SubmitWork";
@@ -62,7 +63,6 @@ function App() {
           path="/freelancer-profile-setup"
           element={<FreelancerProfileSetup />}
         />
-
         <Route path="/client" element={<ClientDashboard />} />
         <Route path="/post-job" element={<PostJob />} />
         <Route path="/bids/:jobId" element={<ViewBids jobs={jobs} />} />
@@ -72,19 +72,19 @@ function App() {
         <Route path="/payment" element={<Payment />} />
         <Route path="/client-profile" element={<ClientProfile />} />
         <Route path="/edit-client-profile" element={<EditClientProfile />} />
-
         {/* Freelancer  */}
         <Route path="/freelancer" element={<FreelancerDashboard />} />
         <Route path="/browseJobs" element={<BrowseJobs />} />
         <Route path="/submitBid/:jobId" element={<SubmitBid />} />
-        <Route path="/myBids" element={<MyBids />} />
+        <Route path="/freelancer/myBids" element={<MyBids />} />
         <Route path="/myProjects" element={<MyProjects />} />
         <Route path="/submitWork/:projectId" element={<SubmitWork />} />
         <Route path="/chat/:projectId" element={<Chat />} />
         <Route path="/reviews" element={<Reviews />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/freelancer/edit-profile" element={<EditFreelancerProfile />} />
-        <Route path="/freelancer/project/:projectId" element={<ProjectDetails />} />
+        <Route path="/freelancer/edit-profile" element={<EditFreelancerProfile />}/>
+        <Route path="/freelancer/project/:projectId"  element={<ProjectDetails />} />
+        <Route path="/freelancer/editBid/:bidId"  element={<EditBid />} />
       </Routes>
 
       {/* <Footer /> */}

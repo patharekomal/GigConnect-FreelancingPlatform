@@ -114,7 +114,14 @@ public class JobServiceImpl implements JobService{
 	    List<JobResponseDto> jobList = new ArrayList<>();
 
 	    for (Job j : jobs) {
-	        jobList.add(mapper.map(j, JobResponseDto.class));
+	    	String name=j.getClient().getCompanyName();
+	    	JobResponseDto dto= mapper.map(j, JobResponseDto.class);
+	    	 dto.setCompanyName(name);
+		      dto.setClientId(j.getClient().getId());
+	    	   
+		      jobList.add(dto);
+	    	
+	        
 	    }
 
 	    return jobList;
@@ -127,8 +134,11 @@ public class JobServiceImpl implements JobService{
 	    Job job = jobRepo.findById(jobId)
 	            .orElseThrow(() ->
 	                    new ResourceNotFoundException("Job Not Found"));
-
-	    return mapper.map(job, JobResponseDto.class);
+        String name=job.getClient().getCompanyName();
+	    JobResponseDto dto= mapper.map(job, JobResponseDto.class);
+	      dto.setCompanyName(name);
+	      dto.setClientId(job.getClient().getId());
+	    return dto;
 	}
 
 }

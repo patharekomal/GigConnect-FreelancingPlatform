@@ -251,7 +251,8 @@ import { getMyProjects } from "../../api/projectApi";
 function MyProjects() {
   const navigate = useNavigate();
 
-  const freelancerId = 1; // temporary
+   const user = JSON.parse(localStorage.getItem("user"));
+  const freelancerId = user.id;  
 
   const [myProjects, setMyProjects] = useState([]);
 
@@ -376,7 +377,7 @@ function MyProjects() {
                           <small className="text-danger">2 Days Left</small> */}
                           <small className="text-muted">👤 Client</small>
 
-                          <h6 className="mt-2">{project.clientName}</h6>
+                          <h6 className="mt-2">{project.companyName}</h6>
                         </div>
                       </div>
 

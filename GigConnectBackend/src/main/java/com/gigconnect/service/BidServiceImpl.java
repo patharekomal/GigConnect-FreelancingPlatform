@@ -126,21 +126,20 @@ public class BidServiceImpl implements BidService {
 	
 	@Override
 	public ApiResponse deleteBid(Long bidId) {
+		
+		  Bid bid = bidRepository.findById(bidId)
+		            .orElseThrow(() -> new RuntimeException("Bid not found"));
 
-		if (bidRepository.existsById(bidId)) {
-			
-			bidRepository.deleteById(bidId);
+		  if (bid.getStatus() != BidStatus.PENDING) {
+		        throw new RuntimeException("Only pending bids can be withdrawn.");
+		    }
+
+		    bidRepository.delete(bid);
 			
 			return new ApiResponse("Success","Bid Deleted Successfully");
 		}
-		else
-		{
-			return new ApiResponse("Failed ","BID Id Not Found ");
-		}
-
 		
-	}
-
+	
 	@Override
 	public List<BidResponse> getBidsByJob(Long jobId) {
 		
@@ -231,5 +230,18 @@ public class BidServiceImpl implements BidService {
 	            "Success",
 	            "Bid accepted and Project created successfully");
 	}
+
+	@Override
+	public BidResponse getBidByBidId(Long bidId) {
+		// TODO Auto-generated method stub
+		Bid obj=bidRepository.findById(bidId)
+				.orElseThrow(()-> new ResourceNotFoundException("Bid id invalid "));
+		BidResponse dto = modelMapper.map(obj, BidResponse.class);
+		dto.setBidId(obj.getId());
+		dto.setJobId(obj.getJob().getId());
+		return dto;
+	}
+	
+	
     
 }

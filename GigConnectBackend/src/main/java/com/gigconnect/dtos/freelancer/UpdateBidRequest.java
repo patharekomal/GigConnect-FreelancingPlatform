@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateBidRequest {
+	
 
     @DecimalMin(value = "0.0", inclusive = false,message = "Amount must be greater than 0")
     private Double amount;
