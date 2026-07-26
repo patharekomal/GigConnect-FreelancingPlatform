@@ -84,7 +84,7 @@ export const jobs = [
     description: "Develop REST APIs using Spring Boot.",
     budget: 30000,
     deadline: "2026-08-15",
-    status: "OPEN"
+    status: "OPEN",
   },
 
   {
@@ -94,7 +94,7 @@ export const jobs = [
     description: "Build secure REST APIs using Spring Boot.",
     budget: 45000,
     deadline: "2026-08-20",
-    status: "OPEN"
+    status: "OPEN",
   },
 
   {
@@ -104,7 +104,7 @@ export const jobs = [
     description: "Develop an admin dashboard using React and Bootstrap.",
     budget: 25000,
     deadline: "2026-08-18",
-    status: "IN_PROGRESS"
+    status: "IN_PROGRESS",
   },
 
   {
@@ -114,7 +114,7 @@ export const jobs = [
     description: "Create booking portal with responsive UI.",
     budget: 50000,
     deadline: "2026-08-25",
-    status: "OPEN"
+    status: "OPEN",
   },
 
   {
@@ -124,7 +124,7 @@ export const jobs = [
     description: "Develop CMS for school management.",
     budget: 38000,
     deadline: "2026-08-30",
-    status: "CLOSED"
+    status: "CLOSED",
   },
 
   {
@@ -134,8 +134,8 @@ export const jobs = [
     description: "Build personal portfolio website.",
     budget: 12000,
     deadline: "2026-09-05",
-    status: "OPEN"
-  }
+    status: "OPEN",
+  },
 ];
 
 // BIDS
