@@ -332,11 +332,11 @@ function MyProjects() {
 
                     <div className="d-flex justify-content-between align-items-start">
                       <div>
-                        <h4 className="fw-bold mb-1">{project.jobTitle}</h4>
+                        <h4 className="fw-bold mb-1">{project.projectTitle}</h4>
 
                         <p className="text-muted mb-0">
                           {" "}
-                          {project.jobDescription}
+                          {project.description}
                         </p>
                       </div>
 
@@ -467,9 +467,9 @@ function MyProjects() {
 
                     <div className="d-flex justify-content-between align-items-start">
                       <div>
-                        <h4 className="fw-bold mb-1">{project.jobTitle}</h4>
+                        <h4 className="fw-bold mb-1">{project.projectTitle}</h4>
 
-                        <p className="text-muted mb-0">{project.jobDescription}</p>
+                        <p className="text-muted mb-0">{project.description}</p>
                       </div>
 
                       <span className="badge bg-success px-3 py-2">

@@ -9,3 +9,8 @@ export const fetchJobsByClient = async(clientId) => {
     const response = await jobApi.getJobsByClient(clientId);
     return response.data;
 };
+
+export const fetchJobById = async (jobId) => {
+    const response = await jobApi.getJobById(jobId);
+    return response.data;
+};

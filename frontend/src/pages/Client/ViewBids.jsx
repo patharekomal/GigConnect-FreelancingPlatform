@@ -1,22 +1,88 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import Sidebar from "../../components/Client/Sidebar";
-import { bids, users, freelancerProfiles } from "../../data/dummyData";
 
-function ViewBids({ jobs }) {
+import { fetchJobById } from "../../services/jobService";
+import { fetchBidsByJob , acceptBid} from "../../services/bidService";
+import { fetchFreelancerById } from "../../services/freelancerService";
+
+function ViewBids() {
   const navigate = useNavigate();
+
+  const [selectedProfile, setSelectedProfile] = useState(null); //selectedProfile → freelancer ID
+  const [profile, setProfile] = useState(null); //profile → freelancer details returned by backend
+
+  const [job, setJob] = useState(null);
+
+  const [jobBids, setJobBids] = useState([]);
+
   const { jobId } = useParams();
 
-  const [selectedProfile, setSelectedProfile] = useState(null);
+  useEffect(() => {
 
-  const job = jobs.find((j) => j.job_id === parseInt(jobId));
-  const jobBids = bids.filter((b) => b.job_id === parseInt(jobId));
+    loadJob();
 
-  const getFreelancer = (id) =>
-    users.find((u) => u.user_id === id);
+    loadBids();
 
-  const getFreelancerProfile = (id) =>
-    freelancerProfiles.find((p) => p.freelancer_id === id);
+  }, [jobId]);
+
+  const loadJob = async() => {
+    try{
+      const data = await fetchJobById(jobId);
+
+      setJob(data);
+
+    }catch(error){
+      console.error(error);
+    }
+  };
+
+  const loadBids = async () => {
+    try{
+
+      const data = await fetchBidsByJob(jobId);
+      setJobBids(data);
+
+    } catch(error){
+      console.error(error);
+    }
+  };
+
+  const loadFreelancerProfile = async (freelancerId) => {
+  try {
+    const data = await fetchFreelancerById(freelancerId);
+
+    setProfile(data);
+    setSelectedProfile(freelancerId);
+
+  } catch (error) {
+    console.error(error);
+  }
+  };
+
+  const handleAcceptBid = async (bidId, freelancerName) => {
+  try {
+
+    const response=await acceptBid(bidId);
+
+    alert(`${freelancerName} selected successfully!`);
+
+    // Reload updated bid statuses
+    await loadBids();
+
+    // Reload job if backend changes job status
+    await loadJob();
+
+    // Navigate to project page
+    navigate(`/project/${response.projectId}`);
+
+  } catch (error) {
+    console.error(error);
+
+    alert("Failed to accept bid.");
+  }
+};
+
 
   const statusBadge = (status) => {
     if (status === "ACCEPTED") return "bg-success";
@@ -25,11 +91,7 @@ function ViewBids({ jobs }) {
   };
 
   if (!job) {
-    return (
-      <div className="p-5 text-center">
-        Job not found.
-      </div>
-    );
+    return <h2>Loading...</h2>;
   }
 
   return (
@@ -237,11 +299,14 @@ function ViewBids({ jobs }) {
 
                   <tbody>
                                       {jobBids.map((bid, index) => {
-                    const freelancer = getFreelancer(bid.freelancer_id);
+                    const freelancer = {
+                      id: bid.freelancerId,
+                      name: bid.freelancerName
+                    };
 
                     return (
                       <tr
-                        key={bid.bid_id}
+                        key={bid.bidId}
                         className="bid-row align-middle"
                       >
                         {/* Row Number */}
@@ -255,8 +320,8 @@ function ViewBids({ jobs }) {
                             className="d-flex align-items-center gap-2"
                             style={{ cursor: "pointer" }}
                             onClick={() =>
-                              setSelectedProfile(
-                                bid.freelancer_id
+                              loadFreelancerProfile(
+                                bid.freelancerId
                               )
                             }
                           >
@@ -269,13 +334,13 @@ function ViewBids({ jobs }) {
                                   "linear-gradient(135deg,#198754,#157347)",
                               }}
                             >
-                              {freelancer?.name?.charAt(0)}
+                              {freelancer.name.charAt(0)}
                             </div>
 
                             <div
                               className="fw-semibold freelancer-link"
                             >
-                              {freelancer?.name}
+                              {freelancer.name}
                             </div>
                           </div>
                         </td>
@@ -290,7 +355,7 @@ function ViewBids({ jobs }) {
 
                         {/* Duration */}
                         <td className="px-4 py-3 text-muted">
-                          {bid.duration_days} days
+                          {bid.duration} days
                         </td>
 
                         {/* Proposal */}
@@ -334,13 +399,8 @@ function ViewBids({ jobs }) {
                                 fontSize: "12px",
                                 fontWeight: "600",
                               }}
-                              onClick={() => {
-                                alert(
-                                  `${freelancer?.name} selected!`
-                                );
-
-                                navigate("/project/1");
-                              }}
+                              onClick={() =>
+                                handleAcceptBid(bid.bidId,freelancer.name)}
                             >
                               ✓ Select
                             </button>
@@ -375,9 +435,10 @@ function ViewBids({ jobs }) {
       {selectedProfile && (
         <div
           className="modal-overlay"
-          onClick={() =>
-            setSelectedProfile(null)
-          }
+          onClick={() => {
+            setSelectedProfile(null);
+            setProfile(null);
+          }}
         >
           <div
             className="modal-content"
@@ -386,15 +447,6 @@ function ViewBids({ jobs }) {
             }
           >
             {(() => {
-              const profile =
-                getFreelancerProfile(
-                  selectedProfile
-                );
-
-              const freelancer =
-                getFreelancer(
-                  selectedProfile
-                );
 
               return (
                 <>
@@ -412,17 +464,17 @@ function ViewBids({ jobs }) {
                             "linear-gradient(135deg,#198754,#157347)",
                         }}
                       >
-                        {freelancer?.name?.charAt(0)}
+                        {profile?.firstName?.charAt(0)}
                       </div>
 
                       <div>
 
                         <h4 className="mb-1">
-                          {freelancer?.name}
+                          {profile?.firstName} {profile?.lastName}
                         </h4>
 
                         <p className="text-muted mb-1">
-                          {profile?.title}
+                          {profile?.profession}
                         </p>
 
                         <span className="rating-star">
@@ -437,13 +489,9 @@ function ViewBids({ jobs }) {
 
                     </div>
 
-                    <button
-                      className="btn-close"
-                      onClick={() =>
-                        setSelectedProfile(
-                          null
-                        )
-                      }
+                    <button className="btn-close" onClick={() => {
+                      setSelectedProfile(null);
+                      setProfile(null);}}
                     />
 
                   </div>
@@ -463,16 +511,16 @@ function ViewBids({ jobs }) {
 
                   <div className="mb-4">
 
-                    {profile?.skills?.map(
-                      (skill, index) => (
+                    {profile?.skills
+                      ?.split(",")
+                      .map((skill, index) => (
                         <span
                           key={index}
                           className="skill-badge"
                         >
-                          {skill}
+                          {skill.trim()}
                         </span>
-                      )
-                    )}
+                      ))}
 
                   </div>
 
@@ -497,7 +545,7 @@ function ViewBids({ jobs }) {
                     </span>
 
                     <a
-                      href={profile?.portfolio}
+                      href={profile?.portfolioLink}
                       target="_blank"
                       rel="noreferrer"
                     >

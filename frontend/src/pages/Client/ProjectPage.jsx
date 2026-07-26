@@ -1,23 +1,38 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Sidebar from "../../components/Client/Sidebar";
-import { projects, users, jobs } from "../../data/dummyData";
+import { fetchProjectById, approveProject } from "../../services/projectService";
+
+import { useState, useEffect } from "react";
 
 function ProjectPage() {
 
   const navigate = useNavigate();
   const { projectId } = useParams();
 
-  const project = projects.find(
-    (p) => p.project_id === parseInt(projectId)
-  );
+  const [project, setProject] = useState(null);
 
-  const job = project
-    ? jobs.find((j) => j.job_id === project.job_id)
-    : null;
+  useEffect(() => {
+    loadProject();
+  }, [projectId]);
 
-  const freelancer = project
-    ? users.find((u) => u.user_id === project.freelancer_id)
-    : null;
+  const loadProject = async () => {
+
+      try {
+
+          const data = await fetchProjectById(projectId);
+
+          console.log(data);
+
+          setProject(data);
+
+      } catch(error){
+
+          console.error(error);
+
+      }
+  };
+
+  
 
   const statusStyle = (status) => {
 
@@ -51,7 +66,7 @@ function ProjectPage() {
     };
   };
 
-  if (!project || !job || !freelancer) {
+  if (!project) {
 
     return (
 
@@ -82,6 +97,27 @@ function ProjectPage() {
   }
 
   const badge = statusStyle(project.status);
+
+  const handleApprove = async () => {
+
+    try {
+
+        await approveProject(projectId);
+
+        alert("Project approved successfully!");
+
+        loadProject();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            error.response?.data?.message ||
+            "Unable to approve project."
+        );
+    }
+};
 
   return (
 
@@ -148,7 +184,7 @@ function ProjectPage() {
                     fontSize: "24px",
                   }}
                 >
-                  {job.title}
+                  {project.projectTitle}
                 </h2>
 
                 <span
@@ -205,11 +241,11 @@ function ProjectPage() {
                             "linear-gradient(135deg,#198754,#157347)",
                         }}
                       >
-                        {freelancer.name.charAt(0)}
+                        {project.freelancerName?.charAt(0)}
                       </div>
 
                       <span className="fw-semibold">
-                        {freelancer.name}
+                        {project.freelancerName}
                       </span>
 
                     </div>
@@ -238,9 +274,9 @@ function ProjectPage() {
                       style={{ fontSize: "20px" }}
                     >
                       ₹
-                      {project.agreed_amount
+                      {project.agreedAmount
                         ?.toLocaleString?.() ??
-                        project.agreed_amount}
+                        project.agreedAmount}
                     </div>
 
                   </div>
@@ -265,7 +301,7 @@ function ProjectPage() {
                     <div className="fw-semibold">
                       #PRJ-
                       {String(
-                        project.project_id
+                        project.projectId
                       ).padStart(3, "0")}
                     </div>
 
@@ -292,7 +328,7 @@ function ProjectPage() {
                     lineHeight: "1.7",
                   }}
                 >
-                  {job.description}
+                  {project.description}
                 </p>
 
               </div>
@@ -300,8 +336,7 @@ function ProjectPage() {
             </div>
 
             {/* Submitted Work */}
-
-            {project.submitted_work ? (
+            {project.submittedWork ? (
 
               <div className="bg-white border rounded-3 p-4 mb-4">
 
@@ -334,12 +369,12 @@ function ProjectPage() {
                     </div>
 
                     <a
-                      href={`https://${project.submitted_work}`}
+                      href={`https://${project.submittedWork}`}
                       target="_blank"
                       rel="noreferrer"
                       className="text-green fw-semibold"
                     >
-                      {project.submitted_work}
+                      {project.submittedWork}
                     </a>
 
                   </div>
@@ -356,15 +391,7 @@ function ProjectPage() {
                         background:
                           "linear-gradient(135deg,#198754,#157347)",
                       }}
-                      onClick={() => {
-
-                        alert(
-                          "Work approved! Payment can now be released."
-                        );
-
-                        navigate("/payment");
-
-                      }}
+                      onClick={handleApprove}
                     >
                       ✓ Approve Work & Release Payment
                     </button>

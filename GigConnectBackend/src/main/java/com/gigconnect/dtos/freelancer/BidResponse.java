@@ -31,6 +31,7 @@ public class BidResponse {
     // null if bid is not accepted
     private Long projectId;
     
+    private Long freelancerId;
     private String freelancerName;
     
 

@@ -11,3 +11,12 @@ export const getProjectById = (projectId) => {
 export const submitWork = (projectId, data) => {
   return api.put(`/projects/${projectId}/submit-work`, data);
 };
+
+export const getProjectsByClient = (clientId) => {
+    return api.get(`/projects/client/${clientId}`);
+};
+
+export const approveProject = (projectId) => {
+    return api.patch(`/projects/${projectId}/approve`);
+};
+
