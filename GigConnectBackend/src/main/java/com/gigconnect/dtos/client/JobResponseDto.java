@@ -25,4 +25,6 @@ public class JobResponseDto {
     private Long clientId;
     private String companyName;
     
+    private int bidCount;
+    
 }

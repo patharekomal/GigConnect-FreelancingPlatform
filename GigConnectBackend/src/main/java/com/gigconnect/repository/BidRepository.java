@@ -12,6 +12,8 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
 	List<Bid> findByFreelancerId(Long freelancerId);
 	List<Bid> findByJobId(Long jobId);
 	long countByFreelancerId(Long freelancerId);
+	
+	int countByJobId(Long jobId);
 
 	long countByFreelancerIdAndStatus(Long freelancerId, BidStatus status);
 }

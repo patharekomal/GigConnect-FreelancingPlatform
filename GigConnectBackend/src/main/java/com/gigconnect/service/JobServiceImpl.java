@@ -14,6 +14,7 @@ import com.gigconnect.dtos.client.JobUpdateDto;
 import com.gigconnect.entities.Client;
 import com.gigconnect.entities.Job;
 import com.gigconnect.enums.JobStatus;
+import com.gigconnect.repository.BidRepository;
 import com.gigconnect.repository.ClientRepository;
 import com.gigconnect.repository.JobRepository;
 
@@ -28,7 +29,9 @@ public class JobServiceImpl implements JobService{
 
 	private final JobRepository jobRepo;
 	private final ClientRepository clientRepo;
+	private final BidRepository bidRepository;
 	private final ModelMapper mapper;
+	
 	
 	@Override
 	public ApiResponse postJob(Long clientId, @Valid JobRequestDto dto) {
@@ -65,10 +68,21 @@ public class JobServiceImpl implements JobService{
 
 	    List<JobResponseDto> jobList = new ArrayList<>();
 
-	    for (Job j : jobs) {
-	        jobList.add(mapper.map(j, JobResponseDto.class));
-	    }
+//	    for (Job j : jobs) {
+//	        jobList.add(mapper.map(j, JobResponseDto.class));
+//	    }
 
+	    
+	    for (Job j : jobs) {
+
+	        JobResponseDto dto = mapper.map(j, JobResponseDto.class);
+
+	        dto.setBidCount(
+	                bidRepository.countByJobId(j.getId())
+	        );
+
+	        jobList.add(dto);
+	    }
 	    return jobList;
 	}
 
@@ -118,6 +132,9 @@ public class JobServiceImpl implements JobService{
 	    	JobResponseDto dto= mapper.map(j, JobResponseDto.class);
 	    	 dto.setCompanyName(name);
 		      dto.setClientId(j.getClient().getId());
+		      dto.setBidCount(
+		    		    bidRepository.countByJobId(((JobResponseDto) jobs).getId())
+		    		);
 	    	   
 		      jobList.add(dto);
 	    	

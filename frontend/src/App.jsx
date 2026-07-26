@@ -19,6 +19,7 @@ import ClientMyProjects from "./pages/Client/ClientMyProjects"
 import ProjectPage from "./pages/Client/ProjectPage"
 import Payment from "./pages/Client/Payment"
 import ClientProfile from "./pages/Client/ClientProfile";
+import ClientChat from "./pages/Client/ClientChat"
 import { jobs } from "./data/dummyData"
 // import ClientDashboard from "./pages/ClientDashboard";
 // import FreelancerDashboard from "./pages/FreelancerDashboard";
@@ -69,6 +70,7 @@ function App() {
         <Route path="/my-jobs" element={<MyJobs jobs={jobs} />} />
         <Route path="/my-projects" element={<ClientMyProjects />} />
         <Route path="/project/:projectId" element={<ProjectPage />} />
+        <Route path="/clientChat/:projectId" element={<ClientChat />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/client-profile" element={<ClientProfile />} />
         <Route path="/edit-client-profile" element={<EditClientProfile />} />

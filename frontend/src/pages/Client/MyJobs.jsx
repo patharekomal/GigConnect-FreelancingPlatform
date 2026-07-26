@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Client/Sidebar";
 
-import { bids } from "../../data/dummyData";
-
 import { useState, useEffect } from "react";
 import { fetchJobsByClient } from "../../services/jobService";
 
@@ -40,9 +38,6 @@ function MyJobs() {
   }, [clientId]);
 
   const myJobs = jobs;
-
-  const getBidCount = (jobId) =>
-    bids.filter((b) => b.job_id === jobId).length;
 
   const statusBadge = (status) => {
     if (status === "OPEN") return "bg-success";
@@ -264,17 +259,17 @@ function MyJobs() {
                             width: "28px",
                             height: "28px",
                             background:
-                              getBidCount(job.id) > 0
+                              job.bidCount > 0
                                 ? "#E1F5EE"
                                 : "#f1f5f9",
                             color:
-                              getBidCount(job.id) > 0
+                              job.bidCount > 0
                                 ? "#1D9E75"
                                 : "#64748b",
                             fontSize: "12px",
                           }}
                         >
-                          {getBidCount(job.id)}
+                          {job.bidCount}
                         </span>
                       </td>
 

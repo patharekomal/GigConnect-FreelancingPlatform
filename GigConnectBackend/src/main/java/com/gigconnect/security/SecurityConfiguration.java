@@ -29,6 +29,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll())
 
+                .cors(Customizer.withDefaults())
+
                 // Disable default login page
                 .formLogin(form -> form.disable())
 

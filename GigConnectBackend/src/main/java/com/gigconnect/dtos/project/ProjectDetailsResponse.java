@@ -34,4 +34,9 @@ public class ProjectDetailsResponse {
 
     // Submitted Work
     private String submittedWork;
+    
+    //Freelancer details
+    private Long freelancerId;
+
+    private String freelancerName;
 }
