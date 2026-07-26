@@ -1,7 +1,10 @@
 import { useNavigate } from "react-router-dom";
 
-function Sidebar() {
+function Sidebar({ client }) {
   const navigate = useNavigate();
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  
 
   return (
     <div
@@ -25,7 +28,6 @@ function Sidebar() {
       {/* Navigation */}
 
       <div className="d-grid gap-2">
-
         <button
           className="btn btn-light text-start"
           onClick={() => navigate("/client")}
@@ -67,21 +69,19 @@ function Sidebar() {
         >
           Profile
         </button>
-
       </div>
 
       {/* Push Bottom */}
-
       <div className="mt-auto"></div>
 
       {/* User Card */}
-
       <div className="card border-0 shadow-sm p-3">
-
-        <h4 className="mb-1">🏢 XYZ Solutions</h4>
+       <h4 className="mb-1">
+  🏢 {client?.companyName || "loading"}
+</h4>
 
         <small className="text-muted d-block mb-2">
-          Client
+          {user?.firstName} {user?.lastName}
         </small>
 
         <span className="text-success mb-3">
@@ -90,13 +90,14 @@ function Sidebar() {
 
         <button
           className="btn btn-outline-danger w-100"
-          onClick={() => navigate("/")}
+          onClick={() => {
+            localStorage.removeItem("user");
+            navigate("/");
+          }}
         >
           Logout
         </button>
-
       </div>
-
     </div>
   );
 }

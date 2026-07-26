@@ -1,12 +1,31 @@
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Client/Sidebar";
 import { jobs, projects, payments } from "../../data/dummyData";
-
-const CLIENT_ID = 2;
-const CLIENT_NAME = "XYZ Solutions";
+import { useEffect, useState } from "react";
+import { fetchClientById } from "../../services/clientService";
 
 function ClientDashboard() {
   const navigate = useNavigate();
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const CLIENT_ID = user?.id;
+   const [client, setClient] = useState(null);
+
+useEffect(() => {
+  loadClient();
+}, []);
+
+const loadClient = async () => {
+  try {
+    const response = await fetchClientById(CLIENT_ID);
+    setClient(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
+  const CLIENT_NAME =
+  client?.firstName || user?.firstName || "";
 
   // ── Stats from dummy data ──────────────────────────────────
   const myJobs = jobs.filter((j) => j.client_id === CLIENT_ID);
@@ -126,7 +145,7 @@ function ClientDashboard() {
         }
       `}</style>
 
-      <Sidebar />
+      <Sidebar key={client?.companyName} client={client} />
 
       <main
         style={{
@@ -190,11 +209,8 @@ function ClientDashboard() {
         {/* Quick Actions */}
 
         <div className="row g-3 mb-4">
-
           <div className="col-md-8">
-
             <div className="bg-white border rounded-3 p-4 h-100">
-
               <h2
                 className="fw-semibold mb-3"
                 style={{ fontSize: "15px" }}
@@ -203,16 +219,12 @@ function ClientDashboard() {
               </h2>
 
               <div className="row g-3">
-
                 {actions.map((a, i) => (
-
                   <div className="col-6" key={i}>
-
                     <div
                       className="action-card border rounded-3 p-3"
                       onClick={() => navigate(a.path)}
                     >
-
                       <div
                         style={{
                           fontSize: "20px",
@@ -235,25 +247,17 @@ function ClientDashboard() {
                       >
                         {a.desc}
                       </div>
-
                     </div>
-
                   </div>
-
                 ))}
-
               </div>
-
             </div>
-
           </div>
 
           {/* Activity */}
 
           <div className="col-md-4">
-
             <div className="bg-white border rounded-3 p-4 h-100">
-
               <h2
                 className="fw-semibold mb-3"
                 style={{ fontSize: "15px" }}
@@ -262,14 +266,11 @@ function ClientDashboard() {
               </h2>
 
               <div className="d-flex flex-column gap-3">
-
                 {activity.map((a, i) => (
-
                   <div
                     key={i}
                     className="d-flex gap-2 align-items-start"
                   >
-
                     <div
                       className="rounded-circle flex-shrink-0 mt-1"
                       style={{
@@ -280,7 +281,6 @@ function ClientDashboard() {
                     />
 
                     <div>
-
                       <div
                         style={{
                           fontSize: "12px",
@@ -296,19 +296,12 @@ function ClientDashboard() {
                       >
                         {a.time}
                       </div>
-
                     </div>
-
                   </div>
-
                 ))}
-
               </div>
-
             </div>
-
           </div>
-
         </div>
 
         {/* Banner */}
@@ -319,9 +312,7 @@ function ClientDashboard() {
             background: "#0f172a",
           }}
         >
-
           <div>
-
             <div
               className="text-white fw-semibold"
               style={{ fontSize: "15px" }}
@@ -338,7 +329,6 @@ function ClientDashboard() {
             >
               Post a job and get proposals from skilled freelancers.
             </div>
-
           </div>
 
           <button
@@ -352,9 +342,7 @@ function ClientDashboard() {
           >
             Post a Job →
           </button>
-
         </div>
-
       </main>
     </>
   );
