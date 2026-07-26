@@ -55,11 +55,14 @@ function Profile() {
               <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center">
                   <div
-                    className="rounded-circle bg-success text-white fw-boldd-flex justify-content-center align-items-center me-3"
+                    className="rounded-circle bg-success text-white fw-bold d-flex justify-content-center align-items-center me-3"
                     style={{
                       width: "70px",
                       height: "70px",
                       fontSize: "28px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
                     {profile.firstName?.charAt(0)}
@@ -77,7 +80,7 @@ function Profile() {
                 </div>
 
                 <div className="text-end">
-                  <h4 className="text-warning mb-1">⭐ {profile.rating}</h4>
+                  <h4 className="text-warning mb-1">⭐{profile.rating}</h4>
 
                   <button
                     className="btn btn-outline-success"
@@ -124,9 +127,16 @@ function Profile() {
               </div>
 
               <h4 className="mt-4">🚀 Skills</h4>
-              <span className="badge rounded-pill bg-success-subtle text-success border px-3 py-2">
-                {profile.skills}
-              </span>
+              <div className="d-flex flex-wrap gap-2 mt-3">
+                {profile.skills.split(",").map((skill, index) => (
+                  <span
+                    key={index}
+                    className="badge rounded-pill bg-success-subtle text-success border px-3 py-2"
+                  >
+                    {skill.trim()}
+                  </span>
+                ))}
+              </div>
 
               <hr />
 
