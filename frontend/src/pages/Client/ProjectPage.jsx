@@ -381,34 +381,41 @@ function ProjectPage() {
 
                 </div>
 
-                {project.status === "SUBMITTED" && (
+                <div className="d-flex gap-3 mt-4">
 
-                  <>
+                  <button
+                    className="btn text-white"
+                    style={{
+                      background: "linear-gradient(135deg,#198754,#157347)",
+                      minWidth: "180px",
+                    }}
+                    onClick={() => navigate(`/clientChat/${project.projectId}`)}
+                  >
+                    💬 Chat with Freelancer
+                  </button>
 
+                  {project.status === "SUBMITTED" && (
                     <button
-                      className="btn approve-btn text-white w-100 mt-4"
+                      className="btn approve-btn text-white flex-grow-1"
                       style={{
-                        background:
-                          "linear-gradient(135deg,#198754,#157347)",
+                        background: "linear-gradient(135deg,#198754,#157347)",
                       }}
                       onClick={handleApprove}
                     >
                       ✓ Approve Work & Release Payment
                     </button>
+                  )}
 
-                    <p
-                      className="text-center text-muted mt-2 mb-0"
-                      style={{
-                        fontSize: "12px",
-                      }}
-                    >
-                      Approving marks this project
-                      as completed.
-                    </p>
+                </div>
 
-                  </>
-
-                )}
+                      {project.status === "SUBMITTED" && (
+                        <p
+                          className="text-center text-muted mt-2 mb-0"
+                          style={{ fontSize: "12px" }}
+                        >
+                          Approving marks this project as completed.
+                        </p>
+                      )}
 
               </div>
 
@@ -422,24 +429,34 @@ function ProjectPage() {
 
                 <div className="text-center py-4">
 
-                  <div
-                    style={{
-                      fontSize: "40px",
-                    }}
-                  >
-                    ⏳
-                  </div>
+  <div
+    style={{
+      fontSize: "40px",
+    }}
+  >
+    ⏳
+  </div>
 
-                  <h6 className="mt-3">
-                    Waiting for Submission
-                  </h6>
+  <h6 className="mt-3">
+    Waiting for Submission
+  </h6>
 
-                  <p className="text-muted mb-0">
-                    The freelancer has not
-                    submitted the work yet.
-                  </p>
+  <p className="text-muted">
+    The freelancer has not submitted the work yet.
+  </p>
 
-                </div>
+  <button
+    className="btn text-white mt-3"
+    style={{
+      background: "linear-gradient(135deg,#198754,#157347)",
+      minWidth: "200px",
+    }}
+    onClick={() => navigate(`/clientChat/${project.projectId}`)}
+  >
+    💬 Chat with Freelancer
+  </button>
+
+</div>
 
               </div>
 
