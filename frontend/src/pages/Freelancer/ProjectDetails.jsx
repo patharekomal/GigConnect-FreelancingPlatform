@@ -54,7 +54,7 @@ function ProjectDetails() {
 
               <div className="d-flex justify-content-between align-items-center">
                 <div>
-                  <h2 className="fw-bold">{project.jobTitle}</h2>
+                  <h2 className="fw-bold">{project.projectTitle}</h2>
 
                   <p className="text-muted mb-0">{project.shortDescription}</p>
                 </div>

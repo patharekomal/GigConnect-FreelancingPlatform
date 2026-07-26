@@ -3,6 +3,7 @@ package com.gigconnect.service;
 import java.util.List;
 
 import com.gigconnect.dtos.ApiResponse;
+import com.gigconnect.dtos.freelancer.AcceptBidResponse;
 import com.gigconnect.dtos.freelancer.BidRequest;
 import com.gigconnect.dtos.freelancer.BidResponse;
 import com.gigconnect.dtos.freelancer.UpdateBidRequest;
@@ -20,7 +21,7 @@ public interface BidService {
 
 	List<BidResponse> getBidsByJob(Long jobId);
 
-	ApiResponse acceptBid(Long bidId);
+	AcceptBidResponse acceptBid(Long bidId);
 
 	BidResponse getBidByBidId(Long bidId);
 

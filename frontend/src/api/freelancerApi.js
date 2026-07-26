@@ -7,3 +7,6 @@ export const getDashboard = (freelancerId) => {
 export const getProfile = (freelancerId) => {
   return api.get(`/freelancers/${freelancerId}`);
 };
+export const getFreelancerById = (freelancerId) => {
+    return api.get(`/freelancers/${freelancerId}`);
+};

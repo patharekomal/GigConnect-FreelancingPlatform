@@ -1,41 +1,38 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Fragment } from "react";
+import React from "react";
 import Sidebar from "../../components/Client/Sidebar";
-import {
-  projects,
-  users,
-  jobs,
-  messages,
-  freelancerProfiles,
-} from "../../data/dummyData";
-
-const CLIENT_ID = 2;
+import { fetchProjectsByClient } from "../../services/projectService";
 
 function MyProjects() {
   const navigate = useNavigate();
 
+  const user = JSON.parse(localStorage.getItem("user"));
+  const clientId = user.id;
+
   const [expandedProject, setExpandedProject] = useState(null);
+
+  // -----------------------------
+  // Future Chat Feature
+  // -----------------------------
   const [newMessage, setNewMessage] = useState("");
 
-  const myProjects = projects.filter(
-    (p) => p.client_id === CLIENT_ID
-  );
+  const [myProjects, setMyProjects] = useState([]);
 
-  const getFreelancer = (id) =>
-    users.find((u) => u.user_id === id);
+  useEffect(() => {
+    loadProjects();
+  }, []);
 
-  const getJob = (id) =>
-    jobs.find((j) => j.job_id === id);
-
-  const getProjectMessages = (projectId) =>
-    messages.filter(
-      (m) => m.project_id === projectId
-    );
-
-  const getFreelancerProfile = (id) =>
-    freelancerProfiles.find(
-      (p) => p.freelancer_id === id
-    );
+  const loadProjects = async () => {
+    try {
+      const data = await fetchProjectsByClient(clientId);
+      console.log(data);
+      setMyProjects(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const statusStyle = (status) => {
     if (status === "COMPLETED")
@@ -68,6 +65,10 @@ function MyProjects() {
     };
   };
 
+  // --------------------------------------------
+  // Future Chat Feature
+  // Backend API not implemented yet
+  // --------------------------------------------
   const handleSendMessage = () => {
     if (newMessage.trim()) {
       console.log(newMessage);
@@ -76,7 +77,7 @@ function MyProjects() {
   };
 
   return (
-    <>
+        <>
       <style>{`
         body{
           background:#f8fafc !important;
@@ -152,9 +153,7 @@ function MyProjects() {
 
               <p className="text-muted">
                 {myProjects.length} Project
-                {myProjects.length !== 1
-                  ? "s"
-                  : ""}
+                {myProjects.length !== 1 ? "s" : ""}
               </p>
 
             </div>
@@ -176,8 +175,7 @@ function MyProjects() {
                 </h5>
 
                 <p className="text-muted">
-                  Projects will appear here after
-                  accepting bids.
+                  Projects will appear here after accepting bids.
                 </p>
 
                 <button
@@ -186,9 +184,7 @@ function MyProjects() {
                     background:
                       "linear-gradient(135deg,#198754,#157347)",
                   }}
-                  onClick={() =>
-                    navigate("/my-jobs")
-                  }
+                  onClick={() => navigate("/my-jobs")}
                 >
                   View My Jobs
                 </button>
@@ -218,9 +214,7 @@ function MyProjects() {
                   >
                     <tr>
 
-                      <th className="px-4 py-3">
-                        #
-                      </th>
+                      <th className="px-4 py-3">#</th>
 
                       <th className="px-4 py-3">
                         JOB TITLE
@@ -246,298 +240,182 @@ function MyProjects() {
                   </thead>
 
                   <tbody>
-                                      {myProjects.map((project, index) => {
-                    const freelancer = getFreelancer(
-                      project.freelancer_id
-                    );
+                    {myProjects.map((project, index) => {
 
-                    const job = getJob(
-                      project.job_id
-                    );
+  const badge = statusStyle(project.status);
 
-                    const badge = statusStyle(
-                      project.status
-                    );
+  const isExpanded =
+    expandedProject === project.projectId;
 
-                    const projectMessages =
-                      getProjectMessages(
-                        project.project_id
-                      );
+  return (
+  <Fragment key={project.projectId}>
+    <tr className="project-row align-middle">
+        {/* Row Number */}
+        <td className="px-4 py-3">
+          {index + 1}
+        </td>
 
-                    const isExpanded =
-                      expandedProject ===
-                      project.project_id;
+        {/* Job Title */}
+        <td
+          className="px-4 py-3"
+          style={{ width: "35%" }}
+        >
+          <div
+            className="fw-semibold"
+            style={{
+              fontSize: "14px",
+            }}
+          >
+            {project.projectTitle}
+          </div>
 
-                    return (
-                      <>
-                        <tr
-                          key={project.project_id}
-                          className="project-row align-middle"
-                        >
-                          {/* Row Number */}
-                          <td className="px-4 py-3">
-                            {index + 1}
-                          </td>
+          <div
+            className="text-muted"
+            style={{
+              fontSize: "12px",
+            }}
+          >
+            #PRJ-
+            {String(project.projectId).padStart(3, "0")}
+          </div>
+        </td>
 
-                          {/* Job Title */}
-                          <td
-                            className="px-4 py-3"
-                            style={{ width: "35%" }}
-                          >
-                            <div
-                              className="fw-semibold"
-                              style={{
-                                fontSize: "14px",
-                              }}
-                            >
-                              {job?.title || "N/A"}
-                            </div>
+        {/* Freelancer */}
+        <td className="px-4 py-3">
+          <div className="d-flex align-items-center gap-2">
 
-                            <div
-                              className="text-muted"
-                              style={{
-                                fontSize: "12px",
-                              }}
-                            >
-                              #PRJ-
-                              {String(
-                                project.project_id
-                              ).padStart(3, "0")}
-                            </div>
-                          </td>
-
-                          {/* Freelancer */}
-                          <td className="px-4 py-3">
-                            <div className="d-flex align-items-center gap-2">
-
-                              <div
-                                className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
-                                style={{
-                                  width: "32px",
-                                  height: "32px",
-                                  background:
-                                    "linear-gradient(135deg,#198754,#157347)",
-                                }}
-                              >
-                                {freelancer?.name?.charAt(
-                                  0
-                                )}
-                              </div>
-
-                              <span>
-                                {freelancer?.name}
-                              </span>
-
-                            </div>
-                          </td>
-
-                          {/* Amount */}
-                          <td className="px-4 py-3 fw-semibold">
-                            ₹
-                            {project.agreed_amount
-                              ?.toLocaleString?.() ??
-                              project.agreed_amount}
-                          </td>
-
-                          {/* Status */}
-                          <td className="px-4 py-3">
-
-                            <span
-                              className="badge rounded-pill px-3 py-2"
-                              style={{
-                                background:
-                                  badge.bg,
-                                color:
-                                  badge.color,
-                              }}
-                            >
-                              {project.status}
-                            </span>
-
-                          </td>
-
-                          {/* Action */}
-                          <td className="px-4 py-3">
-
-                            <div className="d-flex gap-2">
-
-                              <button
-                                className="btn text-white view-btn"
-                                style={{
-                                  background:
-                                    "linear-gradient(135deg,#198754,#157347)",
-                                  fontSize:
-                                    "12px",
-                                }}
-                                onClick={() =>
-                                  navigate(
-                                    `/project/${project.project_id}`
-                                  )
-                                }
-                              >
-                                View
-                              </button>
-
-                              <button
-                                className="btn"
-                                style={{
-                                  background:
-                                    "#E1F5EE",
-                                  color:
-                                    "#1D9E75",
-                                  fontSize:
-                                    "12px",
-                                }}
-                                onClick={() =>
-                                  setExpandedProject(
-                                    isExpanded
-                                      ? null
-                                      : project.project_id
-                                  )
-                                }
-                              >
-                                {isExpanded
-                                  ? "✕"
-                                  : "💬"}
-                              </button>
-
-                            </div>
-
-                          </td>
-                        </tr>
-
-                        {isExpanded && (
-                          <tr>
-
-                            <td
-                              colSpan="6"
-                              className="p-4"
-                              style={{
-                                background:
-                                  "#fff",
-                              }}
-                            >
-                              <h6 className="fw-bold mb-3">
-                                Chat with{" "}
-                                {freelancer?.name}
-                              </h6>
-
-                              <div className="chat-container p-3 mb-3">
-
-                                {projectMessages.length ===
-                                0 ? (
-
-                                  <div className="text-center text-muted py-4">
-                                    No messages
-                                    yet.
-                                  </div>
-
-                                ) : (
-
-                                  projectMessages.map(
-                                    (msg) => (
-                                      <div
-                                        key={
-                                          msg.message_id
-                                        }
-                                        className={`message ${
-                                          msg.sender_id ===
-                                          CLIENT_ID
-                                            ? "sent"
-                                            : "received"
-                                        }`}
-                                      >
-                                        <strong>
-                                          {
-                                            msg.sender_name
-                                          }
-                                        </strong>
-
-                                        <div className="mt-1">
-                                          {
-                                            msg.message
-                                          }
-                                        </div>
-
-                                        <div
-                                          className="mt-1"
-                                          style={{
-                                            fontSize:
-                                              "11px",
-                                            opacity:
-                                              ".7",
-                                          }}
-                                        >
-                                          {
-                                            msg.time
-                                          }
-                                        </div>
-                                      </div>
-                                    )
-                                  )
-
-                                )}
-
-                              </div>
-
-                              <div className="d-flex gap-2">
-
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  placeholder="Type your message..."
-                                  value={
-                                    newMessage
-                                  }
-                                  onChange={(
-                                    e
-                                  ) =>
-                                    setNewMessage(
-                                      e.target
-                                        .value
-                                    )
-                                  }
-                                  onKeyDown={(
-                                    e
-                                  ) => {
-                                    if (
-                                      e.key ===
-                                      "Enter"
-                                    ) {
-                                      handleSendMessage();
-                                    }
-                                  }}
-                                />
-
-                                <button
-                                  className="btn text-white"
-                                  style={{
-                                    background:
-                                      "linear-gradient(135deg,#198754,#157347)",
-                                  }}
-                                  onClick={
-                                    handleSendMessage
-                                  }
-                                >
-                                  Send
-                                </button>
-
-                              </div>
-
-                            </td>
-
-                          </tr>
-                        )}
-                      </>
-                    );
-                  })}
-                                  </tbody>
-
-              </table>
-
+            <div
+              className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
+              style={{
+                width: "32px",
+                height: "32px",
+                background:
+                  "linear-gradient(135deg,#198754,#157347)",
+              }}
+            >
+              {project.freelancerName?.charAt(0)}
             </div>
 
-          )}
+            <span>
+              {project.freelancerName}
+            </span>
+
+          </div>
+        </td>
+
+        {/* Amount */}
+        <td className="px-4 py-3 fw-semibold">
+          ₹
+          {project.agreedAmount?.toLocaleString()}
+        </td>
+
+        {/* Status */}
+        <td className="px-4 py-3">
+
+          <span
+            className="badge rounded-pill px-3 py-2"
+            style={{
+              background: badge.bg,
+              color: badge.color,
+            }}
+          >
+            {project.status}
+          </span>
+
+        </td>
+
+        {/* Action */}
+        <td className="px-4 py-3">
+
+          <div className="d-flex gap-2">
+
+            <button
+              className="btn text-white view-btn"
+              style={{
+                background:
+                  "linear-gradient(135deg,#198754,#157347)",
+                fontSize: "12px",
+              }}
+              onClick={() =>
+                navigate(`/project/${project.projectId}`)
+              }
+            >
+              View
+            </button>
+
+            {/* =====================================================
+                FUTURE CHAT FEATURE
+                Backend APIs not implemented yet.
+                Uncomment after Chat module is ready.
+            ====================================================== */}
+
+            {/*
+            <button
+              className="btn"
+              style={{
+                background:"#E1F5EE",
+                color:"#1D9E75",
+                fontSize:"12px",
+              }}
+              onClick={() =>
+                setExpandedProject(
+                  isExpanded
+                    ? null
+                    : project.projectId
+                )
+              }
+            >
+              {isExpanded ? "✕" : "💬"}
+            </button>
+            */}
+
+          </div>
+
+        </td>
+
+          </tr>
+
+      {/* =====================================================
+          FUTURE CHAT SECTION
+
+          Requires:
+          - GET messages by project
+          - SEND message API
+          - Freelancer Profile API
+
+          Uncomment once backend is ready.
+      ====================================================== */}
+
+      {/*
+      {isExpanded && (
+
+        <tr>
+
+          <td
+            colSpan="6"
+            className="p-4"
+          >
+
+            Chat UI goes here.
+
+          </td>
+
+        </tr>
+
+      )}
+      */}
+
+    </Fragment>
+  );
+
+})}
+                  </tbody>
+
+                </table>
+
+              </div>
+
+            )}
 
           </div>
 

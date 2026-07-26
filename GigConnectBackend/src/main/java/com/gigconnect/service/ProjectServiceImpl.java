@@ -153,6 +153,12 @@ public class ProjectServiceImpl implements ProjectService {
 	    
 	    //Freelancer Details
 	    dto.setFreelancerName(project.getFreelancer().getUserDetails().getFirstName()+ " "+ project.getFreelancer().getUserDetails().getLastName());
+	    
+	    dto.setAgreedAmount(project.getAgreedAmount());
+
+	    dto.setStatus(project.getStatus());
+
+	    dto.setSubmittedWork(project.getSubmittedWork());
 		return dto;
 	}
 

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.gigconnect.custom_exceptions.ApiException;
 import com.gigconnect.custom_exceptions.ResourceNotFoundException;
 import com.gigconnect.dtos.ApiResponse;
+import com.gigconnect.dtos.freelancer.AcceptBidResponse;
 import com.gigconnect.dtos.freelancer.BidRequest;
 import com.gigconnect.dtos.freelancer.BidResponse;
 import com.gigconnect.dtos.freelancer.UpdateBidRequest;
@@ -156,7 +157,7 @@ public class BidServiceImpl implements BidService {
 	    	BidResponse dto = modelMapper.map(bid, BidResponse.class);
 	    	
 	    	dto.setBidId(bid.getId());
-	    	
+	    	dto.setFreelancerId(bid.getFreelancer().getId());
 	    	dto.setFreelancerName(
 	                bid.getFreelancer()
 	                        .getUserDetails()
@@ -173,7 +174,7 @@ public class BidServiceImpl implements BidService {
 	}
 
 	@Override
-	public ApiResponse acceptBid(Long bidId) {
+	public AcceptBidResponse acceptBid(Long bidId) {
 		
 		//Find selected bid
 		Bid selectedBid = bidRepository.findById(bidId)
@@ -226,9 +227,13 @@ public class BidServiceImpl implements BidService {
 
 	    projectRepository.save(project);
 
-	    return new ApiResponse(
-	            "Success",
-	            "Bid accepted and Project created successfully");
+	    AcceptBidResponse response = new AcceptBidResponse();
+
+	    response.setStatus("Success");
+	    response.setMessage("Bid accepted and Project created successfully");
+	    response.setProjectId(project.getId());
+
+	    return response;
 	}
 
 	@Override
