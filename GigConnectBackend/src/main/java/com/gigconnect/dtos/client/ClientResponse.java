@@ -10,9 +10,11 @@ public class ClientResponse {
     private String firstName;
     private String lastName;
     private String email;
+    private String phone;
     
     //Client details
     private String companyName;
+    private String companyWebsite;
 	private String industry;
 	private String location;
 }
