@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "../../components/Client/Sidebar";
+import { fetchClientById } from "../../services/clientService";
+
 
 // TODO: Replace with logged-in user's client ID once auth is wired
 const CLIENT_ID = JSON.parse(localStorage.getItem("user"))?.id;
@@ -10,53 +12,86 @@ function EditClientProfile() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    phone: "9876543210",
-    companyName: "XYZ Solutions",
-    companyWebsite: "https://www.xyz.com",
-    industry: "Software Development",
-    location: "Mumbai",
-  });
+  firstName: "",
+  lastName: "",
+  phone: "",
+  companyName: "",
+  companyWebsite: "",
+  industry: "",
+  location: "",
+});
+
+  const [client, setClient] = useState(null);
+
+
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+ 
+  useEffect(() => {
+  loadClient();
+}, []);
+
+const loadClient = async () => {
+  try {
+    const data = await fetchClientById(CLIENT_ID);
+
+    setClient(data);
+
+    setFormData({
+      firstName: data.firstName || "",
+      lastName: data.lastName || "",
+      phone: data.phone || "",
+      companyName: data.companyName || "",
+      companyWebsite: data.companyWebsite || "",
+      industry: data.industry || "",
+      location: data.location || "",
+    });
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
-    setLoading(true);
+  e.preventDefault();
 
-    try {
-      // PATCH /client/{id}
-      await axios.patch(`http://localhost:8080/client/${CLIENT_ID}`, {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        phone: formData.phone,
-        companyName: formData.companyName,
-        companyWebsite: formData.companyWebsite,
-        industry: formData.industry,
-        location: formData.location,
-      });
+  setError("");
+  setSuccess("");
+  setLoading(true);
 
-      setSuccess("Profile Updated Successfully!");
-      setTimeout(() => navigate("/client-profile"), 1200);
-    } catch (err) {
-      const msg =
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        "Failed to update profile. Please try again.";
-      setError(msg);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    await axios.patch(
+      `http://localhost:8080/client/${CLIENT_ID}`,
+      formData
+    );
+
+    setSuccess("Profile Updated Successfully!");
+
+    // Refresh the latest data from backend
+    await loadClient();
+
+    setTimeout(() => {
+      navigate("/client-profile");
+    }, 1200);
+
+  } catch (err) {
+    const msg =
+      err.response?.data?.error ||
+      err.response?.data?.message ||
+      "Failed to update profile. Please try again.";
+
+    setError(msg);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <>
@@ -70,7 +105,7 @@ function EditClientProfile() {
       `}</style>
 
       <div className="d-flex">
-        <Sidebar />
+        <Sidebar client={client} />
 
         <div
           className="container-fluid"

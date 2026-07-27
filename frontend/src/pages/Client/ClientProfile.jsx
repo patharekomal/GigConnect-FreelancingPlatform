@@ -1,21 +1,37 @@
 import Sidebar from "../../components/Client/Sidebar";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { fetchClientById } from "../../services/clientService";
 
 function ClientProfile() {
 
     const navigate = useNavigate();
 
-    const client = {
-        firstName: "John", 
-        lastName: "Doe",
-        email: "john@gmail.com",
-        phone: "9876543210",
-        companyName: "XYZ Solutions",
-        companyWebsite: "https://www.xyz.com",
-        location: "Mumbai",
-        industry: "Software Development"
-    };
+   const user = JSON.parse(localStorage.getItem("user"));
 
+const [client, setClient] = useState(null);
+
+useEffect(() => {
+    loadClient();
+}, []);
+
+const loadClient = async () => {
+    try {
+        const data = await fetchClientById(user.id);
+        console.log(data);
+        setClient(data);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+if (!client) {
+    return (
+        <div className="d-flex justify-content-center align-items-center vh-100">
+            <h3>Loading...</h3>
+        </div>
+    );
+}
     return (
         <>
             <style>{`
@@ -79,7 +95,7 @@ function ClientProfile() {
 
             <div className="d-flex">
 
-                <Sidebar />
+                <Sidebar client={client} />
 
                 <div
                     className="container-fluid"
