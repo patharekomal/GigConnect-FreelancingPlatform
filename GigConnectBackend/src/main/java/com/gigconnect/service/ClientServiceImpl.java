@@ -40,6 +40,8 @@ public class ClientServiceImpl implements ClientService{
 		dto.setFirstName(client.getUserDetails().getFirstName());
 		dto.setLastName(client.getUserDetails().getLastName());
 		dto.setEmail(client.getUserDetails().getEmail());
+		dto.setPhone(client.getUserDetails().getPhone());
+		//dto.setCompanyWebsite(client.getCompanyWebsite());
 		
 		return dto;
 	}
