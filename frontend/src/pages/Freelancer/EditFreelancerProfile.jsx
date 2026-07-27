@@ -1,8 +1,9 @@
-import { useState } from "react";
+//import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "../../components/Freelancer/Sidebar";
-import { freelancerProfiles } from "../../data/dummyData";
+import { getProfile } from "../../api/freelancerApi";
 
 // TODO: Replace with logged-in user's freelancer ID once auth is wired
 const FREELANCER_ID = JSON.parse(localStorage.getItem("user"))?.id; 
@@ -10,16 +11,42 @@ const FREELANCER_ID = JSON.parse(localStorage.getItem("user"))?.id;
 function EditFreelancerProfile() {
   const navigate = useNavigate();
 
-  const profile = freelancerProfiles.find((p) => p.freelancer_id === FREELANCER_ID);
+ 
 
   const [formData, setFormData] = useState({
-    profession: profile?.title || "",
-    skills: profile?.skills || "",
-    experience: profile?.experience || "",
-    portfolioLink: profile?.portfolio || "",
-    bio: profile?.bio || "",
-    hourlyRate: profile?.hourlyRate || "",
-  });
+  profession: "",
+  skills: "",
+  experience: "",
+  portfolioLink: "",
+  bio: "",
+  hourlyRate: "",
+});
+
+
+useEffect(() => {
+  loadProfile();
+}, []);
+
+
+const loadProfile = async () => {
+  try {
+    const response = await getProfile(FREELANCER_ID);
+
+    const data = response.data;
+
+    setFormData({
+      profession: data.profession || "",
+      skills: data.skills || "",
+      experience: data.experience || "",
+      portfolioLink: data.portfolio || "",
+      bio: data.bio || "",
+      hourlyRate: data.hourlyRate || "",
+    });
+
+  } catch(error) {
+    console.log(error);
+  }
+};
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
