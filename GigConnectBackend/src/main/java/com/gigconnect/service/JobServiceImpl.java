@@ -132,9 +132,13 @@ public class JobServiceImpl implements JobService{
 	    	JobResponseDto dto= mapper.map(j, JobResponseDto.class);
 	    	 dto.setCompanyName(name);
 		      dto.setClientId(j.getClient().getId());
-		      dto.setBidCount(
-		    		    bidRepository.countByJobId(((JobResponseDto) jobs).getId())
-		    		);
+//		      dto.setBidCount(
+//		    		    bidRepository.countByJobId(((JobResponseDto) jobs).getId())
+//		    		);
+		        dto.setBidCount(
+		                bidRepository.countByJobId(j.getId())
+		            );
+
 	    	   
 		      jobList.add(dto);
 	    	

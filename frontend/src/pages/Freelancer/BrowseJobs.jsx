@@ -18,7 +18,7 @@ function BrowseJobs() {
 
         console.log(response.data);
 
-        setJobs(response.data);
+       setJobs(response.data.content || response.data);
       } catch (error) {
         console.error(error);
       }
