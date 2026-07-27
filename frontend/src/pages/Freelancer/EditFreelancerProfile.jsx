@@ -11,7 +11,7 @@ const FREELANCER_ID = JSON.parse(localStorage.getItem("user"))?.id;
 function EditFreelancerProfile() {
   const navigate = useNavigate();
 
- 
+ //removed the initial state values for formData and replaced them with empty strings to avoid undefined values when loading the profile data.
 
   const [formData, setFormData] = useState({
   profession: "",
