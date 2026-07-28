@@ -1,4 +1,6 @@
 package com.gigconnect.service;
+import com.gigconnect.security.JwtUtils;
+import com.gigconnect.security.CustomUserDetailsImpl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,16 +32,39 @@ public class UserServiceImpl implements UserService{
 	private final ClientRepository clientRepo;
     private final FreelancerRepository freelancerRepo;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtils jwtUtils;
 	
 	@Override
+	
 	public AuthResp authenticateUser(AuthRequest request) {
-		User entity=userRepo.findByEmail(request.getEmail()).orElseThrow(() -> new AuthenticationFailedException("Invalid email or password!!!!"));
-		 if (!passwordEncoder.matches(request.getPassword(), entity.getPassword())) {
-		        throw new AuthenticationFailedException("Invalid email or password");
-		    }
-		AuthResp dto = mapper.map(entity, AuthResp.class);
-		dto.setMessage("Login Successful !");
-		return dto;
+
+	    User entity = userRepo.findByEmail(request.getEmail())
+	            .orElseThrow(() ->
+	                    new AuthenticationFailedException("Invalid email or password"));
+
+	    if (!passwordEncoder.matches(request.getPassword(), entity.getPassword())) {
+	        throw new AuthenticationFailedException("Invalid email or password");
+	    }
+
+	    // Build UserDetails
+	    CustomUserDetailsImpl userDetails =
+	            new CustomUserDetailsImpl(
+	                    entity.getId(),
+	                    entity.getFirstName() + " " + entity.getLastName(),
+	                    entity.getEmail(),
+	                    entity.getPassword(),
+	                    entity.getRole()
+	            );
+
+	    // Generate JWT
+	    String jwt = jwtUtils.generateJWT(userDetails);
+
+	    AuthResp dto = mapper.map(entity, AuthResp.class);
+
+	    dto.setJwt(jwt);
+	    dto.setMessage("Login Successful !");
+
+	    return dto;
 	}
 
 	@Override
