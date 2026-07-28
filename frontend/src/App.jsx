@@ -11,20 +11,18 @@ import Contact from "./pages/Contact";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
-import ClientDashboard from "./pages/Client/ClientDashboard"
-import PostJob from "./pages/Client/PostJobs"
-import ViewBids from "./pages/Client/ViewBids"
-import MyJobs from "./pages/Client/MyJobs"
-import ClientMyProjects from "./pages/Client/ClientMyProjects"
-import ProjectPage from "./pages/Client/ProjectPage"
-import Payment from "./pages/Client/Payment"
+import ClientDashboard from "./pages/Client/ClientDashboard";
+import PostJob from "./pages/Client/PostJobs";
+import ViewBids from "./pages/Client/ViewBids";
+import MyJobs from "./pages/Client/MyJobs";
+import ClientMyProjects from "./pages/Client/ClientMyProjects";
+import ProjectPage from "./pages/Client/ProjectPage";
+import Payment from "./pages/Client/Payment";
 import ClientProfile from "./pages/Client/ClientProfile";
-import ClientChat from "./pages/Client/ClientChat"
-import { jobs } from "./data/dummyData"
-// import ClientDashboard from "./pages/ClientDashboard";
-// import FreelancerDashboard from "./pages/FreelancerDashboard";
-{/* Freelancer  */}
-   import FreelancerDashboard from './pages/Freelancer/FreelancerDashboard'
+import ClientChat from "./pages/Client/ClientChat";
+import EditClientProfile from "./pages/Client/EditClientProfile";
+
+import FreelancerDashboard from "./pages/Freelancer/FreelancerDashboard";
 import BrowseJobs from "./pages/Freelancer/BrowseJobs";
 import SubmitBid from "./pages/Freelancer/SubmitBid";
 import MyBids from "./pages/Freelancer/MyBids";
@@ -34,23 +32,22 @@ import Chat from "./pages/Freelancer/Chat";
 import SubmitWork from "./pages/Freelancer/SubmitWork";
 import Reviews from "./pages/Freelancer/Reviews";
 import Profile from "./pages/Freelancer/Profile";
-import ClientProfileSetup from "./pages/ClientProfileSetup";
-import FreelancerProfileSetup from "./pages/FreelancerProfileSetup";
 import ProjectDetails from "./pages/Freelancer/ProjectDetails";
 import EditFreelancerProfile from "./pages/Freelancer/EditFreelancerProfile";
-import EditClientProfile from "./pages/Client/EditClientProfile";
 
+import ClientProfileSetup from "./pages/ClientProfileSetup";
+import FreelancerProfileSetup from "./pages/FreelancerProfileSetup";
 
+import ProtectedRoute from "./components/ProtectedRoute";
 
-
-
-
-
+import { jobs } from "./data/dummyData";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+
+        {/* ── PUBLIC ROUTES — no login needed ──────────────────────── */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -60,36 +57,123 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/client-profile-setup" element={<ClientProfileSetup />} />
-        <Route
-          path="/freelancer-profile-setup"
-          element={<FreelancerProfileSetup />}
-        />
-        <Route path="/client" element={<ClientDashboard />} />
-        <Route path="/post-job" element={<PostJob />} />
-        <Route path="/bids/:jobId" element={<ViewBids jobs={jobs} />} />
-        <Route path="/my-jobs" element={<MyJobs jobs={jobs} />} />
-        <Route path="/my-projects" element={<ClientMyProjects />} />
-        <Route path="/project/:projectId" element={<ProjectPage />} />
-        <Route path="/clientChat/:projectId" element={<ClientChat />} />
-        <Route path="/payment" element={<Payment />} />
-        <Route path="/client-profile" element={<ClientProfile />} />
-        <Route path="/edit-client-profile" element={<EditClientProfile />} />
-        {/* Freelancer  */}
-        <Route path="/freelancer" element={<FreelancerDashboard />} />
-        <Route path="/browseJobs" element={<BrowseJobs />} />
-        <Route path="/submitBid/:jobId" element={<SubmitBid />} />
-        <Route path="/freelancer/myBids" element={<MyBids />} />
-        <Route path="/myProjects" element={<MyProjects />} />
-        <Route path="/submitWork/:projectId" element={<SubmitWork />} />
-        <Route path="/chat/:projectId" element={<Chat />} />
-        <Route path="/reviews" element={<Reviews />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/freelancer/edit-profile" element={<EditFreelancerProfile />}/>
-        <Route path="/freelancer/project/:projectId"  element={<ProjectDetails />} />
-        <Route path="/freelancer/editBid/:bidId"  element={<EditBid />} />
-      </Routes>
+        <Route path="/freelancer-profile-setup" element={<FreelancerProfileSetup />} />
 
-      {/* <Footer /> */}
+        {/* ── CLIENT ONLY ROUTES ───────────────────────────────────── */}
+        <Route path="/client" element={
+          <ProtectedRoute allowedRole="CLIENT">
+            <ClientDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/post-job" element={
+          <ProtectedRoute allowedRole="CLIENT">
+            <PostJob />
+          </ProtectedRoute>
+        } />
+        <Route path="/bids/:jobId" element={
+          <ProtectedRoute allowedRole="CLIENT">
+            <ViewBids jobs={jobs} />
+          </ProtectedRoute>
+        } />
+        <Route path="/my-jobs" element={
+          <ProtectedRoute allowedRole="CLIENT">
+            <MyJobs jobs={jobs} />
+          </ProtectedRoute>
+        } />
+        <Route path="/my-projects" element={
+          <ProtectedRoute allowedRole="CLIENT">
+            <ClientMyProjects />
+          </ProtectedRoute>
+        } />
+        <Route path="/project/:projectId" element={
+          <ProtectedRoute allowedRole="CLIENT">
+            <ProjectPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/clientChat/:projectId" element={
+          <ProtectedRoute allowedRole="CLIENT">
+            <ClientChat />
+          </ProtectedRoute>
+        } />
+        <Route path="/payment" element={
+          <ProtectedRoute allowedRole="CLIENT">
+            <Payment />
+          </ProtectedRoute>
+        } />
+        <Route path="/client-profile" element={
+          <ProtectedRoute allowedRole="CLIENT">
+            <ClientProfile />
+          </ProtectedRoute>
+        } />
+        <Route path="/edit-client-profile" element={
+          <ProtectedRoute allowedRole="CLIENT">
+            <EditClientProfile />
+          </ProtectedRoute>
+        } />
+
+        {/* ── FREELANCER ONLY ROUTES ───────────────────────────────── */}
+        <Route path="/freelancer" element={
+          <ProtectedRoute allowedRole="FREELANCER">
+            <FreelancerDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/browseJobs" element={
+          <ProtectedRoute allowedRole="FREELANCER">
+            <BrowseJobs />
+          </ProtectedRoute>
+        } />
+        <Route path="/submitBid/:jobId" element={
+          <ProtectedRoute allowedRole="FREELANCER">
+            <SubmitBid />
+          </ProtectedRoute>
+        } />
+        <Route path="/freelancer/myBids" element={
+          <ProtectedRoute allowedRole="FREELANCER">
+            <MyBids />
+          </ProtectedRoute>
+        } />
+        <Route path="/myProjects" element={
+          <ProtectedRoute allowedRole="FREELANCER">
+            <MyProjects />
+          </ProtectedRoute>
+        } />
+        <Route path="/submitWork/:projectId" element={
+          <ProtectedRoute allowedRole="FREELANCER">
+            <SubmitWork />
+          </ProtectedRoute>
+        } />
+        <Route path="/chat/:projectId" element={
+          <ProtectedRoute allowedRole="FREELANCER">
+            <Chat />
+          </ProtectedRoute>
+        } />
+        <Route path="/reviews" element={
+          <ProtectedRoute allowedRole="FREELANCER">
+            <Reviews />
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute allowedRole="FREELANCER">
+            <Profile />
+          </ProtectedRoute>
+        } />
+        <Route path="/freelancer/edit-profile" element={
+          <ProtectedRoute allowedRole="FREELANCER">
+            <EditFreelancerProfile />
+          </ProtectedRoute>
+        } />
+        <Route path="/freelancer/project/:projectId" element={
+          <ProtectedRoute allowedRole="FREELANCER">
+            <ProjectDetails />
+          </ProtectedRoute>
+        } />
+        <Route path="/freelancer/editBid/:bidId" element={
+          <ProtectedRoute allowedRole="FREELANCER">
+            <EditBid />
+          </ProtectedRoute>
+        } />
+
+      </Routes>
     </BrowserRouter>
   );
 }
