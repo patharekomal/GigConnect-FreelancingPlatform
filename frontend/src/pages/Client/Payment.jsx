@@ -1,15 +1,43 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Sidebar from "../../components/Client/Sidebar";
-import { payments } from "../../data/dummyData";
-
-const CLIENT_ID = 2;
+import { getPaymentsByClient } from "../../services/paymentService";
 
 function Payment() {
   const navigate = useNavigate();
 
-  const myPayments = payments.filter(
-    (p) => p.client_id === CLIENT_ID
-  );
+  const [payments, setPayments] = useState([]);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  if (!user) {
+    navigate("/login");
+    return null;
+  }
+
+  const clientId = user.id;
+
+  const loadPayments = async () => {
+    try {
+        const data = await getPaymentsByClient(clientId);
+        setPayments(data);
+    } catch (error) {
+        console.log(error);
+        console.log(error.response);
+        console.log(error.response?.data);
+        console.log(error.response?.status);
+
+        alert("Unable to load payments.");
+    }
+  };
+
+  useEffect(() => {
+
+    loadPayments();
+
+  }, [clientId]);
+
+
 
   return (
     <>
@@ -67,7 +95,7 @@ function Payment() {
             </div>
 
             {/* Empty State */}
-            {myPayments.length === 0 ? (
+            {payments.length === 0 ? (
 
               <div className="bg-white border rounded-3 p-5 text-center">
 
@@ -113,7 +141,11 @@ function Payment() {
                     <tr>
 
                       <th className="px-4 py-3">
-                        PROJECT ID
+                        SR. NO.
+                      </th>
+
+                      <th className="px-4 py-3">
+                        PROJECT TITLE
                       </th>
 
                       <th className="px-4 py-3">
@@ -133,18 +165,26 @@ function Payment() {
 
                   <tbody>
 
-                    {myPayments.map((payment) => (
+                    {payments.map((payment, index) => (
 
                       <tr
-                        key={payment.payment_id}
+                        key={payment.paymentId}
                         className="payment-row align-middle"
                       >
 
-                        <td className="px-4 py-3 fw-semibold">
+                        {/* <td className="px-4 py-3 fw-semibold">
                           #PRJ-
                           {String(
-                            payment.project_id
+                            payment.projectId
                           ).padStart(3, "0")}
+                        </td> */}
+
+                        <td className="px-4 py-3 fw-semibold">
+                          {index + 1}
+                        </td>
+
+                        <td className="px-4 py-3 fw-semibold">
+                          {payment.projectTitle}
                         </td>
 
                         <td className="px-4 py-3 fw-semibold">
@@ -157,16 +197,27 @@ function Payment() {
                         <td className="px-4 py-3">
 
                           <span
-                            className="badge rounded-pill px-3 py-2"
-                            style={{
-                              background: "#DBEAFE",
-                              color: "#2563EB",
-                              fontSize: "12px",
-                            }}
-                          >
-                            {payment.status}
-                          </span>
+                              className="badge rounded-pill px-3 py-2"
+                              style={{
+                                background:
+                                  payment.status === "SUCCESS"
+                                    ? "#DCFCE7"
+                                    : payment.status === "FAILED"
+                                    ? "#FEE2E2"
+                                    : "#FEF3C7",
 
+                                color:
+                                  payment.status === "SUCCESS"
+                                    ? "#15803D"
+                                    : payment.status === "FAILED"
+                                    ? "#DC2626"
+                                    : "#D97706",
+
+                                fontSize: "12px",
+                              }}
+                            >
+                              {payment.status}
+                            </span>
                         </td>
 
                         <td
@@ -175,7 +226,7 @@ function Payment() {
                             fontSize: "13px",
                           }}
                         >
-                          {payment.created_at}
+                          {payment.paymentDate? new Date(payment.paymentDate).toLocaleString() : "-"}
                         </td>
 
                       </tr>

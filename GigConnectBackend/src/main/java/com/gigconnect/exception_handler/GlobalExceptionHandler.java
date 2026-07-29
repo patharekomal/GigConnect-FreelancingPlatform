@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.gigconnect.custom_exceptions.ApiException;
 import com.gigconnect.custom_exceptions.AuthenticationFailedException;
+import com.gigconnect.custom_exceptions.PaymentException;
 import com.gigconnect.custom_exceptions.ResourceNotFoundException;
 import com.gigconnect.dtos.ApiResponse;
 
@@ -58,6 +59,18 @@ public class GlobalExceptionHandler {
 				.collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
 		return fieldErrMap;
 	}
+	
+	//for handling payment exceptions
+	@ExceptionHandler(PaymentException.class)
+	public ResponseEntity<?> handlePaymentException(PaymentException ex) {
+
+	    System.out.println("Payment Exception");
+
+	    return ResponseEntity
+	            .status(HttpStatus.CONFLICT)
+	            .body(new ApiResponse("Failed", ex.getMessage()));
+
+	}
 
 	// handle all remaining excs - catch all
 	@ExceptionHandler(RuntimeException.class)
@@ -66,5 +79,6 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR) // SC 500
 				.body(new ApiResponse("Failed", e.getMessage()));
 	}
+	
 
 }
