@@ -184,7 +184,7 @@ function FreelancerDashboard() {
                       </p>
                       <button
                         className="btn btn-outline-success"
-                        onClick={() => navigate("/myBids")}
+                        onClick={() => navigate("/freelancer/myBids")}
                       >
                         Open
                       </button>

@@ -16,7 +16,7 @@ function BrowseJobs() {
       try {
         const response = await getAllJobs(); //waits until Spring Boot replies.
 
-        console.log(response.data);
+        //console.log(response.data);
 
        setJobs(response.data.content || response.data);
       } catch (error) {
@@ -94,7 +94,7 @@ function BrowseJobs() {
 
                           {/* Skills */}
 
-                          <div className="mb-3">
+                          {/* <div className="mb-3">
                             <span className="badge bg-light text-dark me-2">
                               Spring Boot
                             </span>
@@ -106,7 +106,7 @@ function BrowseJobs() {
                             <span className="badge bg-light text-dark">
                               MySQL
                             </span>
-                          </div>
+                          </div> */}
 
                           {/* Information Row */}
 

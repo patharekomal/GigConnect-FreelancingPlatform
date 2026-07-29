@@ -37,20 +37,20 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
             String authHeader = request.getHeader("Authorization");
 
-            log.info("Authorization Header : {}", authHeader);
+           // log.info("Authorization Header : {}", authHeader);
 
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
 
                 String jwt = authHeader.substring(7);
 
-                log.info("JWT Received : {}", jwt);
+             //   log.info("JWT Received : {}", jwt);
 
                 Claims payload = jwtUtils.verifyJwtAndExtractClaims(jwt);
 
                 Long userId = payload.get("user_id", Long.class);
                 String role = payload.get("user_role", String.class);
 
-                log.info("User Id : {}", userId);
+                //log.info("User Id : {}", userId);
                 log.info("Role : {}", role);
 
                 UsernamePasswordAuthenticationToken authentication =

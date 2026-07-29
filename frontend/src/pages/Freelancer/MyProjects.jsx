@@ -332,7 +332,7 @@ function MyProjects() {
 
                     <div className="d-flex justify-content-between align-items-start">
                       <div>
-                        <h4 className="fw-bold mb-1">{project.projectTitle}</h4>
+                        <h4 className="fw-bold mb-1">{project.jobTitle}</h4>
 
                         <p className="text-muted mb-0">
                           {" "}
@@ -453,9 +453,9 @@ function MyProjects() {
             completedProjects.map((project) => {
              
 
-              const payment = payments.find(
-                (payment) => payment.project_id === project.project_id,
-              );
+              // const payment = payments.find(
+              //   (payment) => payment.project_id === project.project_id,
+              // );
 
               return (
                 <div
