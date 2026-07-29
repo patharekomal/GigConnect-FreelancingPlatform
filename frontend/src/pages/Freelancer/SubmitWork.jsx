@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Freelancer/Sidebar";
 import { submitWork } from "../../api/projectApi";
 
 function SubmitWork() {
 
     const { projectId } = useParams();
-
+     const navigate = useNavigate();
     //const [submittedWork, setSubmittedWork] = useState("");
    
     const [githubLink, setGithubLink] = useState("");
@@ -31,6 +31,7 @@ function SubmitWork() {
                 const response = await submitWork(projectId, workData);
                 console.log(response.data);
                  alert("Work Submitted Successfully");
+                 navigate("/myProjects");
 
                  } catch (error) {
                            console.log(error);

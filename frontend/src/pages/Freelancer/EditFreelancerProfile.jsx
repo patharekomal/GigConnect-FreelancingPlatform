@@ -1,7 +1,7 @@
 //import { useState } from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/api";
 import Sidebar from "../../components/Freelancer/Sidebar";
 import { getProfile } from "../../api/freelancerApi";
 
@@ -63,14 +63,15 @@ const loadProfile = async () => {
 
     try {
       // PATCH /freelancers/{id}
-      await axios.patch(`http://localhost:8080/freelancers/${FREELANCER_ID}`, {
-        profession: formData.profession,
-        skills: formData.skills,
-        experience: parseFloat(formData.experience),
-        portfolioLink: formData.portfolioLink,
-        bio: formData.bio,
-        hourlyRate: parseFloat(formData.hourlyRate),
-      });
+      await api.patch(`/freelancers/${FREELANCER_ID}`, {
+  profession: formData.profession,
+  skills: formData.skills,
+  experience: parseFloat(formData.experience),
+  portfolioLink: formData.portfolioLink,
+  bio: formData.bio,
+  hourlyRate: parseFloat(formData.hourlyRate),
+});
+      
 
       setSuccess("Profile updated successfully!");
       setTimeout(() => navigate("/profile"), 1200);

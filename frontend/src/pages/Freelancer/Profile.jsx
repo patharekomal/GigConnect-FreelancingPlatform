@@ -38,7 +38,6 @@ function Profile() {
           <div className="col-md-2">
             <Sidebar />
           </div>
-
           <div className="col-md-10">
             <div className="card shadow-sm border-0 p-4">
               {/* <h2>
@@ -141,8 +140,8 @@ function Profile() {
               <hr />
 
               <h4 className="mt-4">🔗 Portfolio</h4>
-              <a href={profile.portfolio} target="_blank" rel="noreferrer">
-                {profile.portfolio}
+              <a href={profile.portfolioLink} target="_blank" rel="noreferrer">
+                {profile.portfolioLink}
               </a>
 
               <hr />
@@ -151,6 +150,7 @@ function Profile() {
               <div className="bg-light p-3 rounded">{profile.bio}</div>
             </div>
           </div>
+          https://github.com/D3-96545-Komal/WPT
         </div>
       </div>
     );

@@ -51,7 +51,8 @@ public class SecurityConfiguration {
                         "/users/signup",
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
-                        "/swagger-ui.html"
+                        "/swagger-ui.html",
+                        "/chat/**"
                 ).permitAll()
 
                 // ── CLIENT only ──────────────────────────────────────────
@@ -61,7 +62,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.GET,    "/client/**").hasAuthority("CLIENT")
                 .requestMatchers(HttpMethod.PATCH,  "/client/**").hasAuthority("CLIENT")
              
-                .requestMatchers(HttpMethod.GET, "/jobs/**").hasAuthority("CLIENT")
+               // .requestMatchers(HttpMethod.GET, "/jobs/**").hasAuthority("CLIENT")
 
                 // ── FREELANCER only ──────────────────────────────────────
                 .requestMatchers(HttpMethod.POST,  "/bids/**").hasAuthority("FREELANCER")
