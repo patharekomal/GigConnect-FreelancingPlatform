@@ -3,14 +3,12 @@ import Sidebar from "../../components/Client/Sidebar";
 
 import { useState, useEffect } from "react";
 import { fetchJobsByClient } from "../../services/jobService";
-
-
+import { fetchClientById } from "../../services/clientService";
 
 function MyJobs() {
-
   const navigate = useNavigate();
 
-  const user = JSON.parse(localStorage.getItem("user"));//read logged in user
+  const user = JSON.parse(localStorage.getItem("user"));
 
   if (!user) {
     navigate("/login");
@@ -19,23 +17,31 @@ function MyJobs() {
 
   const clientId = user.id;
 
-  const[jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState([]);
+  const [client, setClient] = useState(null);
 
-  useEffect(()=>{
-    const loadJobs = async () => {
-      try{
-        const data = await fetchJobsByClient(clientId);
-
-        setJobs(data);
-
-      }catch(error) {
-        console.log(error);
-      }
-    };
-
+  useEffect(() => {
     loadJobs();
-
+    loadClient();
   }, [clientId]);
+
+  const loadJobs = async () => {
+    try {
+      const data = await fetchJobsByClient(clientId);
+      setJobs(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const loadClient = async () => {
+    try {
+      const data = await fetchClientById(clientId);
+      setClient(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const myJobs = jobs;
 
@@ -46,7 +52,6 @@ function MyJobs() {
     return "bg-light text-dark";
   };
 
-  
   return (
     <>
       <style>{`
@@ -81,8 +86,7 @@ function MyJobs() {
       `}</style>
 
       <div>
-
-        <Sidebar activePage="my-jobs" />
+        <Sidebar client={client} activePage="my-jobs" />
 
         <main
           style={{
@@ -98,7 +102,6 @@ function MyJobs() {
               margin: "0 auto",
             }}
           >
-
             {/* Header */}
             <div className="d-flex justify-content-between align-items-start mb-4">
               <div>
@@ -192,111 +195,74 @@ function MyJobs() {
                   </thead>
 
                   <tbody>
-                                      {myJobs.map((job, index) => (
-                    <tr key={job.id} className="job-row align-middle">
+                    {myJobs.map((job, index) => (
+                      <tr key={job.id} className="job-row align-middle">
+                        <td className="px-4 py-3 text-muted" style={{ fontSize: "13px" }}>
+                          {index + 1}
+                        </td>
 
-                      {/* Row Number */}
-                      <td
-                        className="px-4 py-3 text-muted"
-                        style={{ fontSize: "13px" }}
-                      >
-                        {index + 1}
-                      </td>
+                        <td className="px-4 py-3" style={{ width: "35%" }}>
+                          <div className="fw-semibold" style={{ fontSize: "14px" }}>
+                            {job.title}
+                          </div>
 
-                      {/* Job Title + Description */}
-                      <td
-                        className="px-4 py-3"
-                        style={{ width: "35%" }}
-                      >
-                        <div
-                          className="fw-semibold"
-                          style={{ fontSize: "14px" }}
-                        >
-                          {job.title}
-                        </div>
+                          <div className="text-muted" style={{ fontSize: "12px" }}>
+                            {job.description}
+                          </div>
+                        </td>
 
-                        <div
-                          className="text-muted"
-                          style={{ fontSize: "12px" }}
-                        >
-                          {job.description}
-                        </div>
-                      </td>
+                        <td className="px-4 py-3 fw-semibold" style={{ fontSize: "14px" }}>
+                          ₹{job.budget?.toLocaleString?.() ?? job.budget}
+                        </td>
 
-                      {/* Budget */}
-                      <td
-                        className="px-4 py-3 fw-semibold"
-                        style={{ fontSize: "14px" }}
-                      >
-                        ₹{job.budget?.toLocaleString?.() ?? job.budget}
-                      </td>
+                        <td className="px-4 py-3 text-muted" style={{ fontSize: "13px" }}>
+                          {job.deadline}
+                        </td>
 
-                      {/* Deadline */}
-                      <td
-                        className="px-4 py-3 text-muted"
-                        style={{ fontSize: "13px" }}
-                      >
-                        {job.deadline}
-                      </td>
+                        <td className="px-4 py-3">
+                          <span
+                            className={`badge rounded-pill px-3 py-1 ${statusBadge(job.status)}`}
+                            style={{ fontSize: "11px" }}
+                          >
+                            {job.status}
+                          </span>
+                        </td>
 
-                      {/* Status */}
-                      <td className="px-4 py-3">
-                        <span
-                          className={`badge rounded-pill px-3 py-1 ${statusBadge(
-                            job.status
-                          )}`}
-                          style={{ fontSize: "11px" }}
-                        >
-                          {job.status}
-                        </span>
-                      </td>
+                        <td className="px-4 py-3 text-center">
+                          <span
+                            className="badge rounded-circle d-inline-flex align-items-center justify-content-center fw-bold"
+                            style={{
+                              width: "28px",
+                              height: "28px",
+                              background: job.bidCount > 0 ? "#E1F5EE" : "#f1f5f9",
+                              color: job.bidCount > 0 ? "#1D9E75" : "#64748b",
+                              fontSize: "12px",
+                            }}
+                          >
+                            {job.bidCount}
+                          </span>
+                        </td>
 
-                      {/* Bid Count */}
-                      <td className="px-4 py-3 text-center">
-                        <span
-                          className="badge rounded-circle d-inline-flex align-items-center justify-content-center fw-bold"
-                          style={{
-                            width: "28px",
-                            height: "28px",
-                            background:
-                              job.bidCount > 0
-                                ? "#E1F5EE"
-                                : "#f1f5f9",
-                            color:
-                              job.bidCount > 0
-                                ? "#1D9E75"
-                                : "#64748b",
-                            fontSize: "12px",
-                          }}
-                        >
-                          {job.bidCount}
-                        </span>
-                      </td>
-
-                      {/* Action */}
-                      <td className="px-4 py-3">
-                        <button
-                          className="view-bids-btn btn text-white rounded-3 px-3 py-1"
-                          style={{
-                            background:
-                              "linear-gradient(135deg,#198754,#157347)",
-                            fontSize: "12px",
-                            fontWeight: "600",
-                          }}
-                          onClick={() =>
-                            navigate(`/bids/${job.id}`)
-                          }
-                        >
-                          View Bids
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
+                        <td className="px-4 py-3">
+                          <button
+                            className="view-bids-btn btn text-white rounded-3 px-3 py-1"
+                            style={{
+                              background:
+                                "linear-gradient(135deg,#198754,#157347)",
+                              fontSize: "12px",
+                              fontWeight: "600",
+                            }}
+                            onClick={() => navigate(`/bids/${job.id}`)}
+                          >
+                            View Bids
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </main>
       </div>

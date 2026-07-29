@@ -3,13 +3,24 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "../../components/Client/Sidebar";
 import { fetchClientById } from "../../services/clientService";
+import api from "../../api/api";
 
 
 // TODO: Replace with logged-in user's client ID once auth is wired
-const CLIENT_ID = JSON.parse(localStorage.getItem("user"))?.id;
+//const CLIENT_ID = JSON.parse(localStorage.getItem("user"))?.id;
 
 function EditClientProfile() {
-  const navigate = useNavigate();
+const navigate = useNavigate();
+
+const user = JSON.parse(localStorage.getItem("user"));
+const CLIENT_ID = JSON.parse(localStorage.getItem("user"))?.id;
+
+if (!user) {
+  navigate("/login");
+  return null;
+}
+
+const clientId = user.id;
 
   const [formData, setFormData] = useState({
   firstName: "",
@@ -22,20 +33,17 @@ function EditClientProfile() {
 });
 
   const [client, setClient] = useState(null);
-
-
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
  
   useEffect(() => {
   loadClient();
-}, []);
+}, [clientId]);
 
 const loadClient = async () => {
   try {
-    const data = await fetchClientById(CLIENT_ID);
+    const data = await fetchClientById(clientId);
 
     setClient(data);
 
@@ -67,10 +75,10 @@ const loadClient = async () => {
   setLoading(true);
 
   try {
-    await axios.patch(
-      `http://localhost:8080/client/${CLIENT_ID}`,
-      formData
-    );
+   await api.patch(
+  `/client/${CLIENT_ID}`,
+  formData
+);
 
     setSuccess("Profile Updated Successfully!");
 
@@ -82,15 +90,18 @@ const loadClient = async () => {
     }, 1200);
 
   } catch (err) {
-    const msg =
-      err.response?.data?.error ||
-      err.response?.data?.message ||
-      "Failed to update profile. Please try again.";
+  console.log("Full Error:", err);
+  console.log("Response:", err.response);
+  console.log("Status:", err.response?.status);
+  console.log("Data:", err.response?.data);
 
-    setError(msg);
-  } finally {
-    setLoading(false);
-  }
+  const msg =
+    err.response?.data?.error ||
+    err.response?.data?.message ||
+    "Failed to update profile. Please try again.";
+
+  setError(msg);
+}
 };
 
   return (

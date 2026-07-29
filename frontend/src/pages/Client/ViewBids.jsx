@@ -5,6 +5,7 @@ import Sidebar from "../../components/Client/Sidebar";
 import { fetchJobById } from "../../services/jobService";
 import { fetchBidsByJob , acceptBid} from "../../services/bidService";
 import { fetchFreelancerById } from "../../services/freelancerService";
+import { fetchClientById } from "../../services/clientService";
 
 function ViewBids() {
   const navigate = useNavigate();
@@ -15,16 +16,31 @@ function ViewBids() {
   const [job, setJob] = useState(null);
 
   const [jobBids, setJobBids] = useState([]);
+  const [client, setClient] = useState(null);
+
+const user = JSON.parse(localStorage.getItem("user"));
+const clientId = user.id;
 
   const { jobId } = useParams();
 
   useEffect(() => {
+  
+     loadClient();
 
     loadJob();
 
     loadBids();
 
   }, [jobId]);
+
+  const loadClient = async () => {
+  try {
+    const data = await fetchClientById(clientId);
+    setClient(data);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   const loadJob = async() => {
     try{
@@ -171,7 +187,10 @@ function ViewBids() {
 
       <div>
 
-        <Sidebar activePage="my-jobs" />
+       <Sidebar
+       activePage="my-jobs"
+        client={client}
+       />
 
         <main
           style={{

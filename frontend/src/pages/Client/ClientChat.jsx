@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getMessagesByProject} from "../../api/messageApi";
 import { connectSocket, disconnectSocket, subscribeProject, sendSocketMessage,} from "../../websocket/socket";
+import { fetchClientById } from "../../services/clientService";
+
 
 function Chat() {
   const { projectId } = useParams();
@@ -11,9 +13,22 @@ function Chat() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   const freelancerId = user.id;
+  const clientId = user.id;
+
+const [client, setClient] = useState(null);
 
   const [chatMessages, setChatMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+
+
+  const loadClient = async () => {
+  try {
+    const data = await fetchClientById(clientId);
+    setClient(data);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   const loadMessages = async () => {
     try {
@@ -29,6 +44,8 @@ function Chat() {
 //   }, [projectId]);
 
 useEffect(() => {
+
+  loadClient();
   loadMessages();
 
   connectSocket(() => {
@@ -67,7 +84,9 @@ useEffect(() => {
     <div className="container-fluid p-4">
       <div className="row">
         <div className="col-md-2">
-          <Sidebar />
+          <Sidebar
+          //activePage="my-projects"
+          client={client} />
         </div>
 
         <div className="col-md-10">
