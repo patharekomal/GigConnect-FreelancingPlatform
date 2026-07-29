@@ -1,7 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Sidebar from "../../components/Client/Sidebar";
 import { fetchProjectById, approveProject } from "../../services/projectService";
+<<<<<<< Updated upstream
 import { fetchClientById } from "../../services/clientService";
+=======
+import { createOrder, verifyPayment, markPaymentFailed } from "../../services/paymentService";
+>>>>>>> Stashed changes
 
 import { useState, useEffect } from "react";
 
@@ -115,23 +119,149 @@ function ProjectPage() {
 
   const handleApprove = async () => {
 
+    let paymentCompleted = false;
+
     try {
 
-        await approveProject(projectId);
+        // 1. Create Razorpay Order
+        const order = await createOrder(project.projectId);
 
-        alert("Project approved successfully!");
+        console.log(order);
 
-        loadProject();
+        const options = {
+
+            key: "rzp_test_TIvp6aF23c5Uyn",
+            amount: order.amount,
+            currency: order.currency,
+            name: "GigConnect",
+            description: project.projectTitle,
+            order_id: order.orderId,
+
+            // Payment Success
+            handler: async function (response) {
+
+                try {
+
+                    await verifyPayment({
+
+                        razorpayOrderId: response.razorpay_order_id,
+                        razorpayPaymentId: response.razorpay_payment_id,
+                        razorpaySignature: response.razorpay_signature
+
+                    });
+
+                    paymentCompleted = true;
+
+                    alert("Payment completed successfully.");
+
+                    loadProject();
+
+                } catch (err) {
+
+                    console.error(err);
+
+                    alert("Payment verification failed. Please contact support.");
+
+                }
+
+            },
+
+            // User closes popup
+            modal: {
+
+                ondismiss: async function () {
+                  if (paymentCompleted) {
+                      return;
+                  }
+
+                  try {
+
+                      await markPaymentFailed({
+                          razorpayOrderId: order.orderId
+                      });
+
+                  } catch (err) {
+
+                      console.error(err);
+
+                  }
+
+                  alert("Payment cancelled.");
+
+              }
+
+            },
+
+            theme: {
+                color: "#198754"
+            }
+
+        };
+
+        // Create Razorpay instance ONLY ONCE
+        const razorpay = new window.Razorpay(options);
+
+        // Payment Failed
+        razorpay.on("payment.failed", async function (response) {
+
+          console.error("Payment Failed:", response.error);
+
+          try {
+
+              await markPaymentFailed({
+                  razorpayOrderId: response.error.metadata.order_id
+              });
+
+              await loadProject();
+
+          } catch (err) {
+
+              console.error("Unable to update payment status", err);
+
+          }
+
+          let message = "Payment could not be completed. Please try again.";
+
+          switch (response.error.reason) {
+
+              case "insufficient_funds":
+                  message = "Payment failed due to insufficient balance.";
+                  break;
+
+              case "international_transaction_not_allowed":
+                  message = "This card is not supported. Please use another payment method.";
+                  break;
+
+              case "payment_cancelled":
+                  message = "Payment was cancelled.";
+                  break;
+
+              case "bank_error":
+                  message = "The bank is currently unavailable. Please try again later.";
+                  break;
+
+              default:
+                  message = "Payment could not be completed. Please try again.";
+
+          }
+
+          alert(message);
+
+        });
+
+    razorpay.open();
 
     } catch (error) {
 
         console.error(error);
 
-        alert(
+        const message =
             error.response?.data?.message ||
-            "Unable to approve project."
-        );
+            "Unable to initiate payment. Please try again.";
+
+        alert(message);
     }
+
 };
 
   return (
