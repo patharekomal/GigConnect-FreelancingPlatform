@@ -1,8 +1,10 @@
-import { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Client/Sidebar";
 
 import {createJob} from "../../services/jobService";
+import { useState, useEffect } from "react";
+import { fetchClientById } from "../../services/clientService";
 
 
 
@@ -12,6 +14,7 @@ function PostJob() {
   const user = JSON.parse(localStorage.getItem("user")); //Will get user id(user.id that will be my clientid) from localstorage object "user"
   
   const clientId = user.id;
+  const [client, setClient] = useState(null);
 
   const [form, setForm] = useState({
     title: "",
@@ -21,6 +24,18 @@ function PostJob() {
   });
 
   const [errors, setErrors] = useState({});
+  useEffect(() => {
+  loadClient();
+}, []);
+
+const loadClient = async () => {
+  try {
+    const response = await fetchClientById(clientId);
+    setClient(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   // Handles all input changes
   const handleChange = (e) => {
@@ -124,7 +139,7 @@ function PostJob() {
         }
       `}</style>
 
-      <Sidebar activePage="post-job" />
+      <Sidebar client={client} activePage="post-job" />
 
       <main
         style={{

@@ -453,9 +453,15 @@ function MyProjects() {
             completedProjects.map((project) => {
              
 
+<<<<<<< Updated upstream
               // const payment = payments.find(
               //   (payment) => payment.project_id === project.project_id,
               // );
+=======
+             // const payment = payments.find(
+               // (payment) => payment.project_id === project.project_id,
+              //);
+>>>>>>> Stashed changes
 
               return (
                 <div

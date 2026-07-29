@@ -4,6 +4,7 @@ import { Fragment } from "react";
 import React from "react";
 import Sidebar from "../../components/Client/Sidebar";
 import { fetchProjectsByClient } from "../../services/projectService";
+import { fetchClientById } from "../../services/clientService";
 
 function MyProjects() {
   const navigate = useNavigate();
@@ -19,9 +20,11 @@ function MyProjects() {
   const [newMessage, setNewMessage] = useState("");
 
   const [myProjects, setMyProjects] = useState([]);
+  const [client, setClient] = useState(null);
 
   useEffect(() => {
     loadProjects();
+     loadClient();
   }, []);
 
   const loadProjects = async () => {
@@ -33,6 +36,14 @@ function MyProjects() {
       console.error(error);
     }
   };
+  const loadClient = async () => {
+  try {
+    const data = await fetchClientById(clientId);
+    setClient(data);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   const statusStyle = (status) => {
     if (status === "COMPLETED")
@@ -123,8 +134,7 @@ function MyProjects() {
 
       <div>
 
-        <Sidebar activePage="my-projects" />
-
+       <Sidebar client={client} activePage="my-projects" />
         <main
           style={{
             marginLeft: "260px",

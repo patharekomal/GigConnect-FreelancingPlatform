@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Sidebar from "../../components/Client/Sidebar";
 import { fetchProjectById, approveProject } from "../../services/projectService";
+import { fetchClientById } from "../../services/clientService";
 
 import { useState, useEffect } from "react";
 
@@ -10,10 +11,24 @@ function ProjectPage() {
   const { projectId } = useParams();
 
   const [project, setProject] = useState(null);
+  const [client, setClient] = useState(null);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const clientId = user.id;
 
   useEffect(() => {
+    loadClient();
     loadProject();
   }, [projectId]);
+
+  const loadClient = async () => {
+  try {
+    const data = await fetchClientById(clientId);
+    setClient(data);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   const loadProject = async () => {
 
@@ -146,7 +161,10 @@ function ProjectPage() {
 
       <div>
 
-        <Sidebar activePage="my-projects" />
+        <Sidebar
+         activePage="my-projects"
+         client={client}
+          />
 
         <main
           style={{
