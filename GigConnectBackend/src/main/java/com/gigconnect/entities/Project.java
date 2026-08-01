@@ -1,5 +1,6 @@
 package com.gigconnect.entities;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.gigconnect.enums.ProjectStatus;

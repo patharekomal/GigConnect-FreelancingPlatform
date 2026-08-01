@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Client/Sidebar";
-import { jobs, projects, payments } from "../../data/dummyData";
+import { fetchDashboard } from "../../services/clientService";
 import { useEffect, useState } from "react";
 import { fetchClientById } from "../../services/clientService";
 
@@ -11,59 +11,59 @@ function ClientDashboard() {
 
   const CLIENT_ID = user?.id;
    const [client, setClient] = useState(null);
+   const [dashboard, setDashboard] = useState(null);
 
-useEffect(() => {
-  loadClient();
-}, []);
+  useEffect(() => {
+    loadClient();
+    loadDashboard();
+  }, []);
 
-const loadClient = async () => {
+  const loadClient = async () => {
+    try {
+      const response = await fetchClientById(CLIENT_ID);
+      setClient(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const loadDashboard = async () => {
+
   try {
-    const response = await fetchClientById(CLIENT_ID);
-    setClient(response);
+
+    const data = await fetchDashboard(CLIENT_ID);
+
+    console.log(data);
+
+    setDashboard(data);
+
   } catch (error) {
+
     console.log(error);
+
   }
+
 };
   const CLIENT_NAME =
   client?.firstName || user?.firstName || "";
-
-  // ── Stats from dummy data ──────────────────────────────────
-  const myJobs = jobs.filter((j) => j.client_id === CLIENT_ID);
-
-  const myProjects = projects.filter(
-    (p) => p.client_id === CLIENT_ID
-  );
-
-  const activeProjects = myProjects.filter(
-    (p) => p.status === "IN_PROGRESS"
-  ).length;
-
-  const myProjectIds = myProjects.map(
-    (p) => p.project_id
-  );
-
-  const releasedTotal = payments
-    .filter(
-      (p) =>
-        myProjectIds.includes(p.project_id) &&
-        p.status === "RELEASED"
-    )
-    .reduce((sum, p) => sum + p.amount, 0);
+  if (!dashboard) {
+  return <h2>Loading...</h2>;
+  }
 
   const stats = [
-    {
-      label: "Jobs Posted",
-      value: myJobs.length,
-    },
-    {
-      label: "Active Projects",
-      value: activeProjects,
-    },
-    {
-      label: "Amount Released",
-      value: `₹${releasedTotal.toLocaleString()}`,
-    },
-  ];
+  {
+    label: "Jobs Posted",
+    value: dashboard.jobsPosted,
+  },
+  {
+    label: "Active Projects",
+    value: dashboard.activeProjects,
+  },
+  {
+    label: "Amount Released",
+    value: `₹${dashboard.amountReleased.toLocaleString()}`,
+  },
+];
 
   const actions = [
     {
@@ -92,20 +92,7 @@ const loadClient = async () => {
     },
   ];
 
-  const activity = [
-    {
-      text: "New bid received on React Developer job",
-      time: "2 min ago",
-    },
-    {
-      text: "Spring Boot project is in progress",
-      time: "1 hr ago",
-    },
-    {
-      text: "Payment of ₹38,000 released",
-      time: "Yesterday",
-    },
-  ];
+  
 
   return (
     <>
@@ -266,7 +253,7 @@ const loadClient = async () => {
               </h2>
 
               <div className="d-flex flex-column gap-3">
-                {activity.map((a, i) => (
+                {dashboard.recentActivities.slice(0, 5).map((a, i) => (
                   <div
                     key={i}
                     className="d-flex gap-2 align-items-start"
@@ -287,14 +274,14 @@ const loadClient = async () => {
                           lineHeight: "1.5",
                         }}
                       >
-                        {a.text}
+                        {a.message}
                       </div>
 
                       <div
                         className="text-muted mt-1"
                         style={{ fontSize: "11px" }}
                       >
-                        {a.time}
+                        {new Date(a.activityTime).toLocaleString()}
                       </div>
                     </div>
                   </div>

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gigconnect.dtos.client.ClientDashboardResponseDto;
 import com.gigconnect.dtos.client.ClientResponse;
 import com.gigconnect.dtos.client.ClientUpdateDto;
 import com.gigconnect.service.ClientService;
@@ -33,5 +34,14 @@ public class ClientController {
 	public ResponseEntity<?> updateClientProfile(@PathVariable Long id , @RequestBody @Valid ClientUpdateDto dto){
 		return ResponseEntity.ok(clientService.updateClientProfile(id,dto));
 	}
+	
+	@GetMapping("/dashboard/{clientId}")
+	public ResponseEntity<ClientDashboardResponseDto> getDashboard(
+	        @PathVariable Long clientId) {
+
+	    return ResponseEntity.ok(
+	            clientService.getDashboard(clientId));
+	}
+	
 	
 }

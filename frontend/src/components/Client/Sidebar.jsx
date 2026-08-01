@@ -1,9 +1,27 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { fetchClientById } from "../../services/clientService";
 
 function Sidebar({ client }) {
   const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
+  const [clientState, setClientState] = useState(client || null);
+
+  useEffect(() => {
+    const loadClient = async () => {
+      try {
+        if (!client && user?.role === "CLIENT") {
+          const data = await fetchClientById(user.id);
+          setClientState(data);
+        }
+      } catch (err) {
+        console.error("Failed to load client for sidebar", err);
+      }
+    };
+
+    loadClient();
+  }, [client, user]);
   
 
   return (
@@ -77,7 +95,7 @@ function Sidebar({ client }) {
       {/* User Card */}
       <div className="card border-0 shadow-sm p-3">
        <h4 className="mb-1">
-  🏢 {client?.companyName || "loading"}
+  🏢 {clientState?.companyName || user?.companyName || "Loading..."}
 </h4>
 
         <small className="text-muted d-block mb-2">

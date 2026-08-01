@@ -9,5 +9,6 @@ import com.gigconnect.entities.Job;
 public interface JobRepository extends JpaRepository<Job, Long>{
 
 	List<Job> findByClientId(Long clientId);
+	long countByClientId(Long clientId);
 
 }
