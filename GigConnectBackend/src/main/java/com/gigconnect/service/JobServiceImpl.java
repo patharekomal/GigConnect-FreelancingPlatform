@@ -124,7 +124,7 @@ public class JobServiceImpl implements JobService{
 	@Override
 	public List<JobResponseDto> getAllJobs() {
 
-	    List<Job> jobs = jobRepo.findAll();
+	    List<Job> jobs = jobRepo.findByStatus(JobStatus.OPEN);
 	    List<JobResponseDto> jobList = new ArrayList<>();
 
 	    for (Job j : jobs) {
