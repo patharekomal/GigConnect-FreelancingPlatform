@@ -1,11 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Sidebar from "../../components/Client/Sidebar";
 import { fetchProjectById, approveProject } from "../../services/projectService";
-<<<<<<< Updated upstream
 import { fetchClientById } from "../../services/clientService";
-=======
 import { createOrder, verifyPayment, markPaymentFailed } from "../../services/paymentService";
->>>>>>> Stashed changes
+import { submitReview, fetchReviewByProject } from "../../services/reviewService";
 
 import { useState, useEffect } from "react";
 
@@ -16,6 +14,14 @@ function ProjectPage() {
 
   const [project, setProject] = useState(null);
   const [client, setClient] = useState(null);
+
+  const [showReviewModal, setShowReviewModal] = useState(false);
+
+  const [rating, setRating] = useState(5);
+
+  const [comment, setComment] = useState("");
+
+  const [reviewExists, setReviewExists] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const clientId = user.id;
@@ -43,6 +49,17 @@ function ProjectPage() {
           console.log(data);
 
           setProject(data);
+          try {
+
+              await fetchReviewByProject(projectId);
+
+              setReviewExists(true);
+
+          } catch {
+
+              setReviewExists(false);
+
+          }
 
       } catch(error){
 
@@ -260,6 +277,39 @@ function ProjectPage() {
             "Unable to initiate payment. Please try again.";
 
         alert(message);
+    }
+
+  };
+
+  const handleSubmitReview = async () => {
+
+    try {
+
+        await submitReview({
+
+            projectId,
+
+            rating,
+
+            comment
+
+        });
+
+        alert("Review submitted successfully.");
+
+        setShowReviewModal(false);
+
+        setReviewExists(true);
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            error.response?.data?.message ||
+            "Unable to submit review."
+        );
+
     }
 
 };
@@ -658,6 +708,17 @@ function ProjectPage() {
                   View Payment
                 </button>
 
+                {!reviewExists && (
+
+                  <button
+                      className="btn btn-warning ms-2"
+                      onClick={() => setShowReviewModal(true)}
+                  >
+                      ⭐ Leave Review
+                  </button>
+
+                )}
+
               </div>
 
             )}
@@ -667,6 +728,95 @@ function ProjectPage() {
         </main>
 
       </div>
+
+      {showReviewModal && (
+
+        <div
+            className="modal d-block"
+            style={{ background: "rgba(0,0,0,0.5)" }}
+        >
+
+        <div className="modal-dialog">
+
+        <div className="modal-content">
+
+        <div className="modal-header">
+
+        <h5>Leave Review</h5>
+
+        <button
+        className="btn-close"
+        onClick={() => setShowReviewModal(false)}
+        ></button>
+
+        </div>
+
+        <div className="modal-body">
+
+        <label className="form-label">
+
+        Rating
+
+        </label>
+
+        <select
+        className="form-select mb-3"
+        value={rating}
+        onChange={(e)=>setRating(Number(e.target.value))}
+        >
+
+        <option value={5}>⭐⭐⭐⭐⭐</option>
+        <option value={4}>⭐⭐⭐⭐</option>
+        <option value={3}>⭐⭐⭐</option>
+        <option value={2}>⭐⭐</option>
+        <option value={1}>⭐</option>
+
+        </select>
+
+        <label className="form-label">
+
+        Comment
+
+        </label>
+
+        <textarea
+        className="form-control"
+        rows="4"
+        value={comment}
+        onChange={(e)=>setComment(e.target.value)}
+        />
+
+        </div>
+
+        <div className="modal-footer">
+
+        <button
+        className="btn btn-secondary"
+        onClick={() => setShowReviewModal(false)}
+        >
+
+        Cancel
+
+        </button>
+
+        <button
+        className="btn btn-success"
+        onClick={handleSubmitReview}
+        >
+
+        Submit Review
+
+        </button>
+
+        </div>
+
+        </div>
+
+        </div>
+
+        </div>
+
+        )}
 
     </>
 

@@ -7,3 +7,7 @@ export const getClientProfile = (clientId) => {
 export const getClientById = (clientId) => {
   return api.get(`/client/${clientId}`);
 };
+
+export const getDashboard = (clientId) => {
+    return api.get(`/client/dashboard/${clientId}`);
+};

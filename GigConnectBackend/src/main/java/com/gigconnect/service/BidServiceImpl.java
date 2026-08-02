@@ -203,6 +203,9 @@ public class BidServiceImpl implements BidService {
 	        }
 	    }
 	    
+	    bidRepository.save(selectedBid);
+	    bidRepository.saveAll(bidList);
+	    
 	    // Close the job
 	    job.setStatus(JobStatus.CLOSED);
 	    

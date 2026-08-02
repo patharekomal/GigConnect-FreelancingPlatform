@@ -14,5 +14,6 @@ public interface ProjectRepository extends JpaRepository<Project,Long>{
 	List<Project> findByFreelancerId(Long freelancerId);
 	long countByFreelancerIdAndStatus(Long freelancerId,ProjectStatus status);
 	List<Project> findByClientId(Long clientId);
+	long countByClientIdAndStatus(Long clientId,ProjectStatus status);
 	
 }

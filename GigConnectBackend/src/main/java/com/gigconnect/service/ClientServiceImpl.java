@@ -11,10 +11,25 @@ import com.gigconnect.entities.Client;
 import com.gigconnect.entities.User;
 import com.gigconnect.enums.UserRole;
 import com.gigconnect.repository.ClientRepository;
+import com.gigconnect.repository.JobRepository;
+import com.gigconnect.repository.PaymentRepository;
+import com.gigconnect.repository.ProjectRepository;
 import com.gigconnect.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import com.gigconnect.dtos.client.ActivityResponseDto;
+import com.gigconnect.dtos.client.ClientDashboardResponseDto;
+import com.gigconnect.entities.Job;
+import com.gigconnect.entities.Payment;
+import com.gigconnect.entities.Project;
+import com.gigconnect.enums.PaymentStatus;
+import com.gigconnect.enums.ProjectStatus;
 
 @Service
 @Transactional
@@ -25,6 +40,11 @@ public class ClientServiceImpl implements ClientService{
 	private final ClientRepository clientRepo;
 	private final UserRepository userRepo;
 	private final ModelMapper mapper;
+	private final JobRepository jobRepository;
+
+	private final ProjectRepository projectRepository;
+
+	private final PaymentRepository paymentRepository;
 	
 	@Override
 	public ClientResponse getClientprofile(Long id) {
@@ -72,5 +92,124 @@ public class ClientServiceImpl implements ClientService{
 	    mapper.map(dto, client);
 	    return new ApiResponse("Success","Client profile updated successfully");
 	}
+	
+	@Override
+public ClientDashboardResponseDto getDashboard(Long clientId) {
+
+    // Check Client
+    clientRepo.findById(clientId)
+            .orElseThrow(() ->
+                    new ResourceNotFoundException("Client not found"));
+
+    ClientDashboardResponseDto dto = new ClientDashboardResponseDto();
+
+    // ----------------------------------------------------
+    // Jobs Posted
+    // ----------------------------------------------------
+    dto.setJobsPosted(jobRepository.countByClientId(clientId));
+
+    // ----------------------------------------------------
+    // Active Projects
+    // ----------------------------------------------------
+    List<Project> projectList = projectRepository.findByClientId(clientId);
+
+    long activeProjects = 0;
+
+    for (Project project : projectList) {
+
+        if (project.getStatus() == ProjectStatus.IN_PROGRESS) {
+            activeProjects++;
+        }
+    }
+
+    dto.setActiveProjects(activeProjects);
+
+    // ----------------------------------------------------
+    // Amount Released
+    // ----------------------------------------------------
+    List<Payment> paymentList =
+            paymentRepository.findByProjectClientId(clientId);
+
+    double amountReleased = 0;
+
+    for (Payment payment : paymentList) {
+
+        if (payment.getStatus() == PaymentStatus.SUCCESS) {
+
+            amountReleased += payment.getAmount();
+
+        }
+
+    }
+
+    dto.setAmountReleased(amountReleased);
+
+    // ----------------------------------------------------
+    // Recent Activity
+    // ----------------------------------------------------
+
+    List<ActivityResponseDto> activityList = new ArrayList<>();
+
+    // Latest Jobs
+    List<Job> jobs = jobRepository.findByClientId(clientId);
+
+        for (Job job : jobs) {
+
+        ActivityResponseDto activity =
+            new ActivityResponseDto();
+
+        activity.setMessage(
+            "Job Posted : " + job.getTitle());
+
+        activity.setActivityDate(
+            job.getCreatedOn());
+
+        activityList.add(activity);
+        }
+
+    // Completed Projects
+    for (Project project : projectList) {
+
+        if (project.getStatus() == ProjectStatus.COMPLETED) {
+
+            ActivityResponseDto activity =
+                    new ActivityResponseDto();
+
+            activity.setMessage(
+                    "Project Completed : "
+                            + project.getJob().getTitle());
+
+            activity.setActivityTime(
+                    project.getCreatedAt());
+
+            activityList.add(activity);
+        }
+
+    }
+
+    // Successful Payments
+    for (Payment payment : paymentList) {
+
+        if (payment.getStatus() == PaymentStatus.SUCCESS) {
+
+            ActivityResponseDto activity =
+                    new ActivityResponseDto();
+
+            activity.setMessage(
+                    "Payment Released : ₹"
+                            + payment.getAmount());
+
+            activity.setActivityTime(
+                    payment.getPaymentDate());
+
+            activityList.add(activity);
+        }
+
+    }
+
+    dto.setRecentActivities(activityList);
+
+    return dto;
+}
 	
 }
