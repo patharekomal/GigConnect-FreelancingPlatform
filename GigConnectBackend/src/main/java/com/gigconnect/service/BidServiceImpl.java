@@ -142,12 +142,21 @@ public class BidServiceImpl implements BidService {
 		
 	
 	@Override
-	public List<BidResponse> getBidsByJob(Long jobId) {
+	public List<BidResponse> getBidsByJob(Long jobId,Long userId) {
 		
-		jobRepository.findById(jobId)
+		Job job=jobRepository.findById(jobId)
         .orElseThrow(() ->
                 new ResourceNotFoundException(
                         "Job not found with id : " + jobId));
+		
+		System.out.println("JWT User Id : " + userId);
+		System.out.println("Job Owner Id : " + job.getClient().getUserDetails().getId());
+		 // Authorization
+	    if (!job.getClient().getUserDetails().getId().equals(userId)) {
+	    	throw new RuntimeException("You are not authorized to view this job");
+	    }
+	    System.out.println("JWT User Id : " + userId);
+		
 		// Fetch bids
 	    List<Bid> bidList = bidRepository.findByJobId(jobId);
 	    

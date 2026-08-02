@@ -54,13 +54,15 @@ const clientId = user.id;
   };
 
   const loadBids = async () => {
-    try{
-
+    try {
       const data = await fetchBidsByJob(jobId);
       setJobBids(data);
+    } catch (error) {
+      console.log(error);
 
-    } catch(error){
-      console.error(error);
+      setJobBids([]);
+
+      alert("You are not authorized to view these bids.");
     }
   };
 

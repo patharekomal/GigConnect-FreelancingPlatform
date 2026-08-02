@@ -453,9 +453,15 @@ function MyProjects() {
             completedProjects.map((project) => {
              
 
+<<<<<<< Updated upstream
              // const payment = payments.find(
                // (payment) => payment.project_id === project.project_id,
               //);
+=======
+              // const payment = payments.find(
+              //   (payment) => payment.project_id === project.project_id,
+              // );
+>>>>>>> Stashed changes
 
               return (
                 <div
@@ -467,7 +473,7 @@ function MyProjects() {
 
                     <div className="d-flex justify-content-between align-items-start">
                       <div>
-                        <h4 className="fw-bold mb-1">{project.projectTitle}</h4>
+                        <h4 className="fw-bold mb-1">{project.jobTitle}</h4>
 
                         <p className="text-muted mb-0">{project.description}</p>
                       </div>

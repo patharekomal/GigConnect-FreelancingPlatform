@@ -19,7 +19,7 @@ public interface BidService {
 
 	ApiResponse deleteBid(Long bidId);
 
-	List<BidResponse> getBidsByJob(Long jobId);
+	List<BidResponse> getBidsByJob(Long jobId, Long userId);
 
 	AcceptBidResponse acceptBid(Long bidId);
 

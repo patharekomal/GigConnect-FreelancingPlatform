@@ -1,6 +1,8 @@
 package com.gigconnect.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -55,7 +57,13 @@ public class BidController {
 	//View bids(for a job posted by the client)
 	@GetMapping("/job/{jobId}")
 	public ResponseEntity<?> getBidsByJob(@PathVariable Long jobId){
-		return ResponseEntity.ok(bidService.getBidsByJob(jobId));
+		
+		  Long userId = (Long) SecurityContextHolder
+		            .getContext()
+		            .getAuthentication()
+		            .getPrincipal();
+
+		return ResponseEntity.ok(bidService.getBidsByJob(jobId,userId));
 	}
 	
 	//Accept bid
