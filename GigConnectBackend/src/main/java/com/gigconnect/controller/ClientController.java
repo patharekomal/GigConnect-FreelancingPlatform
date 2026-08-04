@@ -25,9 +25,9 @@ public class ClientController {
 	//Constructor based D.I.
 	private final ClientService clientService;
 	
-	@GetMapping("{id}")
-	public ResponseEntity<ClientResponse> getClientProfile(@PathVariable Long id){
-		return ResponseEntity.ok(clientService.getClientprofile(id));
+	@GetMapping("/profile")
+	public ResponseEntity<ClientResponse> getClientProfile(){
+		return ResponseEntity.ok(clientService.getClientprofile());
 	}
 	
 	@PatchMapping("{id}")

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Sidebar from "../../components/Client/Sidebar";
 import { getPaymentsByClient } from "../../services/paymentService";
+import { getMyPayments } from "../../services/paymentService";
 
 function Payment() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function Payment() {
 
   const loadPayments = async () => {
     try {
-        const data = await getPaymentsByClient(clientId);
+        const data = await getMyPayments();
         setPayments(data);
     } catch (error) {
         console.log(error);
@@ -35,7 +36,7 @@ function Payment() {
 
     loadPayments();
 
-  }, [clientId]);
+  }, []);
 
 
 

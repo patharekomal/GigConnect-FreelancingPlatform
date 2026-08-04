@@ -2,20 +2,34 @@ package com.gigconnect.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    // Password Encoder Bean
+    private final JwtVerificationFilter jwtFilter;
+
     @Bean
-<<<<<<< Updated upstream
-    public PasswordEncoder passwordEncoder() {
-=======
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         // 1. Disable CSRF
@@ -47,6 +61,10 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.DELETE, "/jobs/**").hasAuthority("CLIENT")
                 .requestMatchers(HttpMethod.GET,    "/client/**").hasAuthority("CLIENT")
                 .requestMatchers(HttpMethod.PATCH,  "/client/**").hasAuthority("CLIENT")
+                .requestMatchers(HttpMethod.POST, "/payments/create-order").hasAuthority("CLIENT")
+                .requestMatchers(HttpMethod.POST, "/payments/verify").hasAuthority("CLIENT")
+                .requestMatchers(HttpMethod.PATCH, "/payments/fail").hasAuthority("CLIENT")
+                .requestMatchers(HttpMethod.GET, "/payments/**").hasAuthority("CLIENT")
              
                // .requestMatchers(HttpMethod.GET, "/jobs/**").hasAuthority("CLIENT")
 
@@ -86,30 +104,12 @@ public class SecurityConfiguration {
 
     @Bean
     PasswordEncoder passwordEncoder() {
->>>>>>> Stashed changes
         return new BCryptPasswordEncoder();
     }
 
-    // Security Configuration
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-        http
-                // Disable CSRF for REST APIs
-                .csrf(csrf -> csrf.disable())
-
-                // Allow all requests (temporarily)
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll())
-
-                .cors(Customizer.withDefaults())
-
-                // Disable default login page
-                .formLogin(form -> form.disable())
-
-                // Disable HTTP Basic Authentication
-                .httpBasic(Customizer.withDefaults());
-
-        return http.build();
+    AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+            throws Exception {
+        return config.getAuthenticationManager();
     }
 }

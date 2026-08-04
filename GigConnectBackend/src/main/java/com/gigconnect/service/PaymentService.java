@@ -18,5 +18,7 @@ public interface PaymentService {
 
 	void markPaymentFailed(PaymentFailedRequestDto request);
 	
-	List<PaymentResponseDto> getPaymentsByClient(Long clientId);
+	//List<PaymentResponseDto> getPaymentsByClient(Long clientId);
+
+	List<PaymentResponseDto> getPaymentsByClient();
 }

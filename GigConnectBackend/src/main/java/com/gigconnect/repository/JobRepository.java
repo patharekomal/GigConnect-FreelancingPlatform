@@ -10,10 +10,10 @@ import com.gigconnect.enums.JobStatus;
 public interface JobRepository extends JpaRepository<Job, Long>{
 
 	List<Job> findByClientId(Long clientId);
-<<<<<<< Updated upstream
+
 	long countByClientId(Long clientId);
-=======
+
 	List<Job> findByStatus(JobStatus status); 
->>>>>>> Stashed changes
+
 
 }

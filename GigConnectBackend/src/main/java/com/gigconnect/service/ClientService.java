@@ -7,7 +7,7 @@ import com.gigconnect.dtos.client.ClientUpdateDto;
 
 public interface ClientService {
 
-	ClientResponse getClientprofile(Long id);
+	ClientResponse getClientprofile();
 
 	ApiResponse updateClientProfile(Long id , ClientUpdateDto dto);
 	

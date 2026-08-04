@@ -15,6 +15,7 @@ import com.gigconnect.repository.JobRepository;
 import com.gigconnect.repository.PaymentRepository;
 import com.gigconnect.repository.ProjectRepository;
 import com.gigconnect.repository.UserRepository;
+import com.gigconnect.security.SecurityUtil;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -46,12 +47,17 @@ public class ClientServiceImpl implements ClientService{
 
 	private final PaymentRepository paymentRepository;
 	
+	private final SecurityUtil securityUtil;
+	
+	
+	
 	@Override
-	public ClientResponse getClientprofile(Long id) {
+	public ClientResponse getClientprofile() {
+		Long userId = securityUtil.getCurrentUserId();
 		//Find client
-		Client client = clientRepo.findById(id)
+		Client client = clientRepo.findById(userId)
 				.orElseThrow(()->
-			       new ResourceNotFoundException("Invalid client Id :"+ id));
+			       new ResourceNotFoundException("Invalid client Id :"+ userId));
 		
 		ClientResponse dto = 
 				mapper.map(client, ClientResponse.class);
