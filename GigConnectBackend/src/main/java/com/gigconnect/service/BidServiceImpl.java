@@ -25,6 +25,7 @@ import com.gigconnect.repository.BidRepository;
 import com.gigconnect.repository.FreelancerRepository;
 import com.gigconnect.repository.JobRepository;
 import com.gigconnect.repository.ProjectRepository;
+import com.gigconnect.security.SecurityUtil;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,8 @@ public class BidServiceImpl implements BidService {
 	private  final FreelancerRepository freelancerRepository;
 	private final  JobRepository jobRepository;
 	private final ProjectRepository projectRepository;
+	private final SecurityUtil securityUtil; 
+	private final AuthorizationService authorizationService;
 
 	@Override
 	public ApiResponse submitBid(Long freelancerId, BidRequest bid) 
@@ -103,12 +106,13 @@ public class BidServiceImpl implements BidService {
 
 	@Override
 	public ApiResponse updateBid(Long bidId, UpdateBidRequest bid) {
-		// TODO Auto-generated method stub
-		      
+		
+		Long userId = securityUtil.getCurrentUserId();
 		      //get bid by bid id 
 		         
 				Bid obj=bidRepository.findById(bidId)
 						.orElseThrow(()-> new ResourceNotFoundException("Bid id invalid "));
+				authorizationService.verifyBidOwner(obj,userId);
 				
 				//check if status is pending ,if pending then only update bid 
 				if (obj.getStatus() != BidStatus.PENDING) {
@@ -128,8 +132,12 @@ public class BidServiceImpl implements BidService {
 	@Override
 	public ApiResponse deleteBid(Long bidId) {
 		
+		Long userId = securityUtil.getCurrentUserId();
+		
 		  Bid bid = bidRepository.findById(bidId)
 		            .orElseThrow(() -> new RuntimeException("Bid not found"));
+		  
+		  authorizationService.verifyBidOwner(bid,userId);
 
 		  if (bid.getStatus() != BidStatus.PENDING) {
 		        throw new RuntimeException("Only pending bids can be withdrawn.");
@@ -144,18 +152,16 @@ public class BidServiceImpl implements BidService {
 	@Override
 	public List<BidResponse> getBidsByJob(Long jobId,Long userId) {
 		
+		Long loggedInUserId = securityUtil.getCurrentUserId();
+		
 		Job job=jobRepository.findById(jobId)
         .orElseThrow(() ->
                 new ResourceNotFoundException(
                         "Job not found with id : " + jobId));
 		
-		System.out.println("JWT User Id : " + userId);
-		System.out.println("Job Owner Id : " + job.getClient().getUserDetails().getId());
-		 // Authorization
-	    if (!job.getClient().getUserDetails().getId().equals(userId)) {
-	    	throw new RuntimeException("You are not authorized to view this job");
-	    }
-	    System.out.println("JWT User Id : " + userId);
+		
+		authorizationService.verifyJobOwner(job, loggedInUserId);
+	    
 		
 		// Fetch bids
 	    List<Bid> bidList = bidRepository.findByJobId(jobId);
@@ -185,6 +191,8 @@ public class BidServiceImpl implements BidService {
 	@Override
 	public AcceptBidResponse acceptBid(Long bidId) {
 		
+		Long userId = securityUtil.getCurrentUserId();
+		
 		//Find selected bid
 		Bid selectedBid = bidRepository.findById(bidId)
 				.orElseThrow(()->new ResourceNotFoundException("Invalid Bid Id"));
@@ -199,6 +207,9 @@ public class BidServiceImpl implements BidService {
 	    
 	    //Get associated job
 	    Job job = selectedBid.getJob();
+	    authorizationService.verifyJobOwner(job,userId);
+	    authorizationService.verifyBidJobOwner(selectedBid,userId);
+
 	    
 	    // Reject all other pending bids for this job
 	    List<Bid> bidList = bidRepository.findByJobId(job.getId());
@@ -250,9 +261,11 @@ public class BidServiceImpl implements BidService {
 
 	@Override
 	public BidResponse getBidByBidId(Long bidId) {
+		Long userId = securityUtil.getCurrentUserId();
 		// TODO Auto-generated method stub
 		Bid obj=bidRepository.findById(bidId)
 				.orElseThrow(()-> new ResourceNotFoundException("Bid id invalid "));
+		authorizationService.verifyBidOwner(obj,userId);
 		BidResponse dto = modelMapper.map(obj, BidResponse.class);
 		dto.setBidId(obj.getId());
 		dto.setJobId(obj.getJob().getId());

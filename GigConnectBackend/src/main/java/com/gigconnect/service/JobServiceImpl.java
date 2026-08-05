@@ -17,6 +17,7 @@ import com.gigconnect.enums.JobStatus;
 import com.gigconnect.repository.BidRepository;
 import com.gigconnect.repository.ClientRepository;
 import com.gigconnect.repository.JobRepository;
+import com.gigconnect.security.SecurityUtil;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -31,6 +32,8 @@ public class JobServiceImpl implements JobService{
 	private final ClientRepository clientRepo;
 	private final BidRepository bidRepository;
 	private final ModelMapper mapper;
+	private final SecurityUtil securityUtil; 
+	private final AuthorizationService authorizationService;
 	
 	
 	@Override
@@ -88,8 +91,11 @@ public class JobServiceImpl implements JobService{
 
 	@Override
 	public ApiResponse updateJob(Long jobId, @Valid JobUpdateDto dto) {
+		
+		Long loggedInUserId = securityUtil.getCurrentUserId();
 		Job job = jobRepo.findById(jobId)
 				.orElseThrow(()->new ResourceNotFoundException("Job not found with id"+jobId));
+		authorizationService.verifyJobOwner(job, loggedInUserId);
 		
 		if(dto.getTitle()!=null)
 	        job.setTitle(dto.getTitle());
@@ -109,11 +115,13 @@ public class JobServiceImpl implements JobService{
 
 	@Override
 	public ApiResponse deleteJob(Long jobId) {
+		
+		Long loggedInUserId = securityUtil.getCurrentUserId();
 
-	    if (!jobRepo.existsById(jobId)) {
-	        throw new ResourceNotFoundException(
-	                "Job not found with Id : " + jobId);
-	    }
+		Job job = jobRepo.findById(jobId)
+				.orElseThrow(()->new ResourceNotFoundException("Job not found with id"+jobId));
+	    
+	    authorizationService.verifyJobOwner(job, loggedInUserId);
 	    
 	    jobRepo.deleteById(jobId);
 
@@ -151,10 +159,15 @@ public class JobServiceImpl implements JobService{
 	
 	@Override
 	public JobResponseDto getJobById(Long jobId) {
+		
+		Long loggedInUserId = securityUtil.getCurrentUserId();
 
 	    Job job = jobRepo.findById(jobId)
 	            .orElseThrow(() ->
 	                    new ResourceNotFoundException("Job Not Found"));
+	    
+	    //authorizationService.verifyJobOwner(job, loggedInUserId);
+	    
         String name=job.getClient().getCompanyName();
 	    JobResponseDto dto= mapper.map(job, JobResponseDto.class);
 	      dto.setCompanyName(name);

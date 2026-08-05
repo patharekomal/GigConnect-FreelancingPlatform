@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchClientById } from "../../services/clientService";
+import { fetchMyProfile } from "../../services/clientService";
 
 function Sidebar({ client }) {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ function Sidebar({ client }) {
     const loadClient = async () => {
       try {
         if (!client && user?.role === "CLIENT") {
-          const data = await fetchClientById(user.id);
+          const data = await fetchMyProfile();
           setClientState(data);
         }
       } catch (err) {

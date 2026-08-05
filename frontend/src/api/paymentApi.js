@@ -17,3 +17,6 @@ export const markPaymentFailed = (paymentData) => {
 export const getPaymentsByClient = (clientId) => {
     return api.get(`/payments/client/${clientId}`);
 };
+
+export const getMyPayments = () =>
+    api.get("/payments/client/history");

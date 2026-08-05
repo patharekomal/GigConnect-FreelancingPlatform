@@ -1,7 +1,7 @@
 import Sidebar from "../../components/Client/Sidebar";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchClientById } from "../../services/clientService";
+import { fetchMyProfile } from "../../services/clientService";
 
 function ClientProfile() {
 
@@ -17,7 +17,7 @@ useEffect(() => {
 
 const loadClient = async () => {
     try {
-        const data = await fetchClientById(user.id);
+        const data = await fetchMyProfile();
         console.log(data);
         setClient(data);
     } catch (error) {

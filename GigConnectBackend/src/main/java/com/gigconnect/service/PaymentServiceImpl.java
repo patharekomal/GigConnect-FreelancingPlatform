@@ -5,15 +5,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.gigconnect.custom_exceptions.PaymentException;
+import com.gigconnect.custom_exceptions.ResourceNotFoundException;
 import com.gigconnect.dtos.payment.CreateOrderRequestDto;
 import com.gigconnect.dtos.payment.CreateOrderResponseDto;
 import com.gigconnect.dtos.payment.PaymentFailedRequestDto;
 import com.gigconnect.dtos.payment.PaymentResponseDto;
+import com.gigconnect.entities.Client;
 import com.gigconnect.entities.Payment;
 import com.gigconnect.entities.Project;
 import com.gigconnect.enums.PaymentStatus;
+import com.gigconnect.repository.ClientRepository;
 import com.gigconnect.repository.PaymentRepository;
 import com.gigconnect.repository.ProjectRepository;
+import com.gigconnect.security.SecurityUtil;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 
@@ -40,8 +44,10 @@ public class PaymentServiceImpl implements PaymentService {
 	//Constructor based DI
 	private final ProjectRepository projectRepository;
 	private final PaymentRepository paymentRepository;
+	private final SecurityUtil securityUtil; 
+	private final AuthorizationService authorizationService;
+	private final ClientRepository clientRepository;
 	
-
     @Value("${razorpay.key.id}")
     private String keyId;
 
@@ -52,9 +58,12 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public CreateOrderResponseDto createOrder(CreateOrderRequestDto request) throws Exception {
 
+    	Long userId = securityUtil.getCurrentUserId();
         // Fetch project
         Project project = projectRepository.findById(request.getProjectId())
                 .orElseThrow(() -> new PaymentException("Project not found"));
+        
+        authorizationService.verifyProjectClient(project, userId);
         
         if (project.getStatus() != ProjectStatus.SUBMITTED) {
             throw new PaymentException(
@@ -87,7 +96,7 @@ public class PaymentServiceImpl implements PaymentService {
         RazorpayClient razorpayClient = new RazorpayClient(keyId, keySecret);
 
         // Amount in paise
-        int amount = (int) (project.getAgreedAmount() * 100);
+        int amount = (int) Math.round(project.getAgreedAmount() * 100);
 
         // Create Razorpay order request
         JSONObject orderRequest = new JSONObject();
@@ -116,6 +125,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public VerifyPaymentResponseDto verifyPayment(VerifyPaymentRequestDto request) throws Exception {
 
+    	Long userId = securityUtil.getCurrentUserId();
         // Create JSON object required for signature verification
         JSONObject attributes = new JSONObject();
 
@@ -136,6 +146,8 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElseThrow(() -> new PaymentException("Payment not found"));
         
 
+        authorizationService.verifyPaymentClient(payment, userId);
+        
         // Update payment details
         payment.setRazorpayPaymentId(request.getRazorpayPaymentId());
         payment.setRazorpaySignature(request.getRazorpaySignature());
@@ -159,20 +171,28 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public void markPaymentFailed(PaymentFailedRequestDto request) {
 
+    	Long userId = securityUtil.getCurrentUserId();
         Payment payment = paymentRepository
                 .findByRazorpayOrderId(request.getRazorpayOrderId())
                 .orElseThrow(() -> new PaymentException("Payment not found"));
 
+        authorizationService.verifyPaymentClient(payment, userId);
         payment.setStatus(PaymentStatus.FAILED);
 
         paymentRepository.save(payment);
     }
     
     @Override
-    public List<PaymentResponseDto> getPaymentsByClient(Long clientId) {
+    public List<PaymentResponseDto> getPaymentsByClient() {
 
+    	
+    	Long userId = securityUtil.getCurrentUserId();
+
+    	Client client = clientRepository
+    	        .findByUserDetailsId(userId)
+    	        .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
         List<Payment> paymentList =
-                paymentRepository.findByProjectClientId(clientId);
+                paymentRepository.findByProjectClient(client);
 
         List<PaymentResponseDto> response = new ArrayList<>();
 

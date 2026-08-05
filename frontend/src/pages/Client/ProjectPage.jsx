@@ -3,10 +3,7 @@ import Sidebar from "../../components/Client/Sidebar";
 import { fetchProjectById, approveProject } from "../../services/projectService";
 import { fetchClientById } from "../../services/clientService";
 import { createOrder, verifyPayment, markPaymentFailed } from "../../services/paymentService";
-<<<<<<< Updated upstream
 import { submitReview, fetchReviewByProject } from "../../services/reviewService";
-=======
->>>>>>> Stashed changes
 
 import { useState, useEffect } from "react";
 

@@ -6,6 +6,11 @@ export const fetchClientById = async (clientId) => {
   return response.data;
 };
 
+export const fetchMyProfile = async () => {
+    const response = await clientApi.getMyProfile();
+    return response.data;
+};
+
 
 export const fetchDashboard = async (clientId) => {
     const response = await getDashboardApi(clientId);

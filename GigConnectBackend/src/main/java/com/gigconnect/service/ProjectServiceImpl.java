@@ -17,6 +17,7 @@ import com.gigconnect.dtos.project.SubmitWorkRequest;
 import com.gigconnect.entities.Project;
 import com.gigconnect.enums.ProjectStatus;
 import com.gigconnect.repository.ProjectRepository;
+import com.gigconnect.security.SecurityUtil;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,8 @@ public class ProjectServiceImpl implements ProjectService {
     // Constructor based Dependency Injection
     private final ProjectRepository projectRepository;
     private final ModelMapper modelMapper;
+    private final SecurityUtil securityUtil; 
+	private final AuthorizationService authorizationService;
 
     @Override
     public List<ProjectResponse> getProjectsByFreelancer(Long freelancerId) {
@@ -73,11 +76,14 @@ public class ProjectServiceImpl implements ProjectService {
    //Get all project details by project id 
     @Override
     public ProjectDetailsResponse getProjectDetails(Long projectId) {
-
+    	
+    	Long userId = securityUtil.getCurrentUserId();
         // Fetch Project
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Invalid Project Id"));
+        
+        authorizationService.verifyProjectAccess(project,userId);
 
         // Create Response DTO
         ProjectDetailsResponse dto = new ProjectDetailsResponse();
@@ -117,10 +123,15 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ApiResponse submitWork(Long projectId,SubmitWorkRequest request) {
 
+    	Long userId = securityUtil.getCurrentUserId();
         // Fetch Project
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Invalid Project Id"));
+        
+        authorizationService.verifyProjectFreelancer(
+                project,
+                userId);
 
         // Only active projects can be submitted
         if(project.getStatus() != ProjectStatus.IN_PROGRESS)
@@ -195,8 +206,14 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public ApiResponse approveProject(Long projectId) {
+		
+		Long userId = securityUtil.getCurrentUserId();
+		
 		//Find project
 		Project project = projectRepository.findById(projectId).orElseThrow(()->new ResourceNotFoundException("Project not found with Id : " + projectId));
+		authorizationService.verifyProjectClient(
+		        project,
+		        userId);
 		
 		//Check whether freelancer has submitted work
 	    if (project.getSubmittedWork() == null || project.getSubmittedWork().isBlank()) {

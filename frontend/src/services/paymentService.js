@@ -19,3 +19,11 @@ export const getPaymentsByClient = async (clientId) => {
     const response = await paymentApi.getPaymentsByClient(clientId);
     return response.data;
 };
+
+export const getMyPayments = async () => {
+
+    const response =
+        await paymentApi.getMyPayments();
+
+    return response.data;
+};

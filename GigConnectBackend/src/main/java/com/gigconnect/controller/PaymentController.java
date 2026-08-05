@@ -45,12 +45,11 @@ public class PaymentController {
         return ResponseEntity.ok("Payment marked as failed.");
     }
     
-    @GetMapping("/client/{clientId}")
-    public ResponseEntity<?> getPaymentsByClient(
-            @PathVariable Long clientId) {
+    @GetMapping("/client/history")
+    public ResponseEntity<?> getPaymentsByClient() {
 
         List<PaymentResponseDto> payments =
-                paymentService.getPaymentsByClient(clientId);
+                paymentService.getPaymentsByClient();
 
         return ResponseEntity.ok(payments);
     }
