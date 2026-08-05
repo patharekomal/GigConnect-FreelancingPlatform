@@ -1,10 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-
 function Register() {
   const navigate = useNavigate();
-
   const [selectedRole, setSelectedRole] = useState("CLIENT");
 
   const [formData, setFormData] = useState({
@@ -16,48 +14,106 @@ function Register() {
     confirmPassword: "",
   });
 
+  // Validation errors state
+  const [errors, setErrors] = useState({});
+
+  // Validation rules
+  const validate = () => {
+    const newErrors = {};
+
+    // First Name
+    if (!formData.firstName.trim())
+      newErrors.firstName = "First name is required";
+
+    // Last Name
+    if (!formData.lastName.trim())
+      newErrors.lastName = "Last name is required";
+
+    // Email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email.trim())
+      newErrors.email = "Email is required";
+    else if (!emailRegex.test(formData.email))
+      newErrors.email = "Enter a valid email address (e.g. abc@gmail.com)";
+
+    // Phone — 10 digits starting with 6-9
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!formData.phone.trim())
+      newErrors.phone = "Phone number is required";
+    else if (!phoneRegex.test(formData.phone))
+      newErrors.phone = "Enter a valid 10-digit number starting with 6, 7, 8 or 9";
+
+    // Password
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[#@$*]).{5,20}$/;
+    if (!formData.password)
+      newErrors.password = "Password is required";
+    else if (!passwordRegex.test(formData.password))
+      newErrors.password = "Password must be 5–20 chars and include a digit, lowercase letter & one of # @ $ *";
+
+    // Confirm Password
+    if (!formData.confirmPassword)
+      newErrors.confirmPassword = "Please confirm your password";
+    else if (formData.password !== formData.confirmPassword)
+      newErrors.confirmPassword = "Passwords do not match";
+
+    return newErrors;
+  };
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    // Clear error for that field as user types
+    if (errors[e.target.name]) {
+      setErrors({ ...errors, [e.target.name]: "" });
+    }
   };
 
   const handleRegister = () => {
-  if (formData.password !== formData.confirmPassword) {
-    alert("Passwords do not match");
-    return;
-  }
+    const validationErrors = validate();
 
-  // Store common registration data
-  const commonData = {
-    firstName: formData.firstName,
-    lastName: formData.lastName,
-    email: formData.email,
-    phone: formData.phone,
-    password: formData.password,
-    role: selectedRole,
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    const commonData = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      password: formData.password,
+      role: selectedRole,
+    };
+
+    sessionStorage.setItem("registerData", JSON.stringify(commonData));
+
+    if (selectedRole === "CLIENT") {
+      navigate("/client-profile-setup");
+    } else {
+      navigate("/freelancer-profile-setup");
+    }
   };
 
-  sessionStorage.setItem(
-    "registerData",
-    JSON.stringify(commonData)
-  );
+  // Helper — input border color based on error
+  const inputStyle = (field) => ({
+    borderRadius: "10px",
+    border: `1px solid ${errors[field] ? "#dc2626" : "#d1d5db"}`,
+    padding: "10px 14px",
+  });
 
-  // Navigate to next page
-  if (selectedRole === "CLIENT") {
-    navigate("/client-profile-setup");
-  } else {
-    navigate("/freelancer-profile-setup");
-  }
-};
+  // Helper — error message display
+  const ErrorMsg = ({ field }) =>
+    errors[field] ? (
+      <small className="text-danger d-block mt-1" style={{ fontSize: "0.75rem" }}>
+        {errors[field]}
+      </small>
+    ) : null;
 
   return (
     <div
       style={{
         minHeight: "100vh",
-        background:
-          "linear-gradient(135deg, #dff6e4 0%, #ffffff 50%, #eef7ff 100%)",
+        background: "linear-gradient(135deg, #dff6e4 0%, #ffffff 50%, #eef7ff 100%)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -77,19 +133,13 @@ function Register() {
         <div className="text-center mb-4">
           <span
             className="badge rounded-pill px-3 py-2 mb-3"
-            style={{
-              backgroundColor: "#e8f5e9",
-              color: "#198754",
-              fontSize: "0.8rem",
-            }}
+            style={{ backgroundColor: "#e8f5e9", color: "#198754", fontSize: "0.8rem" }}
           >
             Get Started Free
           </span>
-
           <h4 className="fw-bold mb-1" style={{ color: "#1f2937" }}>
             Join <span style={{ color: "#198754" }}>GigConnect</span>
           </h4>
-
           <p className="text-muted" style={{ fontSize: "0.9rem" }}>
             Create your account in seconds
           </p>
@@ -98,10 +148,7 @@ function Register() {
         {/* ROLE SELECTOR */}
         <div
           className="d-flex gap-2 mb-4 p-1 rounded-3"
-          style={{
-            background: "#f3f4f6",
-            border: "1px solid #e5e7eb",
-          }}
+          style={{ background: "#f3f4f6", border: "1px solid #e5e7eb" }}
         >
           {["CLIENT", "FREELANCER"].map((role) => (
             <label
@@ -112,121 +159,109 @@ function Register() {
                 cursor: "pointer",
                 fontSize: "0.9rem",
                 color: selectedRole === role ? "#fff" : "#374151",
-                background:
-                  selectedRole === role
-                    ? "linear-gradient(135deg, #198754, #157347)"
-                    : "#fff",
-                border:
-                  selectedRole === role
-                    ? "1px solid #157347"
-                    : "1px solid #e5e7eb",
+                background: selectedRole === role
+                  ? "linear-gradient(135deg, #198754, #157347)"
+                  : "#fff",
+                border: selectedRole === role ? "1px solid #157347" : "1px solid #e5e7eb",
                 transition: "all 0.2s ease",
               }}
             >
-              <input
-                type="radio"
-                className="d-none"
-                checked={selectedRole === role}
-                readOnly
-              />
-
-              {role === "FREELANCER"
-                ? "🚀 Freelancer"
-                : "💼 Client"}
+              <input type="radio" className="d-none" checked={selectedRole === role} readOnly />
+              {role === "FREELANCER" ? "🚀 Freelancer" : "💼 Client"}
             </label>
           ))}
         </div>
 
         {/* FIRST + LAST NAME */}
-        <div className="d-flex gap-2 mb-3">
-          <input
-            type="text"
-            name="firstName"
-            className="form-control"
-            placeholder="First Name"
-            value={formData.firstName}
-            onChange={handleChange}
-            style={{
-              borderRadius: "10px",
-              border: "1px solid #d1d5db",
-              padding: "10px 14px",
-            }}
-          />
-
-          <input
-            type="text"
-            name="lastName"
-            className="form-control"
-            placeholder="Last Name"
-            value={formData.lastName}
-            onChange={handleChange}
-            style={{
-              borderRadius: "10px",
-              border: "1px solid #d1d5db",
-              padding: "10px 14px",
-            }}
-          />
+        <div className="d-flex gap-2 mb-1">
+          <div className="flex-fill">
+            <input
+              type="text"
+              name="firstName"
+              className="form-control"
+              placeholder="First Name"
+              value={formData.firstName}
+              onChange={handleChange}
+              style={inputStyle("firstName")}
+            />
+            <ErrorMsg field="firstName" />
+          </div>
+          <div className="flex-fill">
+            <input
+              type="text"
+              name="lastName"
+              className="form-control"
+              placeholder="Last Name"
+              value={formData.lastName}
+              onChange={handleChange}
+              style={inputStyle("lastName")}
+            />
+            <ErrorMsg field="lastName" />
+          </div>
         </div>
 
         {/* EMAIL */}
-        <input
-          type="email"
-          name="email"
-          className="form-control mb-3"
-          placeholder="Email Address"
-          value={formData.email}
-          onChange={handleChange}
-          style={{
-            borderRadius: "10px",
-            border: "1px solid #d1d5db",
-            padding: "10px 14px",
-          }}
-        />
+        <div className="mb-1 mt-3">
+          <input
+            type="email"
+            name="email"
+            className="form-control"
+            placeholder="Email Address"
+            value={formData.email}
+            onChange={handleChange}
+            style={inputStyle("email")}
+          />
+          <ErrorMsg field="email" />
+        </div>
 
         {/* PHONE */}
-        <input
-          type="tel"
-          name="phone"
-          className="form-control mb-3"
-          placeholder="Phone Number"
-          value={formData.phone}
-          onChange={handleChange}
-          style={{
-            borderRadius: "10px",
-            border: "1px solid #d1d5db",
-            padding: "10px 14px",
-          }}
-        />
+        <div className="mb-1 mt-3">
+          <input
+            type="tel"
+            name="phone"
+            className="form-control"
+            placeholder="Phone Number (10 digits)"
+            value={formData.phone}
+            onChange={handleChange}
+            maxLength={10}
+            style={inputStyle("phone")}
+          />
+          <ErrorMsg field="phone" />
+        </div>
 
         {/* PASSWORD */}
-        <input
-          type="password"
-          name="password"
-          className="form-control mb-3"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          style={{
-            borderRadius: "10px",
-            border: "1px solid #d1d5db",
-            padding: "10px 14px",
-          }}
-        />
+        <div className="mb-1 mt-3">
+          <input
+            type="password"
+            name="password"
+            className="form-control"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            style={inputStyle("password")}
+          />
+          {/* Show hint only when no error and user has started typing */}
+          {!errors.password && formData.password.length > 0 && (
+            <small className="text-muted d-block mt-1" style={{ fontSize: "0.75rem" }}>
+              5–20 chars with a digit, lowercase & one of # @ $ * — e.g. abc@123
+            </small>
+          )}
+          <ErrorMsg field="password" />
+        </div>
 
         {/* CONFIRM PASSWORD */}
-        <input
-          type="password"
-          name="confirmPassword"
-          className="form-control mb-4"
-          placeholder="Confirm Password"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          style={{
-            borderRadius: "10px",
-            border: "1px solid #d1d5db",
-            padding: "10px 14px",
-          }}
-        />
+        <div className="mb-4 mt-3">
+          <input
+            type="password"
+            name="confirmPassword"
+            className="form-control"
+            placeholder="Confirm Password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            style={inputStyle("confirmPassword")}
+          />
+          <ErrorMsg field="confirmPassword" />
+        </div>
 
         {/* REGISTER BUTTON */}
         <button
@@ -244,19 +279,9 @@ function Register() {
         </button>
 
         {/* LOGIN LINK */}
-        <p
-          className="text-center text-muted mb-0"
-          style={{ fontSize: "0.875rem" }}
-        >
+        <p className="text-center text-muted mb-0" style={{ fontSize: "0.875rem" }}>
           Already have an account?{" "}
-          <Link
-            to="/login"
-            style={{
-              color: "#198754",
-              textDecoration: "none",
-              fontWeight: 600,
-            }}
-          >
+          <Link to="/login" style={{ color: "#198754", textDecoration: "none", fontWeight: 600 }}>
             Log in
           </Link>
         </p>

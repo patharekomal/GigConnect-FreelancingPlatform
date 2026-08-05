@@ -1,6 +1,7 @@
 import Sidebar from "../../components/Freelancer/Sidebar";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 import { getBidById, updateBid } from "../../api/bidApi";
 import { getJobById } from "../../api/jobApi";
@@ -50,7 +51,7 @@ function EditBid() {
 
   const handleUpdate = async () => {
     if (!amount || !duration || !proposal) {
-      alert("Please fill all fields.");
+      toast.warning("Please fill all fields.");
 
       return;
     }
@@ -67,13 +68,13 @@ function EditBid() {
     try {
       await updateBid(bidId, bidData);
 
-      alert("Bid Updated Successfully");
+     toast.success("Bid Updated Successfully");
 
       navigate("/freelancer/myBids");
     } catch (error) {
       console.log(error);
 
-      alert("Failed to update bid");
+      toast.error("Failed to update bid");
     }
   };
 

@@ -4,6 +4,7 @@ import { fetchProjectById, approveProject } from "../../services/projectService"
 import { fetchClientById } from "../../services/clientService";
 import { createOrder, verifyPayment, markPaymentFailed } from "../../services/paymentService";
 import { submitReview, fetchReviewByProject } from "../../services/reviewService";
+import { toast } from "react-toastify";
 
 import { useState, useEffect } from "react";
 
@@ -169,7 +170,7 @@ function ProjectPage() {
 
                     paymentCompleted = true;
 
-                    alert("Payment completed successfully.");
+                    toast.success("Payment completed successfully.");
 
                     loadProject();
 
@@ -177,7 +178,7 @@ function ProjectPage() {
 
                     console.error(err);
 
-                    alert("Payment verification failed. Please contact support.");
+                    toast.error("Payment verification failed. Please contact support.");
 
                 }
 
@@ -203,7 +204,7 @@ function ProjectPage() {
 
                   }
 
-                  alert("Payment cancelled.");
+                 toast.info("Payment cancelled.");
 
               }
 
@@ -262,7 +263,7 @@ function ProjectPage() {
 
           }
 
-          alert(message);
+         toast.success(message);
 
         });
 
@@ -276,7 +277,7 @@ function ProjectPage() {
             error.response?.data?.message ||
             "Unable to initiate payment. Please try again.";
 
-        alert(message);
+        toast.error(message);
     }
 
   };

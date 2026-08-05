@@ -453,9 +453,15 @@ function MyProjects() {
             completedProjects.map((project) => {
              
 
+<<<<<<< HEAD
               // const payment = payments.find(
               //   (payment) => payment.project_id === project.project_id,
               // );
+=======
+             // const payment = payments.find(
+               // (payment) => payment.project_id === project.project_id,
+              //);
+>>>>>>> bcbcd0c (Added Toastify)
 
               return (
                 <div

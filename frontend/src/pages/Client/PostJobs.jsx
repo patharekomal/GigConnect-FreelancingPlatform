@@ -1,7 +1,7 @@
 
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Client/Sidebar";
-
+import { toast } from "react-toastify";
 import {createJob} from "../../services/jobService";
 import { useState, useEffect } from "react";
 import { fetchClientById } from "../../services/clientService";
@@ -96,7 +96,7 @@ const loadClient = async () => {
          httpMethod: "POST",
        });
 
-      alert("Job posted successfully!");
+      toast.success("Job posted successfully!");
 
       navigate("/my-jobs");
 
@@ -113,7 +113,7 @@ const loadClient = async () => {
           "Failed to post job",
       });
       console.error(error);
-      alert("Unable to post job.");
+      toast.error("Unable to post job.");
     }
     
   };

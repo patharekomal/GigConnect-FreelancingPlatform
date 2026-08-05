@@ -1,7 +1,7 @@
 import Sidebar from "../../components/Freelancer/Sidebar";
 import { useNavigate,useParams } from "react-router-dom";
 import { useEffect,useState } from "react";
-
+import { toast } from "react-toastify";
 import { getJobById } from "../../api/jobApi";
 import { submitBid } from "../../api/bidApi";
 
@@ -38,7 +38,7 @@ const handleSubmit = async () => {
   try {
     
       if (!amount || !duration || !proposal) {
-        alert("Please fill all fields.");
+        toast.warning("Please fill all fields.");
         return;
       }
    // const freelancerId = localStorage.getItem("userId"); 
@@ -59,7 +59,7 @@ const handleSubmit = async () => {
       httpMethod: "POST",
     });
 
-    alert("Bid Submitted Successfully");
+    toast.success("Bid Submitted Successfully");
     console.log(response.data);
 
     navigate("/freelancer/myBids"); // Change route if needed
@@ -75,7 +75,8 @@ const handleSubmit = async () => {
         error.message ||
         "Failed to submit bid",
     });
-    alert("Failed to submit bid");
+   
+    toast.error("Failed to submit bid");
   }
 };
 if (!selectedJob) {

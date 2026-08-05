@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -45,6 +47,7 @@ import { jobs } from "./data/dummyData";
 function App() {
   return (
     <BrowserRouter>
+    <ToastContainer position="top-right" autoClose={3000} /> 
       <Routes>
 
         {/* ── PUBLIC ROUTES — no login needed ──────────────────────── */}
