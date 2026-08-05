@@ -6,7 +6,7 @@ import {createJob} from "../../services/jobService";
 import { useState, useEffect } from "react";
 import { fetchClientById } from "../../services/clientService";
 
-
+import { logInfo, logError } from "../../utils/logger";
 
 function PostJob() {
   const navigate = useNavigate();
@@ -88,13 +88,30 @@ const loadClient = async () => {
 
     try{
       await createJob(clientId, jobData);
+      
+       await logInfo({
+         message: "Client posted a new job in GigConnect",
+         userId: user?.id || null,
+         endpoint: "/jobs",
+         httpMethod: "POST",
+       });
 
       alert("Job posted successfully!");
 
       navigate("/my-jobs");
 
     }catch(error) {
-
+      
+      await logError({
+        message: "Failed to post job in GigConnect",
+        userId: JSON.parse(localStorage.getItem("user"))?.id || null,
+        endpoint: "/jobs",
+        httpMethod: "POST",
+        exception:
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to post job",
+      });
       console.error(error);
       alert("Unable to post job.");
     }

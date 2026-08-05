@@ -7,6 +7,8 @@ import { fetchBidsByJob , acceptBid} from "../../services/bidService";
 import { fetchFreelancerById } from "../../services/freelancerService";
 import { fetchClientById } from "../../services/clientService";
 
+import { logInfo, logError } from "../../utils/logger";
+
 function ViewBids() {
   const navigate = useNavigate();
 
@@ -82,6 +84,13 @@ const clientId = user.id;
   try {
 
     const response=await acceptBid(bidId);
+    await logInfo({
+      message: `Client selected freelancer ${freelancerName} for a project`,
+      userId: clientId,
+      endpoint: `/bids/${bidId}/accept`,
+      httpMethod: "PUT",
+    });
+
 
     alert(`${freelancerName} selected successfully!`);
 
@@ -96,7 +105,17 @@ const clientId = user.id;
 
   } catch (error) {
     console.error(error);
-
+     
+    await logError({
+      message: "Failed to accept freelancer bid",
+      userId: clientId,
+      endpoint: `/bids/${bidId}/accept`,
+      httpMethod: "PUT",
+      exception:
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to accept bid",
+    });
     alert("Failed to accept bid.");
   }
 };

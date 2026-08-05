@@ -3,6 +3,10 @@ import { useState } from "react";
 //import { users } from "../data/dummyData";
 import { loginUser } from "../services/authService";
 
+
+//log part 
+import { logInfo, logError } from "../utils/logger";
+
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
@@ -20,7 +24,13 @@ function Login() {
       email,
       password,
     });
-
+     //log info 
+    await logInfo({
+      message: "User logged into GigConnect",
+      userId: user.id,
+      endpoint: "/users/signin",
+      httpMethod: "POST",
+    });
     console.log(user);
 
     localStorage.setItem("user", JSON.stringify(user));
@@ -36,6 +46,15 @@ function Login() {
 }
   } catch (err) {
     console.error(err);
+    //logerror
+    await logError({
+      message: "User login failed",
+      userId: null,
+      endpoint: "/users/signin",
+      httpMethod: "POST",
+      exception: err.message,
+    });
+
 
     if (err.response) {
       setError(err.response.data.message || "Invalid email or password");

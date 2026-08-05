@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../services/authService";
 
+import { logInfo, logError } from "../utils/logger";
+
 function FreelancerProfileSetup() {
   const navigate = useNavigate();
 
@@ -51,8 +53,14 @@ function FreelancerProfileSetup() {
     };
 
     try {
-      await registerUser(finalData);
+       const registeredUser = await registerUser(finalData);
 
+       await logInfo({
+         message: "New user registered in GigConnect",
+         userId: registeredUser?.id || null,
+         endpoint: "/users/signup",
+         httpMethod: "POST",
+       });
       sessionStorage.removeItem("registerData");
 
       alert("Registration Successful!");
@@ -60,6 +68,17 @@ function FreelancerProfileSetup() {
       navigate("/login");
     } catch (error) {
       console.error(error);
+       
+      await logError({
+        message: "User registration failed in GigConnect(Freelancer)",
+        userId: null,
+        endpoint: "/users/signup",
+        httpMethod: "POST",
+        exception:
+          error.response?.data?.message ||
+          error.message ||
+          "Registration failed",
+      });
 
       if (error.response) {
         alert(error.response.data.message || "Registration Failed");
