@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Freelancer/Sidebar";
 import { submitWork } from "../../api/projectApi";
+import { logInfo, logError } from "../../utils/logger";
 
 function SubmitWork() {
 
@@ -30,11 +31,29 @@ function SubmitWork() {
 
                 const response = await submitWork(projectId, workData);
                 console.log(response.data);
+                await logInfo({
+                  message: "Freelancer submitted project work in GigConnect",
+                  userId: user?.id || null,
+                  endpoint: `/projects/${projectId}/submit`,
+                  httpMethod: "PUT",
+                });
+
                  alert("Work Submitted Successfully");
                  navigate("/myProjects");
 
                  } catch (error) {
                            console.log(error);
+                           await logError({
+                             message:
+                               "Failed to submit project work in GigConnect",
+                             userId: user?.id || null,
+                             endpoint: `/projects/${projectId}/submit`,
+                             httpMethod: "PUT",
+                             exception:
+                               error.response?.data?.message ||
+                               error.message ||
+                               "Failed to submit project work",
+                           });
                            alert("Failed to submit work");
               }
         };

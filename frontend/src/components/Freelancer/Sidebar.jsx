@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../../services/authService";
+import { logInfo } from "../../utils/logger";
 
 function Sidebar() {
   const navigate = useNavigate();
@@ -80,8 +82,18 @@ function Sidebar() {
         <span className="text-success mb-3">● Online</span>
 
         <button
-          className="btn btn-outline-danger w-100 mt-3"
-          onClick={() => navigate("/")}
+          className="btn btn-outline-danger w-100"
+          onClick={async () => {
+            await logInfo({
+              message: "Freelancer logged out of GigConnect",
+              userId: user?.id || null,
+              endpoint: "/logout",
+              httpMethod: "POST",
+            });
+
+            logoutUser();
+            navigate("/");
+          }}
         >
           Logout
         </button>

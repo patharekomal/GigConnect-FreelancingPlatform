@@ -5,6 +5,8 @@ import { useEffect,useState } from "react";
 import { getJobById } from "../../api/jobApi";
 import { submitBid } from "../../api/bidApi";
 
+import { logInfo, logError } from "../../utils/logger";
+
 function SubmitBid() {
 
 
@@ -50,6 +52,12 @@ const handleSubmit = async () => {
     };
 
     const response = await submitBid(freelancerId, bidData);
+    await logInfo({
+      message: "Freelancer submitted a bid in GigConnect",
+      userId: user?.id || null,
+      endpoint: "/bids",
+      httpMethod: "POST",
+    });
 
     alert("Bid Submitted Successfully");
     console.log(response.data);
@@ -57,6 +65,16 @@ const handleSubmit = async () => {
     navigate("/freelancer/myBids"); // Change route if needed
   } catch (error) {
     console.error(error);
+    await logError({
+      message: "Failed to submit freelancer bid",
+      userId: JSON.parse(localStorage.getItem("user"))?.id || null,
+      endpoint: "/bids",
+      httpMethod: "POST",
+      exception:
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to submit bid",
+    });
     alert("Failed to submit bid");
   }
 };

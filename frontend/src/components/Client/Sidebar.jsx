@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchClientById } from "../../services/clientService";
 import { fetchMyProfile } from "../../services/clientService";
+import { logoutUser } from "../../services/authService";
+import { logInfo } from "../../utils/logger";
 
 function Sidebar({ client }) {
   const navigate = useNavigate();
@@ -95,22 +97,27 @@ function Sidebar({ client }) {
 
       {/* User Card */}
       <div className="card border-0 shadow-sm p-3">
-       <h4 className="mb-1">
-  🏢 {clientState?.companyName || user?.companyName || "Loading..."}
-</h4>
+        <h4 className="mb-1">
+          🏢 {clientState?.companyName || user?.companyName || "Loading..."}
+        </h4>
 
         <small className="text-muted d-block mb-2">
           {user?.firstName} {user?.lastName}
         </small>
 
-        <span className="text-success mb-3">
-          ● Active
-        </span>
+        <span className="text-success mb-3">● Active</span>
 
         <button
           className="btn btn-outline-danger w-100"
-          onClick={() => {
-            localStorage.removeItem("user");
+          onClick={async () => {
+            await logInfo({
+              message: "Client logged out of GigConnect",
+              userId: user?.id || null,
+              endpoint: "/logout",
+              httpMethod: "POST",
+            });
+
+            logoutUser();
             navigate("/");
           }}
         >
