@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Sidebar from "../../components/Client/Sidebar";
 import { getPaymentsByClient } from "../../services/paymentService";
 import { getMyPayments } from "../../services/paymentService";
-
+import { toast } from "react-toastify";
 function Payment() {
   const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ function Payment() {
         console.log(error.response?.data);
         console.log(error.response?.status);
 
-        alert("Unable to load payments.");
+        toast.error("Unable to load payments.");
     }
   };
 

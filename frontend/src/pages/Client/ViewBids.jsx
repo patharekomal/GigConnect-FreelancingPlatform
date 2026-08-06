@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState , useEffect} from "react";
 import Sidebar from "../../components/Client/Sidebar";
-
+import { toast } from "react-toastify";
 import { fetchJobById } from "../../services/jobService";
 import { fetchBidsByJob , acceptBid} from "../../services/bidService";
 import { fetchFreelancerById } from "../../services/freelancerService";
@@ -64,7 +64,7 @@ const clientId = user.id;
 
       setJobBids([]);
 
-      alert("You are not authorized to view these bids.");
+      toast.error("You are not authorized to view these bids.");
     }
   };
 
@@ -92,7 +92,7 @@ const clientId = user.id;
     });
 
 
-    alert(`${freelancerName} selected successfully!`);
+    toast.success(`${freelancerName} selected successfully!`);
 
     // Reload updated bid statuses
     await loadBids();
@@ -116,7 +116,7 @@ const clientId = user.id;
         error.message ||
         "Failed to accept bid",
     });
-    alert("Failed to accept bid.");
+    toast.error("Failed to accept bid.");
   }
 };
 

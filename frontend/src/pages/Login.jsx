@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 //import { users } from "../data/dummyData";
 import { loginUser } from "../services/authService";
+import { toast } from "react-toastify";
 
 
 //log part 
@@ -35,7 +36,7 @@ function Login() {
 
     localStorage.setItem("user", JSON.stringify(user));
 
-    alert(user.message);
+    toast.success(user.message);
 
    if (user.role === "CLIENT") {
   navigate("/client");

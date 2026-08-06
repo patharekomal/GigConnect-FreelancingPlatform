@@ -4,7 +4,7 @@ import { fetchProjectById, approveProject } from "../../services/projectService"
 import { fetchClientById } from "../../services/clientService";
 import { createOrder, verifyPayment, markPaymentFailed } from "../../services/paymentService";
 import { submitReview, fetchReviewByProject } from "../../services/reviewService";
-
+import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 
 function ProjectPage() {
@@ -169,7 +169,7 @@ function ProjectPage() {
 
                     paymentCompleted = true;
 
-                    alert("Payment completed successfully.");
+                    toast.success("Payment completed successfully.");
 
                     loadProject();
 
@@ -177,8 +177,7 @@ function ProjectPage() {
 
                     console.error(err);
 
-                    alert("Payment verification failed. Please contact support.");
-
+                    toast.error("Payment verification failed. Please contact support.");
                 }
 
             },
@@ -203,7 +202,7 @@ function ProjectPage() {
 
                   }
 
-                  alert("Payment cancelled.");
+                 toast.info("Payment cancelled.");
 
               }
 
@@ -262,7 +261,7 @@ function ProjectPage() {
 
           }
 
-          alert(message);
+          toast.error(message);
 
         });
 
@@ -276,7 +275,7 @@ function ProjectPage() {
             error.response?.data?.message ||
             "Unable to initiate payment. Please try again.";
 
-        alert(message);
+        toast.error(message);
     }
 
   };
@@ -295,7 +294,7 @@ function ProjectPage() {
 
         });
 
-        alert("Review submitted successfully.");
+        toast.success("Review submitted successfully.");
 
         setShowReviewModal(false);
 
@@ -305,9 +304,9 @@ function ProjectPage() {
 
         console.error(error);
 
-        alert(
-            error.response?.data?.message ||
-            "Unable to submit review."
+        toast.error(
+          error.response?.data?.message ||
+          "Unable to submit review."
         );
 
     }

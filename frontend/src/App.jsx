@@ -10,7 +10,8 @@ import HowItWorks from "./pages/HowItWorks";
 import Contact from "./pages/Contact";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import ClientDashboard from "./pages/Client/ClientDashboard";
 import PostJob from "./pages/Client/PostJobs";
 import ViewBids from "./pages/Client/ViewBids";
@@ -45,6 +46,7 @@ import { jobs } from "./data/dummyData";
 function App() {
   return (
     <BrowserRouter>
+    <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
 
         {/* ── PUBLIC ROUTES — no login needed ──────────────────────── */}
