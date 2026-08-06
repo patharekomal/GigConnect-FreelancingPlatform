@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../services/authService";
+import { toast } from "react-toastify";
 
 
 import { logInfo, logError } from "../utils/logger";
@@ -28,7 +29,7 @@ function ClientProfileSetup() {
     );
 
     if (!commonData) {
-      alert("Registration data not found.");
+      toast.error("Registration data not found.");
       navigate("/register");
       return;
     }
@@ -62,7 +63,7 @@ function ClientProfileSetup() {
 
       sessionStorage.removeItem("registerData");
       
-      alert("Registration Successful!");
+     toast.success("Registration Successful!");
        
       navigate("/login");
     } catch (error) {
@@ -82,9 +83,9 @@ function ClientProfileSetup() {
 
 
       if (error.response) {
-        alert(error.response.data.message || "Registration Failed");
+        toast.error(error.response.data.message || "Registration Failed");
       } else {
-        alert("Unable to connect to server.");
+        toast.error("Unable to connect to server.");
       }
     }
   };

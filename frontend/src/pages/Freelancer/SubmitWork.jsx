@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Freelancer/Sidebar";
 import { submitWork } from "../../api/projectApi";
 import { logInfo, logError } from "../../utils/logger";
-
+import { toast } from "react-toastify";
 function SubmitWork() {
 
     const { projectId } = useParams();
@@ -17,7 +17,8 @@ function SubmitWork() {
    const handleSubmit = async () => {
 
            if (!githubLink) {
-             alert("Please enter GitHub Repository Link.");
+             toast.warning("Please enter GitHub Repository Link.");
+
              return;
            }
 
@@ -38,7 +39,7 @@ function SubmitWork() {
                   httpMethod: "PUT",
                 });
 
-                 alert("Work Submitted Successfully");
+                 toast.success("Work Submitted Successfully");
                  navigate("/myProjects");
 
                  } catch (error) {
@@ -54,7 +55,7 @@ function SubmitWork() {
                                error.message ||
                                "Failed to submit project work",
                            });
-                           alert("Failed to submit work");
+                           toast.error("Failed to submit work");
               }
         };
 

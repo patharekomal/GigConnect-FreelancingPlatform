@@ -124,6 +124,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getMyBids } from "../../api/bidApi";
 import { deleteBid } from "../../api/bidApi";
+import { toast } from "react-toastify";
 
 function MyBids() {
   const navigate = useNavigate();
@@ -158,13 +159,13 @@ function MyBids() {
     try {
       await deleteBid(bidId);
 
-      alert("Bid withdrawn successfully.");
+      toast.success("Bid withdrawn successfully.");
 
       loadMyBids(); // Refresh the list
     } catch (error) {
       console.log(error);
 
-      alert("Unable to withdraw bid.");
+      toast.error("Unable to withdraw bid.");
     }
   };
   return (
