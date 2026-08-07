@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.gigconnect.custom_exceptions.ResourceNotFoundException;
 import com.gigconnect.dtos.ApiResponse;
+import com.gigconnect.dtos.ai.JobAIResponseDto;
 import com.gigconnect.dtos.client.JobRequestDto;
 import com.gigconnect.dtos.client.JobResponseDto;
 import com.gigconnect.dtos.client.JobUpdateDto;
@@ -172,6 +173,28 @@ public class JobServiceImpl implements JobService{
 	    JobResponseDto dto= mapper.map(job, JobResponseDto.class);
 	      dto.setCompanyName(name);
 	      dto.setClientId(job.getClient().getId());
+	    return dto;
+	}
+	
+	@Override
+	public JobAIResponseDto getJobForAI(Long jobId) {
+
+	    Job job = jobRepo.findById(jobId)
+	            .orElseThrow(() ->
+	                    new ResourceNotFoundException("Job not found"));
+
+	    JobAIResponseDto dto = new JobAIResponseDto();
+
+	    dto.setTitle(job.getTitle());
+
+	    dto.setDescription(job.getDescription());
+
+	    dto.setBudget(job.getBudget());
+
+	    dto.setCompanyName(
+	            job.getClient().getCompanyName()
+	    );
+
 	    return dto;
 	}
 

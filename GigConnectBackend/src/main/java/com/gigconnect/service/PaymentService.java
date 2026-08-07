@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import com.gigconnect.dtos.payment.CreateOrderRequestDto;
 import com.gigconnect.dtos.payment.CreateOrderResponseDto;
+import com.gigconnect.dtos.payment.FreelancerPaymentResponseDto;
 import com.gigconnect.dtos.payment.PaymentFailedRequestDto;
 import com.gigconnect.dtos.payment.PaymentResponseDto;
 import com.gigconnect.dtos.payment.VerifyPaymentRequestDto;
@@ -21,4 +22,6 @@ public interface PaymentService {
 	//List<PaymentResponseDto> getPaymentsByClient(Long clientId);
 
 	List<PaymentResponseDto> getPaymentsByClient();
+	
+	List<FreelancerPaymentResponseDto> getPaymentsByFreelancer();
 }

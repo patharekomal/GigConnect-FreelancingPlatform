@@ -27,3 +27,11 @@ export const getMyPayments = async () => {
 
     return response.data;
 };
+
+export const getFreelancerPayments = async () => {
+
+    const response =
+        await paymentApi.getFreelancerPayments();
+
+    return response.data;
+};

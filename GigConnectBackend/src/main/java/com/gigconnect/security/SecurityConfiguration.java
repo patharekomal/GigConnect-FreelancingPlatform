@@ -54,6 +54,7 @@ public class SecurityConfiguration {
                         "/swagger-ui.html",
                         "/chat/**"
                 ).permitAll()
+                .requestMatchers(HttpMethod.GET, "/ai/**").permitAll()
 
                 // ── CLIENT only ──────────────────────────────────────────
                 .requestMatchers(HttpMethod.POST,   "/jobs/**").hasAuthority("CLIENT")
@@ -64,7 +65,8 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.POST, "/payments/create-order").hasAuthority("CLIENT")
                 .requestMatchers(HttpMethod.POST, "/payments/verify").hasAuthority("CLIENT")
                 .requestMatchers(HttpMethod.PATCH, "/payments/fail").hasAuthority("CLIENT")
-                .requestMatchers(HttpMethod.GET, "/payments/**").hasAuthority("CLIENT")
+                .requestMatchers(HttpMethod.GET,"/payments/client/history").hasAuthority("CLIENT")
+
              
                // .requestMatchers(HttpMethod.GET, "/jobs/**").hasAuthority("CLIENT")
 
@@ -74,6 +76,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.GET,   "/freelancers/**").hasAuthority("FREELANCER")
                 .requestMatchers(HttpMethod.PATCH, "/freelancers/**").hasAuthority("FREELANCER")
                 .requestMatchers(HttpMethod.GET, "/jobs/**").hasAnyAuthority("CLIENT", "FREELANCER")
+                .requestMatchers(HttpMethod.GET, "/payments/freelancer/history").hasAuthority("FREELANCER")
 
                 // ── All remaining endpoints need authentication ───────────
                 .anyRequest().authenticated()

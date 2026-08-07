@@ -64,6 +64,13 @@ function Sidebar() {
 
         <button
           className="btn btn-light text-start"
+          onClick={() => navigate("/freelancer/payment")}
+        >
+          Payments
+        </button>
+
+        <button
+          className="btn btn-light text-start"
           onClick={() => navigate("/profile")}
         >
           Profile

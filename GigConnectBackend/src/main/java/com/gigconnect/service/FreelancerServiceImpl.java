@@ -3,6 +3,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.gigconnect.custom_exceptions.ResourceNotFoundException;
+import com.gigconnect.dtos.freelancer.FreelancerAIResponseDto;
 import com.gigconnect.dtos.freelancer.FreelancerDashboardResponse;
 import com.gigconnect.dtos.freelancer.FreelancerResponse;
 import com.gigconnect.dtos.freelancer.UpdateFreelancerProfile;
@@ -107,6 +108,24 @@ public class FreelancerServiceImpl implements FreelancerService{
 	                    ProjectStatus.COMPLETED));
 
 	    dto.setRating(freelancer.getRating());
+
+	    return dto;
+	}
+
+	@Override
+	public FreelancerAIResponseDto getFreelancerForAI(Long userId) {
+
+	    // Find freelancer using logged-in user's ID
+	    Freelancer freelancer = freelancerRepository
+	            .findByUserDetailsId(userId)
+	            .orElseThrow(() ->
+	                    new ResourceNotFoundException("Freelancer not found"));
+
+	    FreelancerAIResponseDto dto = new FreelancerAIResponseDto();
+
+	    dto.setProfession(freelancer.getProfession());
+	    dto.setSkills(freelancer.getSkills());
+	    dto.setExperience(freelancer.getExperience());
 
 	    return dto;
 	}

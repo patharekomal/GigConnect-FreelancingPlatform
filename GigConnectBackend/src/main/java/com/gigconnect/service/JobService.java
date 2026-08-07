@@ -3,6 +3,7 @@ package com.gigconnect.service;
 import java.util.List;
 
 import com.gigconnect.dtos.ApiResponse;
+import com.gigconnect.dtos.ai.JobAIResponseDto;
 import com.gigconnect.dtos.client.JobRequestDto;
 import com.gigconnect.dtos.client.JobResponseDto;
 import com.gigconnect.dtos.client.JobUpdateDto;
@@ -22,4 +23,6 @@ public interface JobService {
 	List<JobResponseDto> getAllJobs();
 	
 	JobResponseDto getJobById(Long jobId);
+	
+	JobAIResponseDto getJobForAI(Long jobId);
 }

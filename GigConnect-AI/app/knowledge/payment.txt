@@ -1,0 +1,15 @@
+Payment Guide
+
+Clients make payments using Razorpay.
+
+Payment is allowed only after the freelancer submits the project.
+
+After successful payment:
+
+Payment status becomes SUCCESS.
+
+Project status becomes COMPLETED.
+
+Freelancers can view completed payments in My Payments.
+
+Failed payments are stored with FAILED status.

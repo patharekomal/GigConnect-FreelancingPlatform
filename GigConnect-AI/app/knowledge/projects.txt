@@ -1,0 +1,9 @@
+Project Guide
+
+Projects are created after a client accepts a freelancer's bid.
+
+Freelancers submit completed work.
+
+Clients review the submission.
+
+After successful payment the project is marked COMPLETED.

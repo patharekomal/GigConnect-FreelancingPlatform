@@ -8,13 +8,16 @@ import com.gigconnect.custom_exceptions.PaymentException;
 import com.gigconnect.custom_exceptions.ResourceNotFoundException;
 import com.gigconnect.dtos.payment.CreateOrderRequestDto;
 import com.gigconnect.dtos.payment.CreateOrderResponseDto;
+import com.gigconnect.dtos.payment.FreelancerPaymentResponseDto;
 import com.gigconnect.dtos.payment.PaymentFailedRequestDto;
 import com.gigconnect.dtos.payment.PaymentResponseDto;
 import com.gigconnect.entities.Client;
+import com.gigconnect.entities.Freelancer;
 import com.gigconnect.entities.Payment;
 import com.gigconnect.entities.Project;
 import com.gigconnect.enums.PaymentStatus;
 import com.gigconnect.repository.ClientRepository;
+import com.gigconnect.repository.FreelancerRepository;
 import com.gigconnect.repository.PaymentRepository;
 import com.gigconnect.repository.ProjectRepository;
 import com.gigconnect.security.SecurityUtil;
@@ -47,6 +50,7 @@ public class PaymentServiceImpl implements PaymentService {
 	private final SecurityUtil securityUtil; 
 	private final AuthorizationService authorizationService;
 	private final ClientRepository clientRepository;
+	private final FreelancerRepository freelancerRepository;
 	
     @Value("${razorpay.key.id}")
     private String keyId;
@@ -203,6 +207,49 @@ public class PaymentServiceImpl implements PaymentService {
             dto.setPaymentId(payment.getId());
 
             dto.setProjectTitle(payment.getProject().getJob().getTitle());
+
+            dto.setAmount(payment.getAmount());
+
+            dto.setStatus(payment.getStatus());
+
+            dto.setPaymentDate(payment.getPaymentDate());
+
+            response.add(dto);
+        }
+
+        return response;
+    }
+
+    @Override
+    public List<FreelancerPaymentResponseDto> getPaymentsByFreelancer() {
+
+        // Logged-in User
+        Long userId = securityUtil.getCurrentUserId();
+
+        // Find Freelancer
+        Freelancer freelancer = freelancerRepository
+                .findByUserDetailsId(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Freelancer not found"));
+
+        // Fetch Payments
+        List<Payment> paymentList =
+                paymentRepository.findByProjectFreelancerId(freelancer.getId());
+
+        // Response List
+        List<FreelancerPaymentResponseDto> response = new ArrayList<>();
+
+        for (Payment payment : paymentList) {
+
+            FreelancerPaymentResponseDto dto =
+                    new FreelancerPaymentResponseDto();
+
+            dto.setPaymentId(payment.getId());
+
+            dto.setProjectTitle(
+                    payment.getProject().getJob().getTitle());
+
+            dto.setClientName(payment.getProject().getClient().getUserDetails().getFirstName()+ " "+ payment.getProject().getClient().getUserDetails().getLastName());
 
             dto.setAmount(payment.getAmount());
 

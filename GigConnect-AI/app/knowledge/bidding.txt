@@ -1,0 +1,13 @@
+Bidding Guide
+
+Freelancers browse open jobs.
+
+They submit a bid with their proposed amount and proposal.
+
+Clients review all bids.
+
+Only one bid can be accepted.
+
+After acceptance a Project is created.
+
+Other bids are rejected.

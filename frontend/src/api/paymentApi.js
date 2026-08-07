@@ -20,3 +20,6 @@ export const getPaymentsByClient = (clientId) => {
 
 export const getMyPayments = () =>
     api.get("/payments/client/history");
+
+export const getFreelancerPayments = () =>
+    api.get("/payments/freelancer/history");
