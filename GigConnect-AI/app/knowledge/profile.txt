@@ -1,0 +1,19 @@
+Profile Guide
+
+Clients complete company details.
+
+Freelancers complete
+
+Profession
+
+Skills
+
+Experience
+
+Hourly Rate
+
+Portfolio
+
+Bio
+
+Users can edit their profile later.

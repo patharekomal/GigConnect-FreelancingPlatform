@@ -1,0 +1,37 @@
+GigConnect Platform Guide
+
+GigConnect is a freelancing marketplace.
+
+Client Workflow
+
+1. Register/Login
+2. Complete Client Profile
+3. Post a Job
+4. Receive Bids
+5. Review Bids
+6. Accept One Bid
+7. Project is Created
+8. Review Submitted Work
+9. Make Payment using Razorpay
+10. Give Rating & Review
+
+Freelancer Workflow
+
+1. Register/Login
+2. Complete Freelancer Profile
+3. Browse Jobs
+4. Submit Bid
+5. Wait for Client Acceptance
+6. Work on Project
+7. Submit Work
+8. Receive Payment
+9. View Payment History
+10. Receive Rating
+
+Features
+
+JWT Authentication
+WebSocket Chat
+Razorpay Payments
+Real-time Messaging
+Ratings & Reviews

@@ -35,6 +35,7 @@ import Reviews from "./pages/Freelancer/Reviews";
 import Profile from "./pages/Freelancer/Profile";
 import ProjectDetails from "./pages/Freelancer/ProjectDetails";
 import EditFreelancerProfile from "./pages/Freelancer/EditFreelancerProfile";
+import PaymentFreelancer from "./pages/Freelancer/PaymentFreelancer";
 
 import ClientProfileSetup from "./pages/ClientProfileSetup";
 import FreelancerProfileSetup from "./pages/FreelancerProfileSetup";
@@ -174,6 +175,14 @@ function App() {
             <EditBid />
           </ProtectedRoute>
         } />
+        <Route
+    path="/freelancer/payment"
+    element={
+        <ProtectedRoute allowedRole="FREELANCER">
+            <PaymentFreelancer />
+        </ProtectedRoute>
+    }
+/>
 
       </Routes>
     </BrowserRouter>

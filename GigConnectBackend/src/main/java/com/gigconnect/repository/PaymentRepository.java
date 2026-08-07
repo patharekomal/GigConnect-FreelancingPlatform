@@ -14,5 +14,6 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     Optional<Payment> findByProjectId(Long projectId);
     List<Payment> findByProjectClientId(Long clientId);
     List<Payment> findByProjectClient(Client client);
+    List<Payment> findByProjectFreelancerId(Long freelancerId);
 
 }

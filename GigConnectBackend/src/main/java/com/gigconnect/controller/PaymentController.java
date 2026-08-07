@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.gigconnect.dtos.payment.CreateOrderRequestDto;
 import com.gigconnect.dtos.payment.CreateOrderResponseDto;
+import com.gigconnect.dtos.payment.FreelancerPaymentResponseDto;
 import com.gigconnect.dtos.payment.PaymentFailedRequestDto;
 import com.gigconnect.dtos.payment.PaymentResponseDto;
 import com.gigconnect.dtos.payment.VerifyPaymentRequestDto;
@@ -52,5 +53,10 @@ public class PaymentController {
                 paymentService.getPaymentsByClient();
 
         return ResponseEntity.ok(payments);
+    }
+    
+    @GetMapping("/freelancer/history")
+    public ResponseEntity<List<FreelancerPaymentResponseDto>>getPaymentsByFreelancer() {
+    	return ResponseEntity.ok(paymentService.getPaymentsByFreelancer());
     }
 }
