@@ -39,8 +39,10 @@ function Login() {
     toast.success(user.message);
 
    if (user.role === "CLIENT") {
+    window.dispatchEvent(new Event("reset-chatbot"));
   navigate("/client");
 } else if (user.role === "FREELANCER") {
+  window.dispatchEvent(new Event("reset-chatbot"));
   navigate("/freelancer");
 } else {
   navigate("/");

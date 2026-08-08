@@ -2,15 +2,38 @@ import Sidebar from "../../components/Freelancer/Sidebar";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAllJobs } from "../../api/jobApi";
-
+import { askAI } from "../../services/chatbotService";
+import ReactMarkdown from "react-markdown";
 function BrowseJobs() {
 
     const navigate = useNavigate();
     const [jobs, setJobs] = useState([]);
+    const [recommendationLoading, setRecommendationLoading] = useState(false);
+    const [recommendation, setRecommendation] = useState("");
 
     useEffect(() => {
       loadJobs();
     }, []); //load jobs only once when page open 
+    
+    const recommendJobs = async () => {
+      try {
+        setRecommendationLoading(true);
+
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        const response = await askAI({
+          message: "Recommend jobs",
+          user_id: user.id,
+        });
+
+        setRecommendation(response.reply);
+      } catch (error) {
+        console.log(error);
+        setRecommendation("Unable to fetch AI recommendations.");
+      } finally {
+        setRecommendationLoading(false);
+      }
+    };
 
     const loadJobs = async () => {
       try {
@@ -45,6 +68,39 @@ function BrowseJobs() {
                 Discover projects that match your skills and submit competitive
                 proposals.
               </p>
+            </div>
+            <button
+              className="btn btn-success"
+              onClick={recommendJobs}
+              disabled={recommendationLoading}
+            >
+              {recommendationLoading
+                ? "⏳ Finding..."
+                : "✨ Recommend Jobs For Me"}
+            </button>
+            <div className="card border-0 shadow-sm mb-4">
+              <div className="card-body">
+                <h5>🤖 AI Recommendation</h5>
+
+                <ReactMarkdown
+                  components={{
+                    h3: ({ children }) => (
+                      <h5 className="fw-bold text-success mt-3 mb-2">
+                        {children}
+                      </h5>
+                    ),
+
+                    p: ({ children }) => <p className="mb-1">{children}</p>,
+
+                    ul: ({ children }) => <ul className="mb-3">{children}</ul>,
+
+                    hr: () => <hr className="my-3" />,
+                  }}
+                >
+                  {recommendation}
+                </ReactMarkdown>
+                
+              </div>
             </div>
             {/* Second part */}
             <div className="card border-0 shadow-sm p-3 mb-4">

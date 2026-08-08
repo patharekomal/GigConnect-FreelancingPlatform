@@ -4,7 +4,7 @@ import { Fragment } from "react";
 import React from "react";
 import Sidebar from "../../components/Client/Sidebar";
 import { fetchProjectsByClient } from "../../services/projectService";
-import { fetchClientById } from "../../services/clientService";
+import { fetchMyProfile } from "../../services/clientService";
 
 function MyProjects() {
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ function MyProjects() {
   };
   const loadClient = async () => {
   try {
-    const data = await fetchClientById(clientId);
+    const data = await fetchMyProfile();
     setClient(data);
   } catch (error) {
     console.error(error);

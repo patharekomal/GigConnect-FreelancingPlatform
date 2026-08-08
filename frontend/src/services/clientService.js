@@ -2,7 +2,7 @@ import * as clientApi from "../api/clientApi";
 import { getDashboard as getDashboardApi } from "../api/clientApi";
 
 export const fetchClientById = async (clientId) => {
-  const response = await clientApi.getClientById(clientId);
+  const response = await clientApi.getClientProfile(clientId);
   return response.data;
 };
 

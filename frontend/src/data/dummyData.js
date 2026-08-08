@@ -330,3 +330,14 @@ export const reviews = [
     client_name: "ABC Technologies",
   },
 ];
+
+const dummyReplies = {
+  "How do I post a job?":
+    "Click 'Post Job', fill in the title, description, budget, and publish.",
+
+  "Recommend jobs":
+    "Based on your skills, I recommend the React Developer and Spring Boot Developer jobs.",
+
+  "Generate proposal":
+    "Hello, I have relevant experience and would be happy to work on your project...",
+};

@@ -52,7 +52,7 @@ public class ClientServiceImpl implements ClientService{
 	
 	
 	@Override
-	public ClientResponse getClientprofile() {
+	public ClientResponse fetchMyProfile() {
 		Long userId = securityUtil.getCurrentUserId();
 		//Find client
 		Client client = clientRepo.findById(userId)

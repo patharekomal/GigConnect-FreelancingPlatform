@@ -26,8 +26,8 @@ public class ClientController {
 	private final ClientService clientService;
 	
 	@GetMapping("/profile")
-	public ResponseEntity<ClientResponse> getClientProfile(){
-		return ResponseEntity.ok(clientService.getClientprofile());
+	public ResponseEntity<ClientResponse> fetchMyProfile(){
+		return ResponseEntity.ok(clientService.fetchMyProfile());
 	}
 	
 	@PatchMapping("{id}")
