@@ -4,7 +4,7 @@ import Sidebar from "../../components/Client/Sidebar";
 import { toast } from "react-toastify";
 import {createJob} from "../../services/jobService";
 import { useState, useEffect } from "react";
-import { fetchClientById } from "../../services/clientService";
+import { fetchMyProfile } from "../../services/clientService";
 
 import { logInfo, logError } from "../../utils/logger";
 
@@ -28,13 +28,17 @@ function PostJob() {
   loadClient();
 }, []);
 
+// const loadClient = async () => {
+//   try {
+//     const response = await fetchClientById(clientId);
+//     setClient(response);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 const loadClient = async () => {
-  try {
-    const response = await fetchClientById(clientId);
-    setClient(response);
-  } catch (error) {
-    console.log(error);
-  }
+  const data = await fetchMyProfile();
+  setClient(data);
 };
 
   // Handles all input changes

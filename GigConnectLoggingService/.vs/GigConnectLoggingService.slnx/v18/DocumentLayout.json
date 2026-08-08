@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\Komal\\OneDrive\\Desktop\\GigConnect-FreelancingPlatform\\GigConnectLoggingService\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{0A83E1B0-E070-9F99-FF67-C1B90F446AE7}|LoggingService\\LoggingService.csproj|c:\\users\\komal\\onedrive\\desktop\\gigconnect-freelancingplatform\\gigconnectloggingservice\\loggingservice\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{0A83E1B0-E070-9F99-FF67-C1B90F446AE7}|LoggingService\\LoggingService.csproj|solutionrelative:loggingservice\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A83E1B0-E070-9F99-FF67-C1B90F446AE7}|LoggingService\\LoggingService.csproj|c:\\users\\komal\\onedrive\\desktop\\gigconnect-freelancingplatform\\gigconnectloggingservice\\loggingservice\\loggingservice.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{0A83E1B0-E070-9F99-FF67-C1B90F446AE7}|LoggingService\\LoggingService.csproj|solutionrelative:loggingservice\\loggingservice.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{0A83E1B0-E070-9F99-FF67-C1B90F446AE7}|LoggingService\\LoggingService.csproj|c:\\users\\komal\\onedrive\\desktop\\gigconnect-freelancingplatform\\gigconnectloggingservice\\loggingservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0A83E1B0-E070-9F99-FF67-C1B90F446AE7}|LoggingService\\LoggingService.csproj|solutionrelative:loggingservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -15,20 +23,12 @@
       "RelativeMoniker": "D:0:0:{0A83E1B0-E070-9F99-FF67-C1B90F446AE7}|LoggingService\\LoggingService.csproj|solutionrelative:loggingservice\\dtos\\createlogrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0A83E1B0-E070-9F99-FF67-C1B90F446AE7}|LoggingService\\LoggingService.csproj|c:\\users\\komal\\onedrive\\desktop\\gigconnect-freelancingplatform\\gigconnectloggingservice\\loggingservice\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{0A83E1B0-E070-9F99-FF67-C1B90F446AE7}|LoggingService\\LoggingService.csproj|solutionrelative:loggingservice\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{0A83E1B0-E070-9F99-FF67-C1B90F446AE7}|LoggingService\\LoggingService.csproj|c:\\users\\komal\\onedrive\\desktop\\gigconnect-freelancingplatform\\gigconnectloggingservice\\loggingservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{0A83E1B0-E070-9F99-FF67-C1B90F446AE7}|LoggingService\\LoggingService.csproj|solutionrelative:loggingservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0A83E1B0-E070-9F99-FF67-C1B90F446AE7}|LoggingService\\LoggingService.csproj|c:\\users\\komal\\onedrive\\desktop\\gigconnect-freelancingplatform\\gigconnectloggingservice\\loggingservice\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{0A83E1B0-E070-9F99-FF67-C1B90F446AE7}|LoggingService\\LoggingService.csproj|solutionrelative:loggingservice\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0A83E1B0-E070-9F99-FF67-C1B90F446AE7}|LoggingService\\LoggingService.csproj|c:\\users\\komal\\onedrive\\desktop\\gigconnect-freelancingplatform\\gigconnectloggingservice\\loggingservice\\loggingservice.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
-      "RelativeMoniker": "D:0:0:{0A83E1B0-E070-9F99-FF67-C1B90F446AE7}|LoggingService\\LoggingService.csproj|solutionrelative:loggingservice\\loggingservice.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0A83E1B0-E070-9F99-FF67-C1B90F446AE7}|LoggingService\\LoggingService.csproj|c:\\users\\komal\\onedrive\\desktop\\gigconnect-freelancingplatform\\gigconnectloggingservice\\loggingservice\\data\\loggingdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -50,11 +50,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Users\\Komal\\OneDrive\\Desktop\\GigConnect-FreelancingPlatform\\GigConnectLoggingService\\LoggingService\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "LoggingService\\Properties\\launchSettings.json",
@@ -62,11 +62,12 @@
               "RelativeToolTip": "LoggingService\\Properties\\launchSettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-08-01T15:00:06.464Z"
+              "WhenOpened": "2026-08-01T15:00:06.464Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 1,
               "Title": "LoggingService.http",
               "DocumentMoniker": "C:\\Users\\Komal\\OneDrive\\Desktop\\GigConnect-FreelancingPlatform\\GigConnectLoggingService\\LoggingService\\LoggingService.http",
               "RelativeDocumentMoniker": "LoggingService\\LoggingService.http",
@@ -74,11 +75,12 @@
               "RelativeToolTip": "LoggingService\\LoggingService.http",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
-              "WhenOpened": "2026-08-01T14:57:53.132Z"
+              "WhenOpened": "2026-08-01T14:57:53.132Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "appsettings.Development.json",
               "DocumentMoniker": "C:\\Users\\Komal\\OneDrive\\Desktop\\GigConnect-FreelancingPlatform\\GigConnectLoggingService\\LoggingService\\appsettings.Development.json",
               "RelativeDocumentMoniker": "LoggingService\\appsettings.Development.json",
@@ -86,11 +88,12 @@
               "RelativeToolTip": "LoggingService\\appsettings.Development.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-08-01T13:03:09.278Z"
+              "WhenOpened": "2026-08-01T13:03:09.278Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\Komal\\OneDrive\\Desktop\\GigConnect-FreelancingPlatform\\GigConnectLoggingService\\LoggingService\\appsettings.json",
               "RelativeDocumentMoniker": "LoggingService\\appsettings.json",
@@ -98,7 +101,8 @@
               "RelativeToolTip": "LoggingService\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-08-01T13:02:58.768Z"
+              "WhenOpened": "2026-08-01T13:02:58.768Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -110,11 +114,12 @@
               "RelativeToolTip": "LoggingService\\Data\\LoggingDbContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-01T12:45:46.228Z"
+              "WhenOpened": "2026-08-01T12:45:46.228Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "CreateLogRequest.cs",
               "DocumentMoniker": "C:\\Users\\Komal\\OneDrive\\Desktop\\GigConnect-FreelancingPlatform\\GigConnectLoggingService\\LoggingService\\DTOs\\CreateLogRequest.cs",
               "RelativeDocumentMoniker": "LoggingService\\DTOs\\CreateLogRequest.cs",
@@ -122,7 +127,8 @@
               "RelativeToolTip": "LoggingService\\DTOs\\CreateLogRequest.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-01T12:42:51.987Z"
+              "WhenOpened": "2026-08-01T12:42:51.987Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -134,7 +140,8 @@
               "RelativeToolTip": "LoggingService\\Models\\LogEntry.cs",
               "ViewState": "AgIAABMAAAAAAAAAAAAuwBYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-01T12:40:55.685Z"
+              "WhenOpened": "2026-08-01T12:40:55.685Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -146,11 +153,12 @@
               "RelativeToolTip": "LoggingService\\LoggingService.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-07-29T17:36:57.331Z"
+              "WhenOpened": "2026-07-29T17:36:57.331Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "LogsController.cs",
               "DocumentMoniker": "C:\\Users\\Komal\\OneDrive\\Desktop\\GigConnect-FreelancingPlatform\\GigConnectLoggingService\\LoggingService\\Controllers\\LogsController.cs",
               "RelativeDocumentMoniker": "LoggingService\\Controllers\\LogsController.cs",
@@ -158,17 +166,18 @@
               "RelativeToolTip": "LoggingService\\Controllers\\LogsController.cs",
               "ViewState": "AgIAACEAAAAAAAAAAAAYwEEAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-29T17:25:55.146Z"
+              "WhenOpened": "2026-07-29T17:25:55.146Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Komal\\OneDrive\\Desktop\\GigConnect-FreelancingPlatform\\GigConnectLoggingService\\LoggingService\\Program.cs",
               "RelativeDocumentMoniker": "LoggingService\\Program.cs",
               "ToolTip": "C:\\Users\\Komal\\OneDrive\\Desktop\\GigConnect-FreelancingPlatform\\GigConnectLoggingService\\LoggingService\\Program.cs",
               "RelativeToolTip": "LoggingService\\Program.cs",
-              "ViewState": "AgIAAD0AAAAAAAAAAAAtwEgAAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAlwA8AAABIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-29T15:09:14.916Z",
               "EditorCaption": ""

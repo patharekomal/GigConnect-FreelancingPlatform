@@ -4,11 +4,12 @@ import { useEffect,useState } from "react";
 import { toast } from "react-toastify";
 import { getJobById } from "../../api/jobApi";
 import { submitBid } from "../../api/bidApi";
-
+import { askAI } from "../../services/chatbotService";
 import { logInfo, logError } from "../../utils/logger";
 
 function SubmitBid() {
 
+const [proposalLoading, setProposalLoading] = useState(false);
 
 const navigate = useNavigate();
 const { jobId } = useParams();  //take  jobid from previous page 
@@ -82,6 +83,39 @@ const handleSubmit = async () => {
 if (!selectedJob) {
   return <h2>Loading...</h2>;
 }
+
+const generateProposal = async () => {
+  try {
+    if (proposal.trim() !== "") {
+      const replace = window.confirm(
+        "Replace your existing proposal with an AI-generated one?",
+      );
+
+      if (!replace) {
+        return;
+      }
+    }
+    setProposalLoading(true);
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const response = await askAI({
+      message: "Generate proposal",
+
+      user_id: user.id,
+
+      job_id: jobId,
+    });
+
+    setProposal(response.reply);
+  } catch (error) {
+    console.log(error);
+
+    alert("Unable to generate proposal.");
+  } finally {
+    setProposalLoading(false);
+  }
+};
   return (
     <div className="container-fluid p-4">
       <div className="row">
@@ -201,6 +235,7 @@ if (!selectedJob) {
 
                 <div className="mb-3">
                   <label className="form-label">Proposal</label>
+                  
                   <textarea
                     rows="5"
                     className="form-control"
@@ -209,6 +244,15 @@ if (!selectedJob) {
                     onChange={(e) => setProposal(e.target.value)}
                   />
                 </div>
+                <button
+                  className="btn btn-outline-primary mt-2 mb-3"
+                  onClick={generateProposal}
+                  disabled={proposalLoading}
+                >
+                  {proposalLoading
+                    ? "⏳ Generating..."
+                    : "✨ Generate AI Proposal"}
+                </button>
 
                 <button
                   className="btn btn-success w-100"

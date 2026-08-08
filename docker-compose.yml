@@ -1,0 +1,77 @@
+# ==============================================================================
+# CDAC Post-Graduate Diploma Project - Multi-Container Docker Orchestration
+# Project: GigConnect Freelancing Platform
+# Database: Aiven Cloud MySQL Integration
+# Services: Frontend, Spring Boot Backend, .NET Logging, Python AI Service
+# ==============================================================================
+
+version: '3.8'
+
+services:
+  # ----------------------------------------------------------------------------
+  # Service 1: Java Spring Boot Backend API
+  # ----------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./GigConnectBackend
+      dockerfile: Dockerfile
+    container_name: gigconnect-backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      # Connects directly to your Aiven Cloud MySQL database via .env
+      - DB_URL=${DB_URL}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXP_TIME=${JWT_EXP_TIME}
+      - RAZORPAY_KEY_ID=${RAZORPAY_KEY_ID}
+      - RAZORPAY_KEY_SECRET=${RAZORPAY_KEY_SECRET}
+
+  # ----------------------------------------------------------------------------
+  # Service 2: C# .NET Logging Microservice
+  # ----------------------------------------------------------------------------
+  logging-service:
+    build:
+      context: ./GigConnectLoggingService/LoggingService
+      dockerfile: Dockerfile
+    container_name: gigconnect-logging
+    restart: always
+    ports:
+      - "5020:5020"
+    environment:
+      - HOST=${AIVEN_HOST}
+      - PORT=${AIVEN_PORT}
+      - DATABASE=${AIVEN_DATABASE_LOG:-gigconnect_logging}
+      - USERNAME=${DB_USERNAME}
+      - PASSWORD=${DB_PASSWORD}
+
+  # ----------------------------------------------------------------------------
+  # Service 3: Python FastAPI AI Assistant Microservice (LangChain + Groq/LLM)
+  # ----------------------------------------------------------------------------
+  ai-service:
+    build:
+      context: ./GigConnect-AI
+      dockerfile: Dockerfile
+    container_name: gigconnect-ai
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+
+  # ----------------------------------------------------------------------------
+  # Service 4: React + Nginx Web Frontend
+  # ----------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: gigconnect-frontend
+    restart: always
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+      - ai-service

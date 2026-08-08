@@ -1,2 +1,4 @@
 /.metadata/
 **/Properties/launchSettings.json
+.env
+.env.*

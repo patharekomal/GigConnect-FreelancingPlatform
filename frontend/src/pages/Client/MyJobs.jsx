@@ -3,7 +3,7 @@ import Sidebar from "../../components/Client/Sidebar";
 
 import { useState, useEffect } from "react";
 import { fetchJobsByClient } from "../../services/jobService";
-import { fetchClientById } from "../../services/clientService";
+import { fetchMyProfile } from "../../services/clientService";
 
 function MyJobs() {
   const navigate = useNavigate();
@@ -34,9 +34,19 @@ function MyJobs() {
     }
   };
 
+
+  // const loadClient = async () => {
+  //   try {
+  //     const data = await fetchClientById(clientId);
+  //     setClient(data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const loadClient = async () => {
     try {
-      const data = await fetchClientById(clientId);
+      const data = await fetchMyProfile();
       setClient(data);
     } catch (error) {
       console.log(error);

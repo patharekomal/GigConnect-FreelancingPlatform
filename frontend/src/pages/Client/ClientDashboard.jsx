@@ -2,25 +2,35 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Client/Sidebar";
 import { fetchDashboard } from "../../services/clientService";
 import { useEffect, useState } from "react";
-import { fetchClientById } from "../../services/clientService";
-
+//import { fetchClientById } from "../../services/clientService";
+import { fetchMyProfile } from "../../services/clientService";
 function ClientDashboard() {
   const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
 
   const CLIENT_ID = user?.id;
-   const [client, setClient] = useState(null);
-   const [dashboard, setDashboard] = useState(null);
+  const [client, setClient] = useState(null);
+  const [dashboard, setDashboard] = useState(null);
 
   useEffect(() => {
     loadClient();
     loadDashboard();
   }, []);
 
+  // const loadClient = async () => {
+  //   try {
+  //     const response = await fetchClientById(CLIENT_ID);
+  //     setClient(response);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+ 
+
   const loadClient = async () => {
     try {
-      const response = await fetchClientById(CLIENT_ID);
+      const response = await fetchMyProfile();
       setClient(response);
     } catch (error) {
       console.log(error);
@@ -28,42 +38,35 @@ function ClientDashboard() {
   };
 
   const loadDashboard = async () => {
+    try {
+      const data = await fetchDashboard(CLIENT_ID);
 
-  try {
+      console.log(data);
 
-    const data = await fetchDashboard(CLIENT_ID);
-
-    console.log(data);
-
-    setDashboard(data);
-
-  } catch (error) {
-
-    console.log(error);
-
-  }
-
-};
-  const CLIENT_NAME =
-  client?.firstName || user?.firstName || "";
+      setDashboard(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const CLIENT_NAME = client?.firstName || user?.firstName || "";
   if (!dashboard) {
-  return <h2>Loading...</h2>;
+    return <h2>Loading...</h2>;
   }
 
   const stats = [
-  {
-    label: "Jobs Posted",
-    value: dashboard.jobsPosted,
-  },
-  {
-    label: "Active Projects",
-    value: dashboard.activeProjects,
-  },
-  {
-    label: "Amount Released",
-    value: `₹${dashboard.amountReleased.toLocaleString()}`,
-  },
-];
+    {
+      label: "Jobs Posted",
+      value: dashboard.jobsPosted,
+    },
+    {
+      label: "Active Projects",
+      value: dashboard.activeProjects,
+    },
+    {
+      label: "Amount Released",
+      value: `₹${dashboard.amountReleased.toLocaleString()}`,
+    },
+  ];
 
   const actions = [
     {
@@ -91,8 +94,6 @@ function ClientDashboard() {
       path: "/my-jobs",
     },
   ];
-
-  
 
   return (
     <>
@@ -145,17 +146,11 @@ function ClientDashboard() {
         {/* Header */}
 
         <div className="mb-5 text-center">
-          <h1
-            className="fw-bold mb-2"
-            style={{ fontSize: "34px" }}
-          >
+          <h1 className="fw-bold mb-2" style={{ fontSize: "34px" }}>
             Welcome back, {CLIENT_NAME}
           </h1>
 
-          <p
-            className="text-muted"
-            style={{ fontSize: "15px" }}
-          >
+          <p className="text-muted" style={{ fontSize: "15px" }}>
             Manage jobs, review bids and track payments
           </p>
         </div>
@@ -175,10 +170,7 @@ function ClientDashboard() {
                   </span>
                 </div>
 
-                <div
-                  className="fw-bold mb-2"
-                  style={{ fontSize: "26px" }}
-                >
+                <div className="fw-bold mb-2" style={{ fontSize: "26px" }}>
                   {s.value}
                 </div>
 
@@ -198,10 +190,7 @@ function ClientDashboard() {
         <div className="row g-3 mb-4">
           <div className="col-md-8">
             <div className="bg-white border rounded-3 p-4 h-100">
-              <h2
-                className="fw-semibold mb-3"
-                style={{ fontSize: "15px" }}
-              >
+              <h2 className="fw-semibold mb-3" style={{ fontSize: "15px" }}>
                 Quick Actions
               </h2>
 
@@ -221,10 +210,7 @@ function ClientDashboard() {
                         {a.icon}
                       </div>
 
-                      <div
-                        className="fw-semibold"
-                        style={{ fontSize: "13px" }}
-                      >
+                      <div className="fw-semibold" style={{ fontSize: "13px" }}>
                         {a.label}
                       </div>
 
@@ -245,19 +231,13 @@ function ClientDashboard() {
 
           <div className="col-md-4">
             <div className="bg-white border rounded-3 p-4 h-100">
-              <h2
-                className="fw-semibold mb-3"
-                style={{ fontSize: "15px" }}
-              >
+              <h2 className="fw-semibold mb-3" style={{ fontSize: "15px" }}>
                 Recent Activity
               </h2>
 
               <div className="d-flex flex-column gap-3">
                 {dashboard.recentActivities.slice(0, 5).map((a, i) => (
-                  <div
-                    key={i}
-                    className="d-flex gap-2 align-items-start"
-                  >
+                  <div key={i} className="d-flex gap-2 align-items-start">
                     <div
                       className="rounded-circle flex-shrink-0 mt-1"
                       style={{
@@ -321,8 +301,7 @@ function ClientDashboard() {
           <button
             className="banner-btn btn text-white fw-semibold px-4 py-2 rounded-3 border-0"
             style={{
-              background:
-                "linear-gradient(135deg,#198754,#157347)",
+              background: "linear-gradient(135deg,#198754,#157347)",
               fontSize: "13px",
             }}
             onClick={() => navigate("/post-job")}
